@@ -1,7 +1,6 @@
 package colorspectrum;
 import java.awt.*;
 import javax.swing.*;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 
 public class ColorGradient extends JPanel{

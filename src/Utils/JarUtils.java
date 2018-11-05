@@ -32,7 +32,7 @@ public class JarUtils {
         System.out.println(workspaceLocation);
         add(new File(workspaceLocation), target);
         target.close();
-        System.out.println("JAR:" + (System.currentTimeMillis()-start));
+        System.out.println("JAR created:" + (((System.currentTimeMillis()-start)/100) % 60) + "seconds");
     }
 
     private static void add(File source, JarOutputStream target) throws IOException

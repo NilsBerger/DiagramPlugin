@@ -23,9 +23,9 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.vfs.VirtualFile;
-import dotparser.DependencyModelProvider;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
+import service.DependenyProjectExtratorService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -146,13 +146,18 @@ public class Settings implements Configurable {
                     properties = PluginProperties.getInstance();
                     properties.readPluginProperties();
 
-                    DependencyModelProvider.getAndroidDependencies(properties.getProperty(PropertyName.ANDROID_WORKSPACE));
-                    DependencyModelProvider.getSwiftDependencies(properties.getProperty(PropertyName.SWIFT_WORKSPACE), properties.getProperty(PropertyName.Swift_SCHEME_FOLDER));
+                    final String android_filepath = properties.getProperty(PropertyName.ANDROID_WORKSPACE);
+                    final String swift_filepath = properties.getProperty(PropertyName.SWIFT_WORKSPACE);
+                    final String swift_scheme_folder = properties.getProperty(PropertyName.Swift_SCHEME_FOLDER);
+
+                    DependenyProjectExtratorService.extractDependenciesFromSwiftProject(swift_filepath, swift_scheme_folder);
+                    DependenyProjectExtratorService.extractDependenciesFromJavaProject(android_filepath);
 
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
             }
+
         });
     }
 

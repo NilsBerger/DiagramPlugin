@@ -17,28 +17,42 @@
 
 package Utils;
 public abstract class StringUtils {
-    public static String sanitizeStringForSimpleName(final String className)
-    {
+    public static String sanitizeStringForSimpleName(final String className) {
         String name = StringUtils.deleteQuotationMarks(className);
         name = StringUtils.deleteAllTextInBrackets(name);
         name = StringUtils.deleteJarEnding(name);
+        name = StringUtils.deleteJavaEnding(name);
         name = StringUtils.deleteSemicolon(name);
+        name = StringUtils.trimFQN(name);
+        name = StringUtils.deleteAllAfterDollarSign(name);
         return name.trim();
     }
-    private static String deleteQuotationMarks(final String string)
-    {
-        return string.replace("\"","");
+
+    private static String deleteQuotationMarks(final String string) {
+        return string.replace("\"", "");
     }
-    private static String deleteAllTextInBrackets(final String string)
-    {
+
+    private static String deleteAllTextInBrackets(final String string) {
         return string.replaceAll("\\(.*\\)", "");
     }
-    private static String deleteJarEnding(final String string)
-    {
-        return string.replace(".jar","");
+
+    private static String deleteJarEnding(final String string) {
+        return string.replace(".jar", "");
     }
-    private static String deleteSemicolon(final String string)
+
+    private static String deleteJavaEnding(final String string){return string.replace(".java", "");}
+
+    private static String deleteSemicolon(final String string) {
+        return string.replace(";", "");
+    }
+
+    private static String deleteAllAfterDollarSign(final String string) {
+        return string.split("\\$")[0];
+    }
+
+    private static String trimFQN(final String string)
     {
-        return string.replace(";","");
+        return   string.substring(string.lastIndexOf(".") + 1).trim();
+
     }
 }

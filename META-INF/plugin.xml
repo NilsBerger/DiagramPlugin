@@ -20,6 +20,7 @@
   <version>1.0</version>
   <vendor email="kb@jetbrains.com" url="http://www.jetbrains.com">JetBrains</vendor>
   <depends>com.intellij.diagram</depends>
+  <depends>de.uhh.swk.traceabilityRecoveryPlugin</depends>
   <description><![CDATA[
       Diagrams demo<br>
       ]]></description>
@@ -43,27 +44,48 @@
 
   <project-components>
     <!-- Add your project components here -->
+    <component>
+      <implementation-class>graphapi.ClassGraphToolWindow</implementation-class>
+    </component>
   </project-components>
 
   <actions>
-    <group id="test" text="Test" popup="false">
-      <add-to-group group-id="AnalyzeMenu" anchor="last"></add-to-group>
+    <!--<group id="test" text="Test" popup="false">-->
+      <!--<add-to-group group-id="AnalyzeMenu" anchor="last"></add-to-group>-->
 
-      <separator></separator>
+      <!--<separator></separator>-->
 
-      <action id="traceabilityrecovery.GenerateTodoCommentAction" class="actions.UpdateDependencyModelAction"
-              text="Update Dependency Models"
-              description="Update the dependency models by analyzing the workspaces">
-        <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt D"/>
-      </action>
+      <!--<action id="update" class="actions.UpdateDependencyModelAction"-->
+              <!--text="Update Dependency Models"-->
+              <!--description="Update the dependency models by analyzing the workspaces">-->
+        <!--<keyboard-shortcut keymap="$default" first-keystroke="ctrl alt D"/>-->
+      <!--</action>-->
 
+      <!--<action id="tttest" class="actions.TestAction"-->
+              <!--text="TTTest"-->
+              <!--description="Update the dependency models by analyzing the workspaces">-->
+        <!--<keyboard-shortcut keymap="$default" first-keystroke="ctrl alt D"/>-->
+      <!--</action>-->
+
+    <!--</group>-->
+
+    <action id="Add Class"
+            class="actions.AddInitialContextClassAction"
+            text="Add affected Class"
+            description="Add class that is affected by the change"/>
+
+    <group id="ClassGraphEditor" text="Change Propagation Class Diagram" popup="true">
+      <reference id="Add Class"/>
+      <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+      <add-to-group group-id="StructureViewPopupMenu" anchor="last"/>
+      <add-to-group group-id="EditorPopupMenu" anchor="last"/>
     </group>
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
-    <applicationConfigurable instance="preferences.Settings" id="Impact-Traceability_settings" displayName="Impact_Traceability" />
-    <diagram.Provider implementation="com.intellij.examples.FileDiagramProvider"/>
-      <diagram.Provider implementation="classdependencygraphdiagram.ClassDiagramProvider"/>
-    <toolWindow id="Class Dependency Graph" factoryClass="toolwindow.ToolWindowFactoryImpl" anchor="bottom"/>
+    <!--<applicationConfigurable instance="preferences.Settings" id="Impact-Traceability_settings" displayName="Impact_Traceability" />-->
+    <!--&lt;!&ndash;<diagram.Provider implementation="com.intellij.examples.FileDiagramProvider"/>&ndash;&gt;-->
+      <!--<diagram.Provider implementation="actions.ClassDiagramProvider"/>-->
+    <!--<toolWindow id="Class Dependency Graph" factoryClass="werkzeuge.ToolWindowWerkzeugFactory" anchor="bottom"/>-->
   </extensions>
 </idea-plugin>

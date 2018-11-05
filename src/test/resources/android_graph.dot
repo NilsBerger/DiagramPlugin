@@ -1,0 +1,24 @@
+digraph "android_workspace.jar" {
+     node [fontname=monospace, fontsize=9, shape=box, style=rounded]
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "android.os.Parcel (not found)";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "android.os.Parcelable (not found)";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "android.os.Parcelable$Creator (not found)";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "com.android.tools.ir.runtime.IncrementalChange (not found)";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "com.android.tools.ir.runtime.InstantReloadException (not found)";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "com.fasterxml.jackson.annotation.JsonCreator (not found)";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "com.fasterxml.jackson.annotation.JsonIgnoreProperties (not found)";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "com.fasterxml.jackson.annotation.JsonProperty (not found)";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "de.unihamburg.hdw.model.events.EventFeed$1 (android_workspace.jar)";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "de.unihamburg.hdw.model.events.EventModel (android_workspace.jar)";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "java.lang.Boolean";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "java.lang.Class";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "java.lang.Integer";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "java.lang.Number";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "java.lang.Object";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "java.lang.String";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "java.lang.StringBuilder";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "java.text.SimpleDateFormat";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "java.util.Collection";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "java.util.Date";
+   "de.unihamburg.hdw.model.events.EventFeed"         -> "java.util.List";
+}

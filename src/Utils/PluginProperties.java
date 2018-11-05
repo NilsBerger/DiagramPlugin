@@ -23,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -38,7 +39,7 @@ import java.util.Properties;
  */
 public final class PluginProperties
 {
-    private static final String  FILE_PATH  = "/Users/nilsberger/Documents/Masterarbeit/IntelliJIdeaDiagramDemo-master/config/AppConfig.properties";
+    private static final String  FILE_PATH  = "/Users/nilsberger/Documents/Masterarbeit/clean2/DiagramPlugin/resources/AppConfig.properties";
 
     private static PluginProperties instance;
 
@@ -59,6 +60,12 @@ public final class PluginProperties
     {
         readPluginProperties();
     }
+
+//    private File getFilePath()
+//    {
+//        URL url = getClass().getResource("resources/AppConfig.properties");
+//        return new File(url.getFile());
+//    }
 
     public synchronized void readPluginProperties() throws IOException
     {
