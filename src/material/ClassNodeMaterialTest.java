@@ -4,6 +4,7 @@ package material;
 
 import com.google.common.io.Files;
 import org.junit.Test;
+import valueobjects.Marking;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,5 +44,19 @@ public class ClassNodeMaterialTest {
 
         String temppath = tempDir.getCanonicalPath();
         classNodeMaterial.setSourceFilePath(temppath);
+    }
+
+
+    @Test
+    public void oldMarking()
+    {
+        ClassNodeMaterial classNode = new JavaClassNodeMaterial("C");
+        classNode.setMarking(Marking.BLANK);
+
+        Marking oldMarking = classNode.getMarking();
+        Marking newMarking = Marking.CHANGED;
+        classNode.setMarking(newMarking);
+        assertThat(oldMarking, is(classNode.getOldMarking()));
+        assertThat(classNode.getMarking(), is(newMarking));
     }
 }

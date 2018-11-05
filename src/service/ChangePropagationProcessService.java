@@ -57,7 +57,7 @@ public class ChangePropagationProcessService implements GraphChangeListener {
         return _INSTANCE;
     }
 
-    public void initialize(final List<? extends DependencyIF> classdependencies, ChangeAndFixStrategyIF strategy)
+    public void initialize(final Set<? extends DependencyIF> classdependencies, ChangeAndFixStrategyIF strategy)
     {
         clear();
          _model = new ChangePropagationModelMaterial(classdependencies);
@@ -108,7 +108,7 @@ public class ChangePropagationProcessService implements GraphChangeListener {
     @Override
     public void update(ClassNodeMaterial changedMarking) {
         if (changedMarking.getMarking() == Marking.CHANGED || changedMarking.getMarking() == Marking.PROPAGATES) {
-            _model.createInconsistencies(changedMarking);
+            //_model.createInconsistencies(changedMarking);
             _affectedClassesByChange.addAll(_model.getNeighbourhoodWithoutIncomingInconsistencies(changedMarking));
         } else {
             //No new neighbours of changed class to calculate
@@ -167,9 +167,9 @@ public class ChangePropagationProcessService implements GraphChangeListener {
 
     public ClassNodeMaterial getClassNodeMaterial(final ClassNodeMaterial classNodeMaterial)
     {
-        if(!_model.getClassesInGraph().contains(classNodeMaterial))
+        if(!_model.getNodes().contains(classNodeMaterial))
             throw new IllegalArgumentException("Class '"+ classNodeMaterial.getFullClassName() + "' not found in dependency graph! Please extract dependencies again");
-        Iterator<ClassNodeMaterial> it = _model.getClassesInGraph().iterator();
+        Iterator<ClassNodeMaterial> it = _model.getNodes().iterator();
         while(it.hasNext())
         {
             ClassNodeMaterial tmp = it.next();
@@ -192,7 +192,7 @@ public class ChangePropagationProcessService implements GraphChangeListener {
         //Add Dependency
         TraceLinkDependencyMaterial dependencyMaterial = new TraceLinkDependencyMaterial((JavaClassNodeMaterial) classNodeMaterial, (SwiftClassNodeMaterial) swiftClassNodeMaterial, traceabilityLink.getProbability());
         _traceabilityLinks.add(dependencyMaterial);
-        _model.getClassDependencyGraph().add(dependencyMaterial);
+        _model.addEdge(dependencyMaterial);
     }
     public void addTraceabilityLinkSwiftSource(final SwiftClassNodeMaterial swiftClassNodeMaterial, final TraceabilityLink traceabilityLink)
     {
@@ -206,7 +206,7 @@ public class ChangePropagationProcessService implements GraphChangeListener {
         //Add Dependency
         TraceLinkDependencyMaterial dependencyMaterial = new TraceLinkDependencyMaterial((JavaClassNodeMaterial) javaClassNodeMaterial, (SwiftClassNodeMaterial) swiftClassNodeMaterial, traceabilityLink.getProbability());
         _traceabilityLinks.add(dependencyMaterial);
-        _model.getClassDependencyGraph().add(dependencyMaterial);
+        _model.addEdge(dependencyMaterial);
     }
 
     public synchronized void addGraphChangeListener(final ChangePropagationChangeListener observer)

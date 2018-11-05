@@ -23,7 +23,9 @@ import werkzeuge.ToolWindowWerkzeug;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -46,7 +48,7 @@ public class ClassDiagramProvider extends BaseDiagramProvider<ClassNodeMaterial>
         _cpProcess = ChangePropagationProcessService.getInstance();
         _cpProcess.initialize(ChangePropagationProcessServiceTest.getJavaAndSwiftDependencyList(), new RandomChangeAndFixStrategy());
         _toolWindowWerkzeug = new ToolWindowWerkzeug();
-        List<DependencyIF> dependencyList = new ArrayList<>();
+        Set<DependencyIF> dependencyList = new HashSet<>();
         dependencyList.addAll(DotFileParserService.parseJavaDependenciesFromDotFile(DotFileParserService.JAVA_DOT_FILENAME));
         dependencyList.addAll(DotFileParserService.parseSwiftDependenciesFromDotFile(DotFileParserService.DEPCHECK_FILENAME));
         _cpProcess.initialize(dependencyList, new RandomChangeAndFixStrategy());

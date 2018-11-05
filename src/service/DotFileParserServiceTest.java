@@ -6,6 +6,7 @@ import material.SwiftClassNodeMaterial;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -20,10 +21,10 @@ public class DotFileParserServiceTest
     public void paserJavaDepenendicesFormDotFileTest()
     {
 
-        List<DependencyIF> dependencies = DotFileParserService.parseJavaDependenciesFromDotFile(_filepath);
+        Set<DependencyIF> dependencies = DotFileParserService.parseJavaDependenciesFromDotFile(_filepath);
 
         assertThat(dependencies.size(), greaterThan(0));
-        assertThat(dependencies.size(), is(21));
+        assertThat(dependencies.size(), is(13));
 
         for(DependencyIF dependency : dependencies)
         {

@@ -22,8 +22,8 @@ import Utils.HashUtils;
  * Created by Nils-Pc on 06.08.2018.
  */
 public class ClassDependencyMaterial implements DependencyIF {
-    private final ClassNodeMaterial dependentClass;
-    private final ClassNodeMaterial independentClass;
+    protected final ClassNodeMaterial dependentClass;
+    protected final ClassNodeMaterial independentClass;
 
 
     public ClassDependencyMaterial(ClassNodeMaterial dependentClass, ClassNodeMaterial independentClass)

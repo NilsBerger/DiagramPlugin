@@ -35,15 +35,15 @@ public class DependencyPersistenceAutomatonTest {
     @Test
     public void writeGraph()
     {
-        ChangePropagationProcessService propgatatesProcess = ChangePropagationProcessService.getInstance();
-        propgatatesProcess.initialize(ChangePropagationProcessServiceTest.getSmallGraph(), new RandomChangeAndFixStrategy());
-        propgatatesProcess.change(new JavaClassNodeMaterial("a"));
-
-        DependencyPersistenceAutomaton dependencyPersistenceAutomaton = new DependencyPersistenceAutomaton(ChangePropagationProcessService.getInstance(), "/Users/nilsberger/Documents/Masterarbeit/IntelliJIdeaDiagramDemo-master/resources/");
-        try {
-            dependencyPersistenceAutomaton.writeChangePropagationGraph();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        ChangePropagationProcessService propgatatesProcess = ChangePropagationProcessService.getInstance();
+//        propgatatesProcess.initialize(ChangePropagationProcessServiceTest.getSmallGraph(), new RandomChangeAndFixStrategy());
+//        propgatatesProcess.change(new JavaClassNodeMaterial("a"));
+//
+//        DependencyPersistenceAutomaton dependencyPersistenceAutomaton = new DependencyPersistenceAutomaton(ChangePropagationProcessService.getInstance(), "/Users/nilsberger/Documents/Masterarbeit/IntelliJIdeaDiagramDemo-master/resources/");
+//        try {
+//            dependencyPersistenceAutomaton.writeChangePropagationGraph();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }

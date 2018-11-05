@@ -27,6 +27,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -391,7 +392,7 @@ public class ChangePropagationProcessServiceTest {
         assertThat(propagationProcess.change(new JavaClassNodeMaterial("Main")), is(true));
     }
 
-    public static final  List<DependencyIF> getSimpleDependencyList()
+    public static final  Set<DependencyIF> getSimpleDependencyList()
     {
         ClassNodeMaterial main = new JavaClassNodeMaterial("Main");
         ClassNodeMaterial search = new JavaClassNodeMaterial("Search");
@@ -400,7 +401,7 @@ public class ChangePropagationProcessServiceTest {
         ClassNodeMaterial data = new JavaClassNodeMaterial("Data");
         ClassNodeMaterial init = new JavaClassNodeMaterial("Init");
 
-        List<DependencyIF> dependencyFachwertList = new ArrayList<>();
+        Set<DependencyIF> dependencyFachwertList = new HashSet<>();
         //conistent
         dependencyFachwertList.add(new ClassDependencyMaterial(input,main));
         dependencyFachwertList.add(new ClassDependencyMaterial(search,main));
@@ -410,36 +411,44 @@ public class ChangePropagationProcessServiceTest {
         dependencyFachwertList.add(new ClassDependencyMaterial(data,search));
         dependencyFachwertList.add(new ClassDependencyMaterial(data,init));
 
+        dependencyFachwertList.add(new InconsistentDependencyMaterial(new ClassDependencyMaterial(input,main)));
+        dependencyFachwertList.add(new InconsistentDependencyMaterial(new ClassDependencyMaterial(search,main)));
+        dependencyFachwertList.add(new InconsistentDependencyMaterial(new ClassDependencyMaterial(init,main)));
+        dependencyFachwertList.add(new InconsistentDependencyMaterial(new ClassDependencyMaterial(input,search)));
+        dependencyFachwertList.add(new InconsistentDependencyMaterial(new ClassDependencyMaterial(c,search)));
+        dependencyFachwertList.add(new InconsistentDependencyMaterial(new ClassDependencyMaterial(data,search)));
+        dependencyFachwertList.add(new InconsistentDependencyMaterial(new ClassDependencyMaterial(data,init)));
+
         return dependencyFachwertList;
     }
 
-    public static final List<DependencyIF> getSmallGraph()
+    public static final Set<DependencyIF> getSmallGraph()
     {
         ClassNodeMaterial a = new JavaClassNodeMaterial("a");
         ClassNodeMaterial b = new JavaClassNodeMaterial("b");
         ClassNodeMaterial c = new JavaClassNodeMaterial("c");
 
-        List<DependencyIF> dependencyFachwertList = new ArrayList<>();
+        Set<DependencyIF> dependencyFachwertList = new HashSet<>();
         //conistent
         dependencyFachwertList.add(new ClassDependencyMaterial(a,b));
         dependencyFachwertList.add(new ClassDependencyMaterial(b,c));
         return dependencyFachwertList;
     }
 
-    public static final List<DependencyIF> getSmallGraphWithTrace()
+    public static final Set<DependencyIF> getSmallGraphWithTrace()
     {
         ClassNodeMaterial a = new JavaClassNodeMaterial("a");
         JavaClassNodeMaterial b = new JavaClassNodeMaterial("b");
         SwiftClassNodeMaterial c = new SwiftClassNodeMaterial("c");
 
-        List<DependencyIF> dependencyFachwertList = new ArrayList<>();
+        Set<DependencyIF> dependencyFachwertList = new HashSet<>();
         //conistent
         dependencyFachwertList.add(new ClassDependencyMaterial(a,b));
         dependencyFachwertList.add(new TraceLinkDependencyMaterial(b,c,100));
         return dependencyFachwertList;
     }
 
-    public static final List<DependencyIF> getJavaAndSwiftDependencyList()
+    public static final Set<DependencyIF> getJavaAndSwiftDependencyList()
     {
         ClassNodeMaterial javaMain = new JavaClassNodeMaterial("java.Main");
         ClassNodeMaterial javaSearch = new JavaClassNodeMaterial("java.Search");
@@ -448,7 +457,7 @@ public class ChangePropagationProcessServiceTest {
         ClassNodeMaterial javaData = new JavaClassNodeMaterial("java.Data");
         ClassNodeMaterial javaInit = new JavaClassNodeMaterial("java.Init");
 
-        List<DependencyIF> dependencyFachwertList = new ArrayList<>();
+        Set<DependencyIF> dependencyFachwertList = new HashSet<>();
         //conistent
         dependencyFachwertList.add(new ClassDependencyMaterial(javaInput,javaMain));
         dependencyFachwertList.add(new ClassDependencyMaterial(javaSearch,javaMain));

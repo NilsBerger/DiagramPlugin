@@ -30,8 +30,6 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, 
         this._edges = edges;
     }
 
-    
-
     @Nullable
     @Override
     public NodesGroup getGroup(ClassGraphNode classGraphNode) {
@@ -143,7 +141,7 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, 
         }
     }
 
-    public void addEdge(final ClassGraphEdge edge )
+    public void addEdge(final ClassGraphEdge edge)
     {
         boolean added = _edges.add(edge);
         if(added)
@@ -201,6 +199,7 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, 
         }
         return removed;
     }
+
     public boolean removeEdge(final ClassGraphEdge edge)
     {
         boolean removed = _edges.remove(edge);

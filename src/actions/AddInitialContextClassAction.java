@@ -14,7 +14,9 @@ import service.DotFileParserService;
 import service.RandomChangeAndFixStrategy;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AddInitialContextClassAction extends AnAction {
     @Override
@@ -26,7 +28,7 @@ public class AddInitialContextClassAction extends AnAction {
 
         ChangePropagationProcessService propagationProcessService = ChangePropagationProcessService.getInstance();
 
-        List<DependencyIF> dependencyList = new ArrayList<>();
+        Set<DependencyIF> dependencyList = new HashSet<>();
         dependencyList.addAll(DotFileParserService.parseJavaDependenciesFromDotFile(DotFileParserService.JAVA_DOT_FILENAME));
         dependencyList.addAll(DotFileParserService.parseSwiftDependenciesFromDotFile(DotFileParserService.DEPCHECK_FILENAME));
         propagationProcessService.initialize(dependencyList, new RandomChangeAndFixStrategy());

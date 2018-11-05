@@ -17,9 +17,11 @@
 package material;
 
 import org.junit.Test;
+import service.ChangePropagationProcessServiceTest;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,106 +33,71 @@ public class ChangePropagationModelMaterialTest {
 
     @Test
     public void getTopDependencies() {
-        ChangePropagationModelMaterial modelMaterial = new ChangePropagationModelMaterial(getSimpleDependencyList());
+        ChangePropagationModelMaterial modelMaterial = new ChangePropagationModelMaterial(ChangePropagationProcessServiceTest.getSimpleDependencyList());
 
-        Set<ClassNodeMaterial> ftopdep = modelMaterial.getTopDependencies(new JavaClassNodeMaterial("f"));
+        JavaClassNodeMaterial search = new JavaClassNodeMaterial("Search");
+        Set<ClassNodeMaterial> searchTopDependencies = modelMaterial.getTopDependencies(search);
 
-        assertThat(ftopdep, hasItem(new JavaClassNodeMaterial("e")));
-        assertThat(ftopdep, hasSize(1));
+        assertThat(searchTopDependencies, hasSize(3));
+        assertThat(searchTopDependencies, hasItem(new JavaClassNodeMaterial("Input")));
+        assertThat(searchTopDependencies, hasItem(new JavaClassNodeMaterial("C")));
+        assertThat(searchTopDependencies, hasItem(new JavaClassNodeMaterial("Data")));
 
-        Set<ClassNodeMaterial> dtopdep = modelMaterial.getTopDependencies(new JavaClassNodeMaterial("d"));
+        JavaClassNodeMaterial c = new JavaClassNodeMaterial("C");
+        Set<ClassNodeMaterial> cTopDependencies = modelMaterial.getTopDependencies(c);
 
-        assertThat(dtopdep,hasItem(new JavaClassNodeMaterial("e")));
-        assertThat(dtopdep,hasItem(new JavaClassNodeMaterial("b")));
-        assertThat(dtopdep,hasItem(new JavaClassNodeMaterial("c")));
-        assertThat(dtopdep,hasSize(3));
-
-//        assertThat(ftopdep,hasItem(new ClassNodeMaterial("e")));
-//        assertThat(ftopdep, hasSize(1));
-//
-//        Set<ClassNodeMaterial> ctopdep = modelMaterial.getTopDependencies(new ClassNodeMaterial("c"));
-//
-//        assertThat(ctopdep,hasItem(new ClassNodeMaterial("a")));
-//        assertThat(ctopdep,hasItem(new ClassNodeMaterial("b")));
-//        assertThat(ctopdep,hasItem(new ClassNodeMaterial("d")));
-//        assertThat(ctopdep,hasSize(3));
+        assertThat(cTopDependencies, hasSize(0));
     }
 
     @Test
     public void getBottomDependencies() {
-        ChangePropagationModelMaterial modelMaterial = new ChangePropagationModelMaterial(getSimpleDependencyList());
+        ChangePropagationModelMaterial modelMaterial = new ChangePropagationModelMaterial(ChangePropagationProcessServiceTest.getSimpleDependencyList());
 
-        Set<ClassNodeMaterial> ebotdep = modelMaterial.getBottomDependencies(new JavaClassNodeMaterial("e"));
+        JavaClassNodeMaterial data = new JavaClassNodeMaterial("Data");
+        Set<ClassNodeMaterial> searchTopDependencies = modelMaterial.getBottomDependencies(data);
 
-        assertThat(ebotdep,hasItem(new JavaClassNodeMaterial("f")));
-        assertThat(ebotdep, hasSize(1));
+        assertThat(searchTopDependencies, hasSize(2));
+        assertThat(searchTopDependencies, hasItem(new JavaClassNodeMaterial("Search")));
+        assertThat(searchTopDependencies, hasItem(new JavaClassNodeMaterial("Init")));
 
-        Set<ClassNodeMaterial> dbotdep = modelMaterial.getBottomDependencies(new JavaClassNodeMaterial("d"));
+        JavaClassNodeMaterial main = new JavaClassNodeMaterial("Main");
+        Set<ClassNodeMaterial> cTopDependencies = modelMaterial.getBottomDependencies(main);
 
-        assertThat(dbotdep,hasItem(new JavaClassNodeMaterial("e")));
-        assertThat(dbotdep,hasItem(new JavaClassNodeMaterial("b")));
-        assertThat(dbotdep,hasItem(new JavaClassNodeMaterial("c")));
-        assertThat(dbotdep,hasSize(3));
-
+        assertThat(cTopDependencies, hasSize(0));
     }
 
     @Test
     public void getTopInconsistencies() {
-        ChangePropagationModelMaterial modelMaterial = new ChangePropagationModelMaterial(getSimpleDependencyList());
-        Set<ClassNodeMaterial> ctopdep = modelMaterial.getTopInconsistencies(new JavaClassNodeMaterial("c"));
+        ChangePropagationModelMaterial modelMaterial = new ChangePropagationModelMaterial(ChangePropagationProcessServiceTest.getSimpleDependencyList());
 
-        assertThat(ctopdep,hasItem(new JavaClassNodeMaterial("f")));
-        assertThat(ctopdep, hasSize(1));
+        JavaClassNodeMaterial search = new JavaClassNodeMaterial("Search");
+        Set<ClassNodeMaterial> searchTopDependencies = modelMaterial.getTopInconsistencies(search);
 
-        Set<ClassNodeMaterial> ftopdep = modelMaterial.getTopInconsistencies(new JavaClassNodeMaterial("f"));
+        assertThat(searchTopDependencies, hasSize(3));
+        assertThat(searchTopDependencies, hasItem(new JavaClassNodeMaterial("Input")));
+        assertThat(searchTopDependencies, hasItem(new JavaClassNodeMaterial("C")));
+        assertThat(searchTopDependencies, hasItem(new JavaClassNodeMaterial("Data")));
 
-        assertThat(ftopdep,hasItem(new JavaClassNodeMaterial("d")));
-        assertThat(ftopdep,hasItem(new JavaClassNodeMaterial("b")));
-        assertThat(ftopdep,hasItem(new JavaClassNodeMaterial("c")));
-        assertThat(ftopdep,hasSize(3));
+        JavaClassNodeMaterial c = new JavaClassNodeMaterial("C");
+        Set<ClassNodeMaterial> cTopDependencies = modelMaterial.getTopInconsistencies(c);
+
+        assertThat(cTopDependencies, hasSize(0));
     }
 
     @Test
     public void getBottomInconsistencies() {
-        ChangePropagationModelMaterial modelMaterial = new ChangePropagationModelMaterial(getSimpleDependencyList());
+        ChangePropagationModelMaterial modelMaterial = new ChangePropagationModelMaterial(ChangePropagationProcessServiceTest.getSimpleDependencyList());
 
-        Set<ClassNodeMaterial> bbotdep = modelMaterial.getBottomInconsistencies(new JavaClassNodeMaterial("c"));
-        assertThat(bbotdep,hasItem(new JavaClassNodeMaterial("b")));
-        assertThat(bbotdep,hasItem(new JavaClassNodeMaterial("f")));
-        assertThat(bbotdep, hasSize(2));
+        JavaClassNodeMaterial data = new JavaClassNodeMaterial("Data");
+        Set<ClassNodeMaterial> searchTopDependencies = modelMaterial.getBottomInconsistencies(data);
 
-        Set<ClassNodeMaterial> dbotdep = modelMaterial.getBottomInconsistencies(new JavaClassNodeMaterial("d"));
-        assertThat(dbotdep,hasItem(new JavaClassNodeMaterial("f")));
-        assertThat(dbotdep,hasSize(1));
-    }
+        assertThat(searchTopDependencies, hasSize(2));
+        assertThat(searchTopDependencies, hasItem(new JavaClassNodeMaterial("Search")));
+        assertThat(searchTopDependencies, hasItem(new JavaClassNodeMaterial("Init")));
 
-    public static final List<DependencyIF> getSimpleDependencyList()
-    {
-        ClassNodeMaterial a = new JavaClassNodeMaterial("a");
-        ClassNodeMaterial b = new JavaClassNodeMaterial("b");
-        ClassNodeMaterial c = new JavaClassNodeMaterial("c");
-        ClassNodeMaterial d = new JavaClassNodeMaterial("d");
-        ClassNodeMaterial e = new JavaClassNodeMaterial("e");
-        ClassNodeMaterial f = new JavaClassNodeMaterial("f");
+        JavaClassNodeMaterial main = new JavaClassNodeMaterial("Main");
+        Set<ClassNodeMaterial> cTopDependencies = modelMaterial.getBottomInconsistencies(main);
 
-        List<DependencyIF> dependencyFachwertList = new ArrayList<>();
-        //consistent
-        dependencyFachwertList.add(new ClassDependencyMaterial(b,a));
-        dependencyFachwertList.add(new ClassDependencyMaterial(c,b));
-        dependencyFachwertList.add(new ClassDependencyMaterial(c,d));
-        dependencyFachwertList.add(new ClassDependencyMaterial(b,d));
-        dependencyFachwertList.add(new ClassDependencyMaterial(e,d));
-        dependencyFachwertList.add(new ClassDependencyMaterial(f,e));
-        dependencyFachwertList.add(new ClassDependencyMaterial(c,a));
-        dependencyFachwertList.add(new ClassDependencyMaterial(d,a));
-
-        //inconsistent
-        dependencyFachwertList.add(new InconsistentDependencyMaterial(new ClassDependencyMaterial(f,b)));
-        dependencyFachwertList.add(new InconsistentDependencyMaterial(new ClassDependencyMaterial(f,c)));
-        dependencyFachwertList.add(new InconsistentDependencyMaterial(new ClassDependencyMaterial(c,f)));
-        dependencyFachwertList.add(new InconsistentDependencyMaterial(new ClassDependencyMaterial(f,d)));
-        dependencyFachwertList.add(new InconsistentDependencyMaterial(new ClassDependencyMaterial(b,c)));
-
-        return dependencyFachwertList;
+        assertThat(cTopDependencies, hasSize(0));
     }
 }

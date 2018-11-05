@@ -1,48 +1,98 @@
-/*
- * Copyright 1998-2018 Konstantin Bulenkov
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package material;
 
-import material.ClassDependencyMaterial;
-import material.ClassNodeMaterial;
+import Utils.HashUtils;
 
-public class TraceLinkDependencyMaterial extends ClassDependencyMaterial {
+/**
+ * The tracelinkdependency class represents a dependency between a JavaClassNode and SwiftClassNode
+ */
+public class TraceLinkDependencyMaterial extends ClassDependencyMaterial{
 
     private double tracelinkvalue;
-    public TraceLinkDependencyMaterial(JavaClassNodeMaterial dependentClass, SwiftClassNodeMaterial independentClass, double tracelinkvalue) {
-        super(dependentClass, independentClass);
+
+    /**
+     *
+     * @param javaClassNode
+     * @param swiftClassNode
+     * @param tracelinkvalue
+     */
+    public TraceLinkDependencyMaterial(JavaClassNodeMaterial javaClassNode, SwiftClassNodeMaterial swiftClassNode, double tracelinkvalue)
+    {
+        super(javaClassNode, swiftClassNode);
+        assert javaClassNode != null :"Precondition violated: JavaClassNode should not be null";
+        assert swiftClassNode != null :"Precondition violated: SwiftClassNode should not be null";
+        assert tracelinkvalue >=0 && tracelinkvalue <= 100.00 : "Precondition violated: Trace-Link not between 0.0 and 100.0";
+
         this.tracelinkvalue = tracelinkvalue;
     }
-    public double getTracelinkvalue() {
+
+    /**
+     * @return The Trace Link Value of the dependency
+     */
+    public double getTracelinkValue() {
         return tracelinkvalue;
     }
 
-
+    /**
+     * Sets
+     * @param tracelinkvalue A value between 0.0 and 100.0.
+     */
     public void setTracelinkvalue(double tracelinkvalue) {
+        assert tracelinkvalue >=0 && tracelinkvalue <= 100.00 : "Precondition violated: Trace-Link not between 0.0 and 100.0";
         this.tracelinkvalue = tracelinkvalue;
     }
 
+    /**
+     *
+     * @return The JavaClassNode of the dependency.
+     */
     public JavaClassNodeMaterial getJavaClassNode()
     {
         return (JavaClassNodeMaterial) getDependentClass();
     }
-
+    /**
+     *
+     * @return The SwiftClassNode of the dependency.
+     */
     public SwiftClassNodeMaterial getSwiftClassNodeMaterial()
     {
         return (SwiftClassNodeMaterial) getIndependentClass();
     }
 
+    @Override
+    public ClassNodeMaterial getDependentClass() {
+        return dependentClass;
+    }
+
+    @Override
+    public ClassNodeMaterial getIndependentClass() {
+        return independentClass;
+    }
+
+    @Override
+    public String toString() {
+        return "JavaClassNode '" + getJavaClassNode().getSimpleClassName() +"' has the Trace-Link-Value of " + tracelinkvalue+ " '" + "to the SwiftClassNode "+ getSwiftClassNodeMaterial().getSimpleClassName()+ "'.";
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 17;
+        hash = HashUtils.calcHashCode(hash, getJavaClassNode());
+        hash = HashUtils.calcHashCode(hash, getSwiftClassNodeMaterial());
+        hash = HashUtils.calcHashCode(hash, tracelinkvalue);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null)
+            return false;
+        if(this == obj)
+            return true;
+        if(this.getClass() != obj.getClass())
+            return false;
+        final TraceLinkDependencyMaterial traceLinkDependency = (TraceLinkDependencyMaterial) obj;
+        return  this.getJavaClassNode().equals(traceLinkDependency.getJavaClassNode()) &&
+                this.getSwiftClassNodeMaterial().equals(traceLinkDependency.getSwiftClassNodeMaterial()) &&
+                this.tracelinkvalue == traceLinkDependency.getTracelinkValue();
+    }
 }

@@ -16,79 +16,182 @@
 
 package material;
 
-import de.unihamburg.masterprojekt2016.traceability.TraceabilityLink;
-import service.GraphChangeListener;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableSet;
-import javafx.collections.SetChangeListener;
 
-import javax.xml.bind.annotation.XmlElement;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-public class ChangePropagationModelMaterial implements GraphChangeListener {
+public class ChangePropagationModelMaterial{
 
-    @XmlElement(name = "Graphelement")
-    private ObservableSet<DependencyIF> _classdependencygraph;
-    private Set<ClassNodeMaterial> _classesInGraph;
-    private Set<InconsistentDependencyMaterial> _inconsistencies;
+    private Set<ClassNodeMaterial> _nodes;
+    private Set<DependencyIF> _edges;
+    private Map<ClassNodeMaterial, Set<DependencyIF>> _nodesEdges;
+
 
     public ChangePropagationModelMaterial()
-    {}
-
-    public ChangePropagationModelMaterial(final List<? extends DependencyIF> classdependencies)
     {
-        this._classdependencygraph = FXCollections.observableSet((new HashSet<DependencyIF>(classdependencies)));
-        this._classesInGraph = new HashSet<>();
-        this._inconsistencies = new HashSet<>();
-        extractClassesAndRegisterObserver();
-        observerDependenyGraphForChange();
+        _nodes = new HashSet<>();
+        _nodesEdges = new HashMap<>();
+        _edges = new HashSet<>();
+    }
+
+    public ChangePropagationModelMaterial(final Set<? extends DependencyIF> classdependencies)
+    {
+        _nodes = new HashSet<>();
+        _nodesEdges = new HashMap<>();
+        _edges = new HashSet<>();
+        addAll(classdependencies);
+    }
+
+    private void addNode(final ClassNodeMaterial node)
+    {
+        boolean added = _nodes.add(node);
+        if(added)
+        {
+            System.out.println("addNode - Added ClassNode : " + node);
+        }
+        else {
+            System.out.println("addNode - ClassNode already in model : " +  node);
+        }
+    }
+
+    public void addEdge(final DependencyIF edge)
+    {
+        boolean added = _edges.add(edge);
+        if(added)
+        {
+            System.out.println("addEdge - Added Edge : " + edge);
+        }
+        else {
+            System.out.println("addEdge - Edge already in model : " +  edge);
+        }
+        addNode(edge.getDependentClass());
+        addNode(edge.getIndependentClass());
+        addNodeEdge(edge.getDependentClass(), edge);
+        addNodeEdge(edge.getIndependentClass(), edge);
+    }
+
+    public void addNodeEdge(final ClassNodeMaterial node, final DependencyIF edge)
+    {
+        Set<DependencyIF> nodeEdges = _nodesEdges.get(node);
+        if(nodeEdges == null)
+        {
+            nodeEdges = new HashSet<>();
+            _nodesEdges.put(node, nodeEdges);
+        }
+        nodeEdges.add(edge);
+    }
+
+    /**
+     *
+     * @param edges
+     */
+    public void addAll(final Set<? extends DependencyIF> edges)
+    {
+        for(DependencyIF edge : edges)
+        {
+            addEdge(edge);
+        }
+    }
+
+    public void removeNodeEdges(final ClassNodeMaterial node)
+    {
+        Set<DependencyIF> nodeEdges = _nodesEdges.get(node);
+        if(nodeEdges != null)
+        {
+            for(DependencyIF nodeEdge : nodeEdges)
+            {
+                removeEdge(nodeEdge);
+            }
+        }
+    }
+
+    public boolean removeNode(final ClassNodeMaterial node){
+        boolean removed = _nodes.remove(node);
+        if (removed) {
+            System.out.println("removeNode - Removed node : " + node);
+            removeNodeEdges(node);
+            _nodesEdges.remove(node);
+        } else {
+            System.out.println("addNode - Node not in model : " + node);
+        }
+        return removed;
+    }
+
+    public boolean removeEdge(final DependencyIF edge)
+    {
+        boolean removed = _edges.remove(edge);
+        if(removed)
+        {
+            System.out.println("removeEdge - Removed edge : " + edge);
+        }
+        else{
+            System.out.println("removeEdge - Edge not in model : " + edge);
+        }
+        return removed;
     }
 
     public Set<ClassNodeMaterial> getBottomDependencies(final ClassNodeMaterial classNode)
     {
-        Set<ClassNodeMaterial> tmpList = new HashSet<>();
-        for(DependencyIF dependency : _classdependencygraph)
+        Set<DependencyIF> edgesForNode = _nodesEdges.get(classNode);
+        Set<ClassNodeMaterial> bottomDependencies = new HashSet();
+        for(DependencyIF edge: edgesForNode)
         {
-            if(classNode.equals(dependency.getDependentClass()) && !(dependency instanceof InconsistentDependencyMaterial)){
-                tmpList.add(dependency.getIndependentClass());
+            if(!(edge instanceof InconsistentDependencyMaterial))
+            {
+                if(!edge.getIndependentClass().equals(classNode))
+                {
+                    bottomDependencies.add(edge.getIndependentClass());
+                }
             }
         }
-        return tmpList;
+        return bottomDependencies;
     }
     public Set<ClassNodeMaterial> getTopDependencies(final ClassNodeMaterial classNode)
     {
-        Set<ClassNodeMaterial> tmpList = new HashSet<>();
-        for(DependencyIF dependency : _classdependencygraph)
+        Set<DependencyIF> edgesForNode = _nodesEdges.get(classNode);
+        Set<ClassNodeMaterial> topDependencies = new HashSet();
+        for(DependencyIF edge: edgesForNode)
         {
-            if(classNode.equals(dependency.getIndependentClass()) && !(dependency instanceof InconsistentDependencyMaterial)){
-                tmpList.add(dependency.getDependentClass());
+            if(!(edge instanceof InconsistentDependencyMaterial))
+            {
+                if(!edge.getDependentClass().equals(classNode))
+                {
+                    topDependencies.add(edge.getDependentClass());
+                }
             }
         }
-        return tmpList;
+        return topDependencies;
     }
     public Set<ClassNodeMaterial> getBottomInconsistencies(final ClassNodeMaterial classNode)
     {
-        Set<ClassNodeMaterial> tmpList = new HashSet<>();
-        for(DependencyIF dependency : _classdependencygraph)
+        Set<DependencyIF> edgesForNode = _nodesEdges.get(classNode);
+        Set<ClassNodeMaterial> bottomDependencies = new HashSet();
+        for(DependencyIF edge: edgesForNode)
         {
-            if(classNode.equals(dependency.getDependentClass()) && dependency instanceof InconsistentDependencyMaterial){
-                tmpList.add(dependency.getIndependentClass());
+            if(edge instanceof InconsistentDependencyMaterial)
+            {
+                if(!edge.getIndependentClass().equals(classNode))
+                {
+                    bottomDependencies.add(edge.getIndependentClass());
+                }
             }
         }
-        return tmpList;
+        return bottomDependencies;
     }
     public Set<ClassNodeMaterial> getTopInconsistencies(final ClassNodeMaterial classNode)
     {
-        Set<ClassNodeMaterial> tmpList = new HashSet<>();
-        for(DependencyIF dependency : _classdependencygraph)
+        Set<DependencyIF> edgesForNode = _nodesEdges.get(classNode);
+        Set<ClassNodeMaterial> topDependencies = new HashSet();
+        for(DependencyIF edge: edgesForNode)
         {
-            if(classNode.equals(dependency.getIndependentClass()) && dependency instanceof InconsistentDependencyMaterial){
-                tmpList.add(dependency.getDependentClass());
+            if(edge instanceof InconsistentDependencyMaterial)
+            {
+                if(!edge.getDependentClass().equals(classNode))
+                {
+                    topDependencies.add(edge.getDependentClass());
+                }
             }
         }
-        return tmpList;
+        return topDependencies;
     }
     public Set<ClassNodeMaterial> getNeighbourhood(final ClassNodeMaterial clazz)
     {
@@ -108,71 +211,7 @@ public class ChangePropagationModelMaterial implements GraphChangeListener {
         return neighbourhood;
     }
 
-    private void extractClassesAndRegisterObserver() {
-        for(DependencyIF dependency: _classdependencygraph)
-        {
-            addClass(dependency.getDependentClass());
-            addClass(dependency.getIndependentClass());
-        }
-    }
-    private void addClass(final ClassNodeMaterial classNodeMaterial)
-    {
-        registerToClassNode(classNodeMaterial);
-        _classesInGraph.add(classNodeMaterial);
-    }
-    private void deleteClass(final ClassNodeMaterial classNodeMaterial)
-    {
-        classNodeMaterial.removeChangeListener(this);
-        _classesInGraph.remove(classNodeMaterial);
-    }
-
-
-
-    public void createInconsistencies(final ClassNodeMaterial changedClass)
-    {
-        for(ClassNodeMaterial topDependency: getTopDependencies(changedClass))
-        {
-            _classdependencygraph.add(new InconsistentDependencyMaterial(new ClassDependencyMaterial(changedClass,topDependency)));
-        }
-        for(ClassNodeMaterial topDependency: getBottomDependencies(changedClass))
-        {
-            _classdependencygraph.add(new InconsistentDependencyMaterial(new ClassDependencyMaterial(changedClass,topDependency).switchDependencies()));
-        }
-
-    }
-
-    public void addInconsistency(InconsistentDependencyMaterial inconsistency)
-    {
-        _classdependencygraph.add(inconsistency);
-    }
-
-
-
-    private void observerDependenyGraphForChange()
-    {
-        _classdependencygraph.addListener(new SetChangeListener<DependencyIF>() {
-            @Override
-            public void onChanged(Change<? extends DependencyIF> change) {
-                extractClassesAndRegisterObserver();
-            }
-        });
-    }
-
-    public Set<ClassNodeMaterial> getClassesInGraph() {
-        return _classesInGraph;
-    }
-
-    public ObservableSet<DependencyIF> getClassDependencyGraph() {
-        return _classdependencygraph;
-    }
-    private void registerToClassNode(ClassNodeMaterial node)
-    {
-        node.addGraphChangeListener(this);
-    }
-
-    @Override
-    public void update(ClassNodeMaterial changedClass) {
-
-        System.out.println("Class:  '" + changedClass.getSimpleClassName() + "' changed from marking: '" + changedClass.getOldMarking() +"' to new marking: '" + changedClass.getMarking() + "'." );
+    public Set<ClassNodeMaterial> getNodes() {
+        return _nodes;
     }
 }

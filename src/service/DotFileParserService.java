@@ -12,9 +12,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+
 public class DotFileParserService{
 
     public final static Charset ENCODING = StandardCharsets.UTF_8;
@@ -28,9 +27,9 @@ public class DotFileParserService{
     {
     }
 
-    public static List<DependencyIF> parseJavaDependenciesFromDotFile(final String filepath)
+    public static Set<DependencyIF> parseJavaDependenciesFromDotFile(final String filepath)
     {
-        List<DependencyIF> dependencies = new ArrayList<>();
+        Set<DependencyIF> dependencies = new HashSet<>();
         File dotFile = new File(filepath);
         if(!dotFile.isFile())
         {
