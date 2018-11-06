@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package material;
+package materials;
 
 
 import java.util.*;

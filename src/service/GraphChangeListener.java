@@ -16,7 +16,7 @@
 
 package service;
 
-import material.ClassNodeMaterial;
+import materials.ClassNodeMaterial;
 
 public interface GraphChangeListener {
     void update(ClassNodeMaterial dataProvider);

@@ -1,6 +1,6 @@
 package service;
 
-import material.ClassNodeMaterial;
+import materials.ClassNodeMaterial;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

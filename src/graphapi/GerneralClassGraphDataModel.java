@@ -2,7 +2,7 @@ package graphapi;
 
 import com.intellij.openapi.graph.builder.GraphDataModel;
 import com.intellij.openapi.graph.builder.NodesGroup;
-import material.ClassNodeMaterial;
+import materials.ClassNodeMaterial;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import service.ChangePropagationChangeListener;

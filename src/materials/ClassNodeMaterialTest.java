@@ -1,6 +1,6 @@
 
 
-package material;
+package materials;
 
 import com.google.common.io.Files;
 import org.junit.Test;

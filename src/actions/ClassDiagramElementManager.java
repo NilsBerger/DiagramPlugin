@@ -22,8 +22,8 @@ import com.intellij.diagram.presentation.DiagramState;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.ui.SimpleColoredText;
-import material.ClassNodeMaterial;
-import material.JavaClassNodeMaterial;
+import materials.ClassNodeMaterial;
+import materials.JavaClassNodeMaterial;
 import org.jetbrains.annotations.Nullable;
 
 /**

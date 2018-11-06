@@ -19,7 +19,7 @@ package actions;
 import Utils.HashUtils;
 import com.intellij.diagram.DiagramEdgeBase;
 import com.intellij.diagram.DiagramRelationshipInfo;
-import material.ClassNodeMaterial;
+import materials.ClassNodeMaterial;
 
 /**
  * @author Konstantin Bulenkov

@@ -5,17 +5,14 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import graphapi.ClassGraph;
-import graphapi.ClassGraphNode;
 import graphapi.ClassGraphToolWindow;
-import material.DependencyIF;
-import material.JavaClassNodeMaterial;
+import materials.DependencyIF;
+import materials.JavaClassNodeMaterial;
 import service.ChangePropagationProcessService;
 import service.DotFileParserService;
 import service.RandomChangeAndFixStrategy;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class AddInitialContextClassAction extends AnAction {

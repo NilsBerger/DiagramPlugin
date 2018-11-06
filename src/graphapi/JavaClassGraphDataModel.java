@@ -1,7 +1,7 @@
 package graphapi;
 
-import material.ClassNodeMaterial;
-import material.JavaClassNodeMaterial;
+import materials.ClassNodeMaterial;
+import materials.JavaClassNodeMaterial;
 
 import java.util.HashSet;
 import java.util.Set;

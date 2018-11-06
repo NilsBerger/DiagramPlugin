@@ -16,7 +16,7 @@
 
 package service;
 
-import material.*;
+import materials.*;
 import org.hamcrest.core.IsNull;
 import org.junit.Test;
 import valueobjects.Marking;
@@ -26,9 +26,7 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class ChangePropagationProcessServiceTest {

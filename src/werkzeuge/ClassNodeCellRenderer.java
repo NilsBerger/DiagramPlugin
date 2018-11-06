@@ -1,7 +1,7 @@
 package werkzeuge;
 
 
-import material.ClassNodeMaterial;
+import materials.ClassNodeMaterial;
 import valueobjects.Marking;
 
 import javax.swing.*;

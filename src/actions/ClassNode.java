@@ -22,7 +22,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import service.ChangePropagationProcessService;
 import service.GraphChangeListener;
 import com.intellij.diagram.DiagramNodeBase;
-import material.ClassNodeMaterial;
+import materials.ClassNodeMaterial;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import werkzeuge.StatusIcons;

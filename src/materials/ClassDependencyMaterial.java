@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package material;
+package materials;
 
 import Utils.HashUtils;
 
@@ -40,10 +40,19 @@ public class ClassDependencyMaterial implements DependencyIF {
         return new ClassDependencyMaterial(this.independentClass, this.dependentClass);
     }
 
+    /**
+     * Returns a ClassNode, that dependents on another class
+     * @return ClassNode
+     */
+
     public ClassNodeMaterial getDependentClass() {
         return dependentClass;
     }
 
+    /**
+     * Returns a ClassNode that the depeendent ClassNode depends on.
+     * @return
+     */
     public ClassNodeMaterial getIndependentClass() {
         return independentClass;
     }

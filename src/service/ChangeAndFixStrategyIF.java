@@ -16,7 +16,7 @@
 
 package service;
 
-import material.ClassNodeMaterial;
+import materials.ClassNodeMaterial;
 
 import java.util.Set;
 

@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package material;
-
-
-import material.ClassNodeMaterial;
+package materials;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "JavaClass")
-public class JavaClassNodeMaterial extends ClassNodeMaterial {
-    public JavaClassNodeMaterial(String className) {
+@XmlRootElement(name = "SwiftClass")
+public class SwiftClassNodeMaterial extends ClassNodeMaterial {
+    public SwiftClassNodeMaterial(String className) {
         super(className);
     }
 }

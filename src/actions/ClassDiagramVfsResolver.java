@@ -18,7 +18,7 @@ package actions;
 
 import com.intellij.diagram.DiagramVfsResolver;
 import com.intellij.openapi.project.Project;
-import material.ClassNodeMaterial;
+import materials.ClassNodeMaterial;
 import org.jetbrains.annotations.Nullable;
 
 /**

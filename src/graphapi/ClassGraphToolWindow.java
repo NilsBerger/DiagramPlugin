@@ -9,8 +9,8 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
-import material.ClassNodeMaterial;
-import material.TraceLinkDependencyMaterial;
+import materials.ClassNodeMaterial;
+import materials.TraceLinkDependencyMaterial;
 import org.jetbrains.annotations.NotNull;
 import werkzeuge.ToolWindowWerkzeug;
 

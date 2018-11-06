@@ -12,8 +12,8 @@ import com.intellij.openapi.graph.base.Node;
 import com.intellij.util.containers.ContainerUtil;
 import java.awt.geom.Point2D;
 
-import material.ClassNodeMaterial;
-import material.JavaClassNodeMaterial;
+import materials.ClassNodeMaterial;
+import materials.JavaClassNodeMaterial;
 import service.ChangePropagationChangeListener;
 import service.ChangePropagationProcessService;
 

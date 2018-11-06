@@ -4,7 +4,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
-import material.TraceLinkDependencyMaterial;
+import materials.TraceLinkDependencyMaterial;
 import werkzeuge.DynamicListModel;
 
 import javax.swing.*;

@@ -6,8 +6,8 @@ import de.unihamburg.masterprojekt2016.traceability.TraceabilityLink;
 import de.unihamburg.masterprojekt2016.traceability.TypePointer;
 import de.unihamburg.swk.traceabilityrecovery.ITraceabilityRecoveryService;
 import de.unihamburg.swk.traceabilityrecovery.Language;
-import material.JavaClassNodeMaterial;
-import material.SwiftClassNodeMaterial;
+import materials.JavaClassNodeMaterial;
+import materials.SwiftClassNodeMaterial;
 
 import java.util.List;
 import java.util.stream.Collectors;

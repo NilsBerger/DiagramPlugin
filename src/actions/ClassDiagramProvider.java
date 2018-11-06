@@ -1,30 +1,25 @@
 package actions;
 
 
-import material.DependencyIF;
+import materials.DependencyIF;
 import service.ChangePropagationProcessService;
 import service.ChangePropagationProcessServiceTest;
 import service.DotFileParserService;
 import service.RandomChangeAndFixStrategy;
 import com.intellij.diagram.*;
 import com.intellij.diagram.extras.DiagramExtras;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.ui.content.ContentFactory;
-import material.ClassNodeMaterial;
+import materials.ClassNodeMaterial;
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import werkzeuge.ToolWindowWerkzeug;
 
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 

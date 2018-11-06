@@ -20,8 +20,8 @@ import service.ChangePropagationProcessService;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.AnActionButton;
 import com.intellij.ui.AnActionButtonRunnable;
-import material.ClassNodeMaterial;
-import material.SwiftClassNodeMaterial;
+import materials.ClassNodeMaterial;
+import materials.SwiftClassNodeMaterial;
 import javafx.collections.SetChangeListener;
 
 import javax.swing.*;

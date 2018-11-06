@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package material;
-
-import material.ClassNodeMaterial;
+package materials;
 
 public interface DependencyIF {
     ClassNodeMaterial getDependentClass();

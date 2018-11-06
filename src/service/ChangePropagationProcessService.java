@@ -21,14 +21,13 @@ import de.unihamburg.masterprojekt2016.traceability.TypePointer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
-import material.*;
+import materials.*;
 import valueobjects.Marking;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 

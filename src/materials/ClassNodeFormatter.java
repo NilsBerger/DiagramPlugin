@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package material;
+package materials;
 
-import material.ClassNodeMaterial;
+import Utils.StringUtils;
 
-import javax.xml.bind.annotation.XmlRootElement;
+/**
+ * Wrapper for a ClassNode to get the SimpleName of a ClassNode
+ */
+class ClassNodeFormatter {
+    private final ClassNodeMaterial _javaClassNodeMaterial;
+    public ClassNodeFormatter(final ClassNodeMaterial classNodeMaterial)
+    {
+        this._javaClassNodeMaterial = classNodeMaterial;
+    }
 
-@XmlRootElement(name = "SwiftClass")
-public class SwiftClassNodeMaterial extends ClassNodeMaterial {
-    public SwiftClassNodeMaterial(String className) {
-        super(className);
+    @Override
+    public String toString() {
+       return StringUtils.sanitizeStringForSimpleName(_javaClassNodeMaterial.getFullClassName());
     }
 }

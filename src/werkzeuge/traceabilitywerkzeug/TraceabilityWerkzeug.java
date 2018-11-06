@@ -1,9 +1,8 @@
 package werkzeuge.traceabilitywerkzeug;
 
-import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.ui.components.JBList;
 import javafx.collections.SetChangeListener;
-import material.TraceLinkDependencyMaterial;
+import materials.TraceLinkDependencyMaterial;
 import service.ChangePropagationProcessService;
 
 import javax.swing.*;

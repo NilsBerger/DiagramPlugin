@@ -20,7 +20,7 @@ import com.intellij.diagram.*;
 import com.intellij.diagram.extras.DiagramExtras;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import material.ClassNodeMaterial;
+import materials.ClassNodeMaterial;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

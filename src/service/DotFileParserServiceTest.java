@@ -1,8 +1,8 @@
 package service;
 
-import material.DependencyIF;
-import material.JavaClassNodeMaterial;
-import material.SwiftClassNodeMaterial;
+import materials.DependencyIF;
+import materials.JavaClassNodeMaterial;
+import materials.SwiftClassNodeMaterial;
 import org.junit.Test;
 
 import java.util.List;

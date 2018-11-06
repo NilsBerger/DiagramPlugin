@@ -21,7 +21,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
-import material.ClassNodeMaterial;
+import materials.ClassNodeMaterial;
 import werkzeuge.ClassNodeCellRenderer;
 import werkzeuge.DynamicListModel;
 

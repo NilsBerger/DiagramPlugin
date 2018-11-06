@@ -16,16 +16,14 @@
 
 package werkzeuge.tracebilitychooserwerkzeug;
 
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
 import de.unihamburg.masterprojekt2016.traceability.TraceabilityLink;
-import de.unihamburg.masterprojekt2016.traceability.TraceabilityPointer;
+import de.unihamburg.masterprojekt2016.traceability.TypePointer;
 import materials.ClassNodeMaterial;
 import materials.JavaClassNodeMaterial;
 import materials.SwiftClassNodeMaterial;
+import service.ChangePropagationProcessService;
 import service.TraceabilityClassNodeService;
 
 import javax.swing.event.MouseInputListener;
@@ -33,19 +31,21 @@ import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.List;
 
-public class TracebilityChooserWerkzeug {
+public class CorrespondingTraceabilityChooserWerkzeug{
 
     private TracebilityChooserWerkzeugUI _ui;
-    private TraceabilityClassNodeService _service;
+    private TraceabilityClassNodeService traceabilityClassNodeService;
+    private ChangePropagationProcessService _propagationProcessService;
     private Project _project;
     private final ClassNodeMaterial _classNodeMaterial;
 
-    public TracebilityChooserWerkzeug(final ClassNodeMaterial classNodeMaterial)
+    public CorrespondingTraceabilityChooserWerkzeug(final ClassNodeMaterial classNodeMaterial)
     {
+        _propagationProcessService = ChangePropagationProcessService.getInstance();
         _project = ProjectManager.getInstance().getOpenProjects()[0];
         _classNodeMaterial = classNodeMaterial;
         _ui = new TracebilityChooserWerkzeugUI();
-        _service = new TraceabilityClassNodeService(_project);
+        traceabilityClassNodeService = new TraceabilityClassNodeService(_project);
         List<TraceabilityLink> traceabilityLinks = getTraceabilityLinks(_classNodeMaterial);
         _ui.setContent(traceabilityLinks);
         registerListener();
@@ -56,11 +56,11 @@ public class TracebilityChooserWerkzeug {
     {
         if(classNodeMaterial instanceof JavaClassNodeMaterial)
         {
-            return _service.getJavaTracebiliityLinksForJavaClassNode((JavaClassNodeMaterial) classNodeMaterial);
+            return traceabilityClassNodeService.getSwiftTracebiliityLinksForJavaClassNode((JavaClassNodeMaterial) _classNodeMaterial);
         }
         if(classNodeMaterial instanceof SwiftClassNodeMaterial)
         {
-            return _service.getSwiftTracebiliityLinksForSwiftClassNode((SwiftClassNodeMaterial) classNodeMaterial);
+            return traceabilityClassNodeService.getJavaTracebiliityLinksForSwiftClassNode((SwiftClassNodeMaterial) classNodeMaterial);
         }
         return Collections.emptyList();
     }
@@ -75,9 +75,15 @@ public class TracebilityChooserWerkzeug {
             @Override
             public void mouseClicked(MouseEvent e) {
                 TraceabilityLink link = _ui.getJBList().getSelectedValue();
-                TraceabilityPointer target = link.getTarget();
-                VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByPath(target.getSourceFilePath());
-                new OpenFileDescriptor(_project,virtualFile).navigate(true);
+                link.setSource(new TypePointer());
+                if(_classNodeMaterial instanceof JavaClassNodeMaterial)
+                {
+                    _propagationProcessService.addTraceabilityLinkJavaSource((JavaClassNodeMaterial) _classNodeMaterial, link);
+                }
+                if(_classNodeMaterial instanceof SwiftClassNodeMaterial)
+                {
+                    _propagationProcessService.addTraceabilityLinkSwiftSource((SwiftClassNodeMaterial)_classNodeMaterial, link);
+                }
 
             }
 

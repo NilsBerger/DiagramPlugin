@@ -16,14 +16,13 @@
 
 package actions;
 
-import com.intellij.openapi.application.ApplicationManager;
 import service.ChangePropagationProcessService;
 import com.intellij.diagram.*;
 import com.intellij.diagram.presentation.DiagramLineType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import material.ClassNodeMaterial;
+import materials.ClassNodeMaterial;
 import javafx.collections.SetChangeListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -1,9 +1,9 @@
 package graphapi;
 
 import Utils.HashUtils;
-import material.ClassNodeMaterial;
-import material.JavaClassNodeMaterial;
-import material.SwiftClassNodeMaterial;
+import materials.ClassNodeMaterial;
+import materials.JavaClassNodeMaterial;
+import materials.SwiftClassNodeMaterial;
 
 public class ClassGraphNode {
     private ClassNodeMaterial _classNode;

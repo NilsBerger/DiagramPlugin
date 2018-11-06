@@ -1,8 +1,8 @@
 package werkzeuge.traceabilitywerkzeug;
 
-import material.ClassNodeMaterial;
-import material.JavaClassNodeMaterial;
-import material.TraceLinkDependencyMaterial;
+import materials.ClassNodeMaterial;
+import materials.JavaClassNodeMaterial;
+import materials.TraceLinkDependencyMaterial;
 
 import javax.swing.*;
 import java.awt.*;

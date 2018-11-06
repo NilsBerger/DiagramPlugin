@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package material;
+package materials;
 
 import org.junit.Test;
 import service.ChangePropagationProcessServiceTest;
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;

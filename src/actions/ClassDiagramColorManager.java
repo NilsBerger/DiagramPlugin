@@ -20,8 +20,8 @@ import com.intellij.diagram.DiagramColorManagerBase;
 import com.intellij.diagram.DiagramEdge;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.JBColor;
-import material.JavaClassNodeMaterial;
-import material.SwiftClassNodeMaterial;
+import materials.JavaClassNodeMaterial;
+import materials.SwiftClassNodeMaterial;
 
 import java.awt.*;
 

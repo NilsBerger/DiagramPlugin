@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package material;
+package materials;
 
-import Utils.StringUtils;
 
-class ClassNodeFormatter {
-    private final ClassNodeMaterial _javaClassNodeMaterial;
-    public ClassNodeFormatter(final ClassNodeMaterial classNodeMaterial)
-    {
-        this._javaClassNodeMaterial = classNodeMaterial;
-    }
+import javax.xml.bind.annotation.XmlRootElement;
 
-    @Override
-    public String toString() {
-       return StringUtils.sanitizeStringForSimpleName(_javaClassNodeMaterial.getFullClassName());
+@XmlRootElement(name = "JavaClass")
+public class JavaClassNodeMaterial extends ClassNodeMaterial {
+    public JavaClassNodeMaterial(String className) {
+        super(className);
     }
 }

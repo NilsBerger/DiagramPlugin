@@ -1,9 +1,9 @@
 package service;
 
-import material.ClassDependencyMaterial;
-import material.DependencyIF;
-import material.JavaClassNodeMaterial;
-import material.SwiftClassNodeMaterial;
+import materials.ClassDependencyMaterial;
+import materials.DependencyIF;
+import materials.JavaClassNodeMaterial;
+import materials.SwiftClassNodeMaterial;
 
 import java.io.BufferedReader;
 import java.io.File;
