@@ -18,21 +18,21 @@ package actions;
 
 import com.intellij.diagram.DiagramVfsResolver;
 import com.intellij.openapi.project.Project;
-import materials.ClassNodeMaterial;
+import materials.ClassNode;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class ClassDiagramVfsResolver implements DiagramVfsResolver<ClassNodeMaterial> {
+public class ClassDiagramVfsResolver implements DiagramVfsResolver<ClassNode> {
   @Override
-  public String getQualifiedName(ClassNodeMaterial classNodeMaterial) {
+  public String getQualifiedName(ClassNode classNode) {
     return "";
   }
 
   @Nullable
   @Override
-  public ClassNodeMaterial resolveElementByFQN(String s, Project project) {
+  public ClassNode resolveElementByFQN(String s, Project project) {
     return null;
   }
 }

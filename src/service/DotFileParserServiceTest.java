@@ -1,8 +1,8 @@
 package service;
 
 import materials.DependencyIF;
-import materials.JavaClassNodeMaterial;
-import materials.SwiftClassNodeMaterial;
+import materials.JavaClassNode;
+import materials.SwiftClassNode;
 import org.junit.Test;
 
 import java.util.List;
@@ -28,8 +28,8 @@ public class DotFileParserServiceTest
 
         for(DependencyIF dependency : dependencies)
         {
-            assertThat(dependency.getDependentClass(), is(instanceOf(JavaClassNodeMaterial.class)));
-            assertThat(dependency.getIndependentClass(), is(instanceOf(JavaClassNodeMaterial.class)));
+            assertThat(dependency.getDependentClass(), is(instanceOf(JavaClassNode.class)));
+            assertThat(dependency.getIndependentClass(), is(instanceOf(JavaClassNode.class)));
         }
     }
 
@@ -44,8 +44,8 @@ public class DotFileParserServiceTest
 
         for(DependencyIF dependency : dependencies)
         {
-            assertThat(dependency.getDependentClass(), is(instanceOf(SwiftClassNodeMaterial.class)));
-            assertThat(dependency.getIndependentClass(), is(instanceOf(SwiftClassNodeMaterial.class)));
+            assertThat(dependency.getDependentClass(), is(instanceOf(SwiftClassNode.class)));
+            assertThat(dependency.getIndependentClass(), is(instanceOf(SwiftClassNode.class)));
         }
     }
 }

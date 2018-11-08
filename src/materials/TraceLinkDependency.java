@@ -5,7 +5,7 @@ import Utils.HashUtils;
 /**
  * The tracelinkdependency class represents a dependency between a JavaClassNode and SwiftClassNode
  */
-public class TraceLinkDependencyMaterial extends ClassDependencyMaterial{
+public class TraceLinkDependency extends ClassDependency {
 
     private double tracelinkvalue;
 
@@ -15,7 +15,7 @@ public class TraceLinkDependencyMaterial extends ClassDependencyMaterial{
      * @param swiftClassNode
      * @param tracelinkvalue
      */
-    public TraceLinkDependencyMaterial(JavaClassNodeMaterial javaClassNode, SwiftClassNodeMaterial swiftClassNode, double tracelinkvalue)
+    public TraceLinkDependency(JavaClassNode javaClassNode, SwiftClassNode swiftClassNode, double tracelinkvalue)
     {
         super(javaClassNode, swiftClassNode);
         assert javaClassNode != null :"Precondition violated: JavaClassNode should not be null";
@@ -45,26 +45,26 @@ public class TraceLinkDependencyMaterial extends ClassDependencyMaterial{
      *
      * @return The JavaClassNode of the dependency.
      */
-    public JavaClassNodeMaterial getJavaClassNode()
+    public JavaClassNode getJavaClassNode()
     {
-        return (JavaClassNodeMaterial) getDependentClass();
+        return (JavaClassNode) getDependentClass();
     }
     /**
      *
      * @return The SwiftClassNode of the dependency.
      */
-    public SwiftClassNodeMaterial getSwiftClassNodeMaterial()
+    public SwiftClassNode getSwiftClassNodeMaterial()
     {
-        return (SwiftClassNodeMaterial) getIndependentClass();
+        return (SwiftClassNode) getIndependentClass();
     }
 
     @Override
-    public ClassNodeMaterial getDependentClass() {
+    public ClassNode getDependentClass() {
         return dependentClass;
     }
 
     @Override
-    public ClassNodeMaterial getIndependentClass() {
+    public ClassNode getIndependentClass() {
         return independentClass;
     }
 
@@ -90,7 +90,7 @@ public class TraceLinkDependencyMaterial extends ClassDependencyMaterial{
             return true;
         if(this.getClass() != obj.getClass())
             return false;
-        final TraceLinkDependencyMaterial traceLinkDependency = (TraceLinkDependencyMaterial) obj;
+        final TraceLinkDependency traceLinkDependency = (TraceLinkDependency) obj;
         return  this.getJavaClassNode().equals(traceLinkDependency.getJavaClassNode()) &&
                 this.getSwiftClassNodeMaterial().equals(traceLinkDependency.getSwiftClassNodeMaterial()) &&
                 this.tracelinkvalue == traceLinkDependency.getTracelinkValue();

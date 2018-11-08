@@ -17,14 +17,14 @@
 
 package werkzeuge.finalcontextwerkzeug;
 
-import service.ChangePropagationProcessService;
+import service.ChangePropagationProcess;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.components.JBPanel;
-import materials.ClassNodeMaterial;
-import materials.JavaClassNodeMaterial;
+import materials.ClassNode;
+import materials.JavaClassNode;
 import valueobjects.Marking;
-import materials.SwiftClassNodeMaterial;
+import materials.SwiftClassNode;
 import javafx.collections.SetChangeListener;
 import werkzeuge.tracebilitychooserwerkzeug.CorrespondingTraceabilityChooserWerkzeug;
 import werkzeuge.tracebilitychooserwerkzeug.TracebilityChooserWerkzeug;
@@ -38,7 +38,7 @@ import java.awt.event.MouseEvent;
 public class FinalContextWerkzeug {
 
     private final FinalContextWerkzeugUI _ui;
-    private final ChangePropagationProcessService _cpProcess;
+    private final ChangePropagationProcess _cpProcess;
     private JBPopupMenu _popup;
     private final JBMenuItem _inspectedMenuItem = new JBMenuItem("Inspected");
     private final JBMenuItem _propagatesMenuItem = new JBMenuItem("Propagates");
@@ -47,7 +47,7 @@ public class FinalContextWerkzeug {
     private final JBMenuItem _showCorrespondingClassItem = new JBMenuItem("Show corresponding class in other platform");
     private final boolean _forSwift;
 
-    private ClassNodeMaterial _selectedClass;
+    private ClassNode _selectedClass;
 
     public FinalContextWerkzeug(final String text,final boolean isSwift)
     {
@@ -63,30 +63,30 @@ public class FinalContextWerkzeug {
         _popup.addSeparator();
         _popup.add(_showSourcecodeItem);
         _popup.add(_showCorrespondingClassItem);
-        _cpProcess = ChangePropagationProcessService.getInstance();
+        _cpProcess = ChangePropagationProcess.getInstance();
         registerUIActions();
     }
-    private void addEntry(final ClassNodeMaterial classnode)
+    private void addEntry(final ClassNode classnode)
     {
-        if(_forSwift && (classnode instanceof SwiftClassNodeMaterial))
+        if(_forSwift && (classnode instanceof SwiftClassNode))
         {
             _ui.getModel().addEntry(classnode);
         }
-        if(!_forSwift && (classnode instanceof JavaClassNodeMaterial))
+        if(!_forSwift && (classnode instanceof JavaClassNode))
         {
             _ui.getModel().addEntry(classnode);
         }
 
     }
-    private void removeEntry(final ClassNodeMaterial classnode)
+    private void removeEntry(final ClassNode classnode)
     {
         _ui.getModel().removeEntry(classnode);
     }
 
     private void registerUIActions() {
-        _cpProcess.getAffectedClassesByChange().addListener(new SetChangeListener<ClassNodeMaterial>(){
+        _cpProcess.getAffectedClassesByChange().addListener(new SetChangeListener<ClassNode>(){
             @Override
-            public void onChanged(Change<? extends ClassNodeMaterial> change) {
+            public void onChanged(Change<? extends ClassNode> change) {
                 if (change.wasAdded()) {
                     if(!_ui.getModel().contains(change.getElementAdded()))
                     {
@@ -106,7 +106,7 @@ public class FinalContextWerkzeug {
                         && !_ui.getJBList().isSelectionEmpty()
                         && _ui.getJBList().locationToIndex(e.getPoint()) == _ui.getJBList().getSelectedIndex())
                 {
-                   _selectedClass = (ClassNodeMaterial) _ui.getJBList().getSelectedValue();
+                   _selectedClass = (ClassNode) _ui.getJBList().getSelectedValue();
                    _popup.show(_ui.getJBList(),e.getX(),e.getY());
 
                 }
@@ -116,19 +116,21 @@ public class FinalContextWerkzeug {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                _selectedClass.setMarking(Marking.PROPAGATES);
+                _cpProcess.updateNeigbbourhood(_selectedClass, Marking.PROPAGATES);
             }
         });
         _changedMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                _cpProcess.updateNeigbbourhood(_selectedClass, Marking.CHANGED);
                 _selectedClass.setMarking(Marking.CHANGED);
             }
         });
         _inspectedMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                _selectedClass.setMarking(Marking.INSPECTED);
+
+                _cpProcess.updateNeigbbourhood(_selectedClass, Marking.INSPECTED);
             }
         });
         _showSourcecodeItem.addActionListener(new ActionListener() {

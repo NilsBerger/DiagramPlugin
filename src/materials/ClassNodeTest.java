@@ -13,44 +13,44 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 
-public class ClassNodeMaterialTest {
+public class ClassNodeTest {
 
     @Test
     public void EqualsAndHashCodeTest()
     {
-        ClassNodeMaterial classNodeMaterial = new ClassNodeMaterial("a");
-        ClassNodeMaterial classNodeMaterial2 = new ClassNodeMaterial("b");
+        ClassNode classNode = new ClassNode("a");
+        ClassNode classNode2 = new ClassNode("b");
 
-        assertThat(classNodeMaterial, is(classNodeMaterial));
-        assertThat(classNodeMaterial.hashCode(), is(classNodeMaterial.hashCode()));
+        assertThat(classNode, is(classNode));
+        assertThat(classNode.hashCode(), is(classNode.hashCode()));
 
-        assertThat(classNodeMaterial, is(not(classNodeMaterial2)));
+        assertThat(classNode, is(not(classNode2)));
     }
 
     @Test
     public void setSourceFilepathTest() throws IOException {
         File tempFile = File.createTempFile("Temp", ".java");
-        ClassNodeMaterial classNodeMaterial = new ClassNodeMaterial("a");
+        ClassNode classNode = new ClassNode("a");
 
         String temppath = tempFile.getCanonicalPath();
-        classNodeMaterial.setSourceFilePath(temppath);
-        assertThat(temppath, is(classNodeMaterial.getSourceFilePath()));
+        classNode.setSourceFilePath(temppath);
+        assertThat(temppath, is(classNode.getSourceFilePath()));
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void setWrongSourceFilepathTest() throws IOException {
         File tempDir = Files.createTempDir();
-        ClassNodeMaterial classNodeMaterial = new ClassNodeMaterial("a");
+        ClassNode classNode = new ClassNode("a");
 
         String temppath = tempDir.getCanonicalPath();
-        classNodeMaterial.setSourceFilePath(temppath);
+        classNode.setSourceFilePath(temppath);
     }
 
 
     @Test
     public void oldMarking()
     {
-        ClassNodeMaterial classNode = new JavaClassNodeMaterial("C");
+        ClassNode classNode = new JavaClassNode("C");
         classNode.setMarking(Marking.BLANK);
 
         Marking oldMarking = classNode.getMarking();

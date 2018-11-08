@@ -9,9 +9,11 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
-import materials.ClassNodeMaterial;
-import materials.TraceLinkDependencyMaterial;
+import javafx.collections.SetChangeListener;
+import materials.ClassNode;
+import materials.TraceLinkDependency;
 import org.jetbrains.annotations.NotNull;
+import service.ChangePropagationProcess;
 import werkzeuge.ToolWindowWerkzeug;
 
 import javax.swing.*;
@@ -27,6 +29,7 @@ public class ClassGraphToolWindow implements ProjectComponent {
     private ClassGraph _swiftClassGraph;
     private ToolWindowWerkzeug _werkzeug;
     private ClassGraphComponent _classGraphComponent;
+    private ChangePropagationProcess _propagationProcess;
 
     public static final String TOOL_WINDOW_ID = "Class Graph";
     public static final Key<ClassGraph> GENERAL_GRAPH_KEY = Key.create("General Graph");
@@ -37,6 +40,7 @@ public class ClassGraphToolWindow implements ProjectComponent {
     {
         _project = project;
         _werkzeug = new ToolWindowWerkzeug();
+        _propagationProcess = ChangePropagationProcess.getInstance();
     }
 
 
@@ -112,7 +116,7 @@ public class ClassGraphToolWindow implements ProjectComponent {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                e.getSource();
-               TraceLinkDependencyMaterial link = _werkzeug.getTaceabilityWerkzeug().getTraceablilityList().getSelectedValue();
+               TraceLinkDependency link = _werkzeug.getTaceabilityWerkzeug().getTraceablilityList().getSelectedValue();
 
                zoomToNode(_javaClassGraph, link.getJavaClassNode());
                zoomToNode(_swiftClassGraph, link.getSwiftClassNodeMaterial());
@@ -120,10 +124,11 @@ public class ClassGraphToolWindow implements ProjectComponent {
         });
     }
 
-    private void zoomToNode(ClassGraph graph, ClassNodeMaterial classNodeMaterial)
+
+    private void zoomToNode(ClassGraph graph, ClassNode classNode)
     {
         final Graph2DView view = graph.getView();
-        Node node = graph.getNode(new ClassGraphNode(classNodeMaterial));
+        Node node = graph.getNode(new ClassGraphNode(classNode));
         double x = view.getGraph2D().getX(node);
         double y = view.getGraph2D().getY(node);
         graph.getView().focusView(1.0, new Point2D.Double(x,y),true);

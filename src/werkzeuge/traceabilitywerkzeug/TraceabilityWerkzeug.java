@@ -2,8 +2,8 @@ package werkzeuge.traceabilitywerkzeug;
 
 import com.intellij.ui.components.JBList;
 import javafx.collections.SetChangeListener;
-import materials.TraceLinkDependencyMaterial;
-import service.ChangePropagationProcessService;
+import materials.TraceLinkDependency;
+import service.ChangePropagationProcess;
 
 import javax.swing.*;
 
@@ -11,7 +11,7 @@ public class TraceabilityWerkzeug
 {
 
     private TraceabilityWerkzeugUI _ui;
-    private ChangePropagationProcessService _changePropagationProcessService;
+    private ChangePropagationProcess _changePropagationProcess;
 
     public TraceabilityWerkzeug()
     {
@@ -21,9 +21,9 @@ public class TraceabilityWerkzeug
 
     private void registerTraceLinkListener()
     {
-        _changePropagationProcessService.getTraceLinkDepenendecySet().addListener(new SetChangeListener<TraceLinkDependencyMaterial>() {
+        _changePropagationProcess.getTraceLinkDepenendecySet().addListener(new SetChangeListener<TraceLinkDependency>() {
             @Override
-            public void onChanged(Change<? extends TraceLinkDependencyMaterial> change) {
+            public void onChanged(Change<? extends TraceLinkDependency> change) {
                 if(change.wasAdded())
                 {
                     _ui.getModel().addEntry(change.getElementAdded());
@@ -35,9 +35,9 @@ public class TraceabilityWerkzeug
             }
         });
     }
-    public void setChangePropagationProcessService(final ChangePropagationProcessService service)
+    public void setChangePropagationProcessService(final ChangePropagationProcess service)
     {
-        _changePropagationProcessService = service;
+        _changePropagationProcess = service;
         registerTraceLinkListener();
     }
 
@@ -46,7 +46,7 @@ public class TraceabilityWerkzeug
     {
         return _ui.getPanel();
     }
-    public JBList<TraceLinkDependencyMaterial> getTraceablilityList()
+    public JBList<TraceLinkDependency> getTraceablilityList()
     {
         return  _ui.getTracebilityList();
     }

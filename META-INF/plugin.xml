@@ -61,11 +61,7 @@
         <!--<keyboard-shortcut keymap="$default" first-keystroke="ctrl alt D"/>-->
       <!--</action>-->
 
-      <!--<action id="tttest" class="actions.TestAction"-->
-              <!--text="TTTest"-->
-              <!--description="Update the dependency models by analyzing the workspaces">-->
-        <!--<keyboard-shortcut keymap="$default" first-keystroke="ctrl alt D"/>-->
-      <!--</action>-->
+
 
     <!--</group>-->
 

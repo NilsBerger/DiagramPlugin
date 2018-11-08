@@ -16,44 +16,44 @@
 
 package actions;
 
-import service.ChangePropagationProcessService;
+import service.ChangePropagationProcess;
 import com.intellij.diagram.AbstractDiagramElementManager;
 import com.intellij.diagram.presentation.DiagramState;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.ui.SimpleColoredText;
-import materials.ClassNodeMaterial;
-import materials.JavaClassNodeMaterial;
+import materials.ClassNode;
+import materials.JavaClassNode;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author Konstantin Bulenkov
  * Diese Klasse ist dü
  */
-public class ClassDiagramElementManager extends AbstractDiagramElementManager<ClassNodeMaterial> {
-    private final ChangePropagationProcessService _cp;
+public class ClassDiagramElementManager extends AbstractDiagramElementManager<ClassNode> {
+    private final ChangePropagationProcess _cp;
 
     public ClassDiagramElementManager()
     {
-        _cp = ChangePropagationProcessService.getInstance();
+        _cp = ChangePropagationProcess.getInstance();
     }
 
     @Nullable
     @Override
-    public ClassNodeMaterial findInDataContext(DataContext context) {
-        _cp.change(new JavaClassNodeMaterial(CommonDataKeys.VIRTUAL_FILE.getData(context).getName()));
-        return new JavaClassNodeMaterial(CommonDataKeys.VIRTUAL_FILE.getData(context).getName());
+    public ClassNode findInDataContext(DataContext context) {
+        _cp.change(new JavaClassNode(CommonDataKeys.VIRTUAL_FILE.getData(context).getName()));
+        return new JavaClassNode(CommonDataKeys.VIRTUAL_FILE.getData(context).getName());
     }
 
     @Override
     public boolean isAcceptableAsNode(Object o) {
         final String extension = "java";
-        return  ((ClassNodeMaterial)o).getFullClassName().endsWith(extension);
+        return  ((ClassNode)o).getFullClassName().endsWith(extension);
     }
 
     @Nullable
     @Override
-    public String getElementTitle(ClassNodeMaterial material) {
+    public String getElementTitle(ClassNode material) {
         return material.getSimpleClassName();
     }
 
@@ -64,7 +64,7 @@ public class ClassDiagramElementManager extends AbstractDiagramElementManager<Cl
     }
 
     @Override
-    public String getNodeTooltip(ClassNodeMaterial material) {
+    public String getNodeTooltip(ClassNode material) {
         return "No tooltip";
     }
 }

@@ -7,8 +7,8 @@ import com.intellij.psi.PsiNamedElement;
 import graphapi.ClassGraph;
 import graphapi.ClassGraphToolWindow;
 import materials.DependencyIF;
-import materials.JavaClassNodeMaterial;
-import service.ChangePropagationProcessService;
+import materials.JavaClassNode;
+import service.ChangePropagationProcess;
 import service.DotFileParserService;
 import service.RandomChangeAndFixStrategy;
 
@@ -23,7 +23,7 @@ public class AddInitialContextClassAction extends AnAction {
         final Language javaLanguage = Language.findLanguageByID("JAVA");
         Language psiElementLanguage = element.getNode().getElementType().getLanguage();
 
-        ChangePropagationProcessService propagationProcessService = ChangePropagationProcessService.getInstance();
+        ChangePropagationProcess propagationProcessService = ChangePropagationProcess.getInstance();
 
         Set<DependencyIF> dependencyList = new HashSet<>();
         dependencyList.addAll(DotFileParserService.parseJavaDependenciesFromDotFile(DotFileParserService.JAVA_DOT_FILENAME));
@@ -33,28 +33,25 @@ public class AddInitialContextClassAction extends AnAction {
 
         if (psiElementLanguage.equals(javaLanguage)) {
             PsiNamedElement namedElement = (PsiNamedElement) element;
-            propagationProcessService.change(new JavaClassNodeMaterial(namedElement.getName()));
+            propagationProcessService.change(new JavaClassNode(namedElement.getName()));
 
-            ClassGraph generalClassGraph = element.getProject().getUserData(ClassGraphToolWindow.GENERAL_GRAPH_KEY);
-            generalClassGraph.clear();
-            generalClassGraph.getDataModel().setChangePropagationService(propagationProcessService);
-            generalClassGraph.registerListener();
-            generalClassGraph.updateGraph();
-            generalClassGraph.fitContent();
+            //ClassGraph generalClassGraph = element.getProject().getUserData(ClassGraphToolWindow.GENERAL_GRAPH_KEY);
+            //generalClassGraph.clear();
+            //generalClassGraph.getDataModel().setChangePropagationService(propagationProcessService);
+            //generalClassGraph.updateGraph();
+            //generalClassGraph.fitContent();
 
-            ClassGraph javaClassGraph = element.getProject().getUserData(ClassGraphToolWindow.JAVA_GRAPH_KEY);
-            javaClassGraph.clear();
-            javaClassGraph.getDataModel().setChangePropagationService(propagationProcessService);
-            javaClassGraph.registerListener();
-            javaClassGraph.updateGraph();
-            javaClassGraph.fitContent();
+            //ClassGraph javaClassGraph = element.getProject().getUserData(ClassGraphToolWindow.JAVA_GRAPH_KEY);
+            //javaClassGraph.clear();
+            //javaClassGraph.getDataModel().setChangePropagationService(propagationProcessService);
+            //javaClassGraph.updateGraph();
+            //javaClassGraph.fitContent();
 
-            ClassGraph swiftClassGraph = element.getProject().getUserData(ClassGraphToolWindow.SWIFT_GRAPH_KEY);
-            swiftClassGraph.clear();
-            swiftClassGraph.getDataModel().setChangePropagationService(propagationProcessService);
-            swiftClassGraph.registerListener();
-            swiftClassGraph.updateGraph();
-            swiftClassGraph.fitContent();
+            //ClassGraph swiftClassGraph = element.getProject().getUserData(ClassGraphToolWindow.SWIFT_GRAPH_KEY);
+            //swiftClassGraph.clear();
+            //swiftClassGraph.getDataModel().setChangePropagationService(propagationProcessService);
+            //swiftClassGraph.updateGraph();
+           //swiftClassGraph.fitContent();
         }
     }
 

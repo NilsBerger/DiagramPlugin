@@ -21,13 +21,13 @@ import org.junit.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class SwiftClassNodeMaterialTest {
+public class JavaClassNodeTest {
 
     @Test
     public void equalsTest()
     {
-        ClassNodeMaterial m1 = new SwiftClassNodeMaterial("C");
-        ClassNodeMaterial m2 = new SwiftClassNodeMaterial("C.java");
+        ClassNode m1 = new JavaClassNode("C");
+        ClassNode m2 = new JavaClassNode("C.java");
         assertThat(m1, is(m2));
         assertThat(m1.hashCode(), is(m2.hashCode()));
     }

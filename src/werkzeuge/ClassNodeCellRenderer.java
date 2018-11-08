@@ -1,7 +1,7 @@
 package werkzeuge;
 
 
-import materials.ClassNodeMaterial;
+import materials.ClassNode;
 import valueobjects.Marking;
 
 import javax.swing.*;
@@ -14,7 +14,7 @@ public class ClassNodeCellRenderer extends DefaultListCellRenderer {
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-        final ClassNodeMaterial classnode = (ClassNodeMaterial) value;
+        final ClassNode classnode = (ClassNode) value;
         final String classname = classnode.getSimpleClassName();
         Marking marking = classnode.getMarking();
 

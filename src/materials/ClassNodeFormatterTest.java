@@ -60,6 +60,6 @@ public class ClassNodeFormatterTest {
 
     public static String getFormattetString(final String classname)
     {
-        return new ClassNodeFormatter(new ClassNodeMaterial(classname)).toString();
+        return new ClassNodeFormatter(new ClassNode(classname)).toString();
     }
 }

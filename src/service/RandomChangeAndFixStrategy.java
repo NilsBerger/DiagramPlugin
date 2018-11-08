@@ -16,13 +16,13 @@
 
 package service;
 
-import materials.ClassNodeMaterial;
+import materials.ClassNode;
 
 import java.util.Set;
 
 public class RandomChangeAndFixStrategy implements ChangeAndFixStrategyIF{
     @Override
-    public boolean accept(Set<ClassNodeMaterial> affectedClasses) {
+    public boolean accept(Set<ClassNode> affectedClasses) {
         return true;
     }
 }

@@ -21,7 +21,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
-import materials.ClassNodeMaterial;
+import materials.ClassNode;
 import werkzeuge.ClassNodeCellRenderer;
 import werkzeuge.DynamicListModel;
 
@@ -32,7 +32,7 @@ public class InitialContextWerkzeugUI {
 
     private  JBPanel _mainPanel;
     private JBList _initialContextList;
-    private DynamicListModel<ClassNodeMaterial> _model;
+    private DynamicListModel<ClassNode> _model;
     private JBLabel _label;
     private ToolbarDecorator _toolbarDecorator;
 
@@ -62,7 +62,7 @@ public class InitialContextWerkzeugUI {
     public void createJBList()
     {
         _initialContextList = new JBList();
-        _model = new DynamicListModel<>(new ArrayList<ClassNodeMaterial>());
+        _model = new DynamicListModel<>(new ArrayList<ClassNode>());
     }
 
     private void initToolbar()
@@ -78,7 +78,7 @@ public class InitialContextWerkzeugUI {
     {
         return _initialContextList;
     }
-    public DynamicListModel<ClassNodeMaterial> getModel()
+    public DynamicListModel<ClassNode> getModel()
     {
         return _model;
     }

@@ -20,16 +20,16 @@ import com.intellij.diagram.*;
 import com.intellij.diagram.extras.DiagramExtras;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import materials.ClassNodeMaterial;
+import materials.ClassNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class ClassTwoDiagramProvider extends BaseDiagramProvider<ClassNodeMaterial> {
+public class ClassTwoDiagramProvider extends BaseDiagramProvider<ClassNode> {
 
     public static final String ID = "FileDiagramProvider";
-    private DiagramElementManager<ClassNodeMaterial> myElementManager = new ClassDiagramElementManager();
-    private DiagramVfsResolver<ClassNodeMaterial> myVfsResolver = new ClassDiagramVfsResolver();
-    private DiagramExtras<ClassNodeMaterial> myExtras = new ClassDiagramExtras();
+    private DiagramElementManager<ClassNode> myElementManager = new ClassDiagramElementManager();
+    private DiagramVfsResolver<ClassNode> myVfsResolver = new ClassDiagramVfsResolver();
+    private DiagramExtras<ClassNode> myExtras = new ClassDiagramExtras();
     private DiagramColorManager myColorManager = new ClassDiagramColorManager();
     @Override
     public String getID() {
@@ -37,12 +37,12 @@ public class ClassTwoDiagramProvider extends BaseDiagramProvider<ClassNodeMateri
     }
 
     @Override
-    public DiagramElementManager<ClassNodeMaterial> getElementManager() {
+    public DiagramElementManager<ClassNode> getElementManager() {
         return myElementManager;
     }
 
     @Override
-    public DiagramVfsResolver<ClassNodeMaterial> getVfsResolver() {
+    public DiagramVfsResolver<ClassNode> getVfsResolver() {
         return myVfsResolver;
     }
 
@@ -52,7 +52,7 @@ public class ClassTwoDiagramProvider extends BaseDiagramProvider<ClassNodeMateri
     }
 
     @Override
-    public DiagramDataModel<ClassNodeMaterial> createDataModel(@NotNull Project project, @Nullable ClassNodeMaterial material, @Nullable VirtualFile virtualFile, DiagramPresentationModel diagramPresentationModel) {
+    public DiagramDataModel<ClassNode> createDataModel(@NotNull Project project, @Nullable ClassNode material, @Nullable VirtualFile virtualFile, DiagramPresentationModel diagramPresentationModel) {
         return null;
     }
 }

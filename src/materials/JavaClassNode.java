@@ -16,11 +16,12 @@
 
 package materials;
 
+
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "SwiftClass")
-public class SwiftClassNodeMaterial extends ClassNodeMaterial {
-    public SwiftClassNodeMaterial(String className) {
+@XmlRootElement(name = "JavaClass")
+public class JavaClassNode extends ClassNode {
+    public JavaClassNode(String className) {
         super(className);
     }
 }

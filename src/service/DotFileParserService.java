@@ -1,9 +1,9 @@
 package service;
 
-import materials.ClassDependencyMaterial;
+import materials.ClassDependency;
 import materials.DependencyIF;
-import materials.JavaClassNodeMaterial;
-import materials.SwiftClassNodeMaterial;
+import materials.JavaClassNode;
+import materials.SwiftClassNode;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,9 +47,9 @@ public class DotFileParserService{
                 if (line.contains(delimiter))
                 {
                     String[] parts = line.split(delimiter);
-                    JavaClassNodeMaterial dependentClass = new JavaClassNodeMaterial(parts[0]);
-                    JavaClassNodeMaterial independentClass = new JavaClassNodeMaterial(parts[1]);
-                    ClassDependencyMaterial classDependency = new ClassDependencyMaterial(dependentClass,independentClass);
+                    JavaClassNode dependentClass = new JavaClassNode(parts[0]);
+                    JavaClassNode independentClass = new JavaClassNode(parts[1]);
+                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass);
                     dependencies.add(classDependency);
                 }
             }
@@ -94,9 +94,9 @@ public class DotFileParserService{
                 if (line.contains(delimiter))
                 {
                     String[] parts = line.split(delimiter);
-                    SwiftClassNodeMaterial dependentClass = new SwiftClassNodeMaterial(parts[0]);
-                    SwiftClassNodeMaterial independentClass = new SwiftClassNodeMaterial(parts[1]);
-                    ClassDependencyMaterial classDependency = new ClassDependencyMaterial(dependentClass,independentClass);
+                    SwiftClassNode dependentClass = new SwiftClassNode(parts[0]);
+                    SwiftClassNode independentClass = new SwiftClassNode(parts[1]);
+                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass);
                     dependencies.add(classDependency);
                 }
             }

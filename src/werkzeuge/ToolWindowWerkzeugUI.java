@@ -53,13 +53,16 @@ public class ToolWindowWerkzeugUI extends SimpleToolWindowPanel {
         _listPanel.setLayout(new GridBagLayout());
 
         GridBagConstraints c = new GridBagConstraints();
+        c.insets = new Insets(5,5,5,5);
+        c.weightx = 2.0;
 
-        //c.fill = GridBagConstraints.HORIZONTAL;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridheight = GridBagConstraints.REMAINDER;
+
         c.gridx = 0;
         c.gridy = 0;
         _listPanel.add(initialContext, c);
 
-        //c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 0;
         _listPanel.add(finalContextJava, c);
@@ -71,9 +74,11 @@ public class ToolWindowWerkzeugUI extends SimpleToolWindowPanel {
         c.gridx = 3;
         c.gridy = 0;
         _listPanel.add(tracelinkPanel, c);
+        _listPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
         _panel.add(graphSelection, BorderLayout.NORTH);
         _panel.add(_listPanel, BorderLayout.CENTER);
+
     }
 
     private void createSelectClassDependencyGraph() {

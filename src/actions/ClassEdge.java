@@ -19,13 +19,13 @@ package actions;
 import Utils.HashUtils;
 import com.intellij.diagram.DiagramEdgeBase;
 import com.intellij.diagram.DiagramRelationshipInfo;
-import materials.ClassNodeMaterial;
+import materials.ClassNode;
 
 /**
  * @author Konstantin Bulenkov
  */
-public class ClassEdge extends DiagramEdgeBase<ClassNodeMaterial> {
-    public ClassEdge(ClassNode source, ClassNode target, DiagramRelationshipInfo relationship) {
+public class ClassEdge extends DiagramEdgeBase<ClassNode> {
+    public ClassEdge(actions.ClassNode source, actions.ClassNode target, DiagramRelationshipInfo relationship) {
         super(source, target, relationship);
     }
 

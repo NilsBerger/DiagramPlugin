@@ -16,13 +16,13 @@
 
 package actions;
 
-import service.ChangePropagationProcessService;
+import service.ChangePropagationProcess;
 import com.intellij.diagram.*;
 import com.intellij.diagram.presentation.DiagramLineType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.ModificationTracker;
 import com.intellij.openapi.vfs.VirtualFileManager;
-import materials.ClassNodeMaterial;
+import materials.ClassNode;
 import javafx.collections.SetChangeListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,14 +33,14 @@ import java.util.*;
 /**
  * @author Konstantin Bulenkov
  */
-public class ClassDiagramDataModel extends DiagramDataModel<ClassNodeMaterial> {
-  private Set<ClassNode> myNodes = new HashSet<ClassNode>();
+public class ClassDiagramDataModel extends DiagramDataModel<ClassNode> {
+  private Set<actions.ClassNode> myNodes = new HashSet<actions.ClassNode>();
   private Set<ClassEdge> myEdges = new HashSet<ClassEdge>();
-  private Map<ClassNodeMaterial, ClassNode> path2Node = new HashMap<>(myNodes.size());
-  private ChangePropagationProcessService _cpProcess;
+  private Map<ClassNode, actions.ClassNode> path2Node = new HashMap<>(myNodes.size());
+  private ChangePropagationProcess _cpProcess;
 
 
-    public ClassDiagramDataModel(Project project, ChangePropagationProcessService propagationProcess) {
+    public ClassDiagramDataModel(Project project, ChangePropagationProcess propagationProcess) {
         super(project, ClassDiagramProvider.getInstance());
         this._cpProcess = propagationProcess;
         refreshDataModel();
@@ -49,7 +49,7 @@ public class ClassDiagramDataModel extends DiagramDataModel<ClassNodeMaterial> {
 
   @NotNull
   @Override
-  public Collection<ClassNode> getNodes() {
+  public Collection<actions.ClassNode> getNodes() {
     return myNodes;
   }
 
@@ -60,16 +60,16 @@ public class ClassDiagramDataModel extends DiagramDataModel<ClassNodeMaterial> {
   }
 
     @NotNull
-    public String getNodeName(DiagramNode<ClassNodeMaterial> e) {
+    public String getNodeName(DiagramNode<ClassNode> e) {
         return e.toString();
     }
 
   @Nullable
   @Override
-  public ClassNode addElement(ClassNodeMaterial material) {
-    ClassNode node = path2Node.get(material);
+  public actions.ClassNode addElement(ClassNode material) {
+    actions.ClassNode node = path2Node.get(material);
     if (node == null) {
-      node = new ClassNode(material);
+      node = new actions.ClassNode(material);
       path2Node.put(material, node);
       myNodes.add(node);
     }
@@ -80,28 +80,28 @@ public class ClassDiagramDataModel extends DiagramDataModel<ClassNodeMaterial> {
   @Override
   public void refreshDataModel() {
 
-      for (ClassNodeMaterial classNodeMaterial : _cpProcess.getAffectedClassesByChange()) {
-          addElement(classNodeMaterial);
+      for (ClassNode classNode : _cpProcess.getAffectedClassesByChange()) {
+          addElement(classNode);
 
-          Set<ClassNodeMaterial> topdependencies = _cpProcess.getModel().getTopDependencies(classNodeMaterial);
-          Set<ClassNodeMaterial> bottompdependencies = _cpProcess.getModel().getBottomDependencies(classNodeMaterial);
-          Set<ClassNodeMaterial> neighbourhood = new HashSet<>();
+          Set<ClassNode> topdependencies = _cpProcess.getModel().getTopDependencies(classNode);
+          Set<ClassNode> bottompdependencies = _cpProcess.getModel().getBottomDependencies(classNode);
+          Set<ClassNode> neighbourhood = new HashSet<>();
           neighbourhood.addAll(topdependencies);
           neighbourhood.addAll(bottompdependencies);
 
-          for (ClassNodeMaterial topdependency : topdependencies) {
+          for (ClassNode topdependency : topdependencies) {
               if (_cpProcess.getAffectedClassesByChange().contains(topdependency)) {
-                  ClassNode dependentNode = new ClassNode(classNodeMaterial);
-                  ClassNode independentNode = new ClassNode(topdependency);
+                  actions.ClassNode dependentNode = new actions.ClassNode(classNode);
+                  actions.ClassNode independentNode = new actions.ClassNode(topdependency);
                   myEdges.add(new ClassEdge(dependentNode, independentNode, getDiagramrelationshipInfo()));
               }
           }
 
-          for (ClassNodeMaterial bottomdependency : bottompdependencies) {
+          for (ClassNode bottomdependency : bottompdependencies) {
               if (_cpProcess.getAffectedClassesByChange().contains(bottomdependency)) {
 
-                  ClassNode dependentNode = new ClassNode(classNodeMaterial);
-                  ClassNode independentNode = new ClassNode(bottomdependency);
+                  actions.ClassNode dependentNode = new actions.ClassNode(classNode);
+                  actions.ClassNode independentNode = new actions.ClassNode(bottomdependency);
 
                   myEdges.add(new ClassEdge(independentNode, dependentNode, getDiagramrelationshipInfo()));
               }
@@ -138,7 +138,7 @@ public class ClassDiagramDataModel extends DiagramDataModel<ClassNodeMaterial> {
   }
 
   @Override
-  public void removeNode(DiagramNode<ClassNodeMaterial> node) {
+  public void removeNode(DiagramNode<ClassNode> node) {
     myNodes.remove(node);
     path2Node.remove(node.getIdentifyingElement());
     refreshDataModel();
@@ -157,9 +157,9 @@ public class ClassDiagramDataModel extends DiagramDataModel<ClassNodeMaterial> {
 
   private void registerListener()
   {
-      _cpProcess.getAffectedClassesByChange().addListener(new SetChangeListener<ClassNodeMaterial>() {
+      _cpProcess.getAffectedClassesByChange().addListener(new SetChangeListener<ClassNode>() {
           @Override
-          public void onChanged(Change<? extends ClassNodeMaterial> change) {
+          public void onChanged(Change<? extends ClassNode> change) {
               refreshDataModel();
           }
       });

@@ -1,33 +1,28 @@
 package graphapi;
 
+import b.d.d.C;
 import com.intellij.openapi.graph.builder.GraphDataModel;
 import com.intellij.openapi.graph.builder.NodesGroup;
-import materials.ClassNodeMaterial;
+import javafx.collections.SetChangeListener;
+import materials.ClassNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import service.ChangePropagationChangeListener;
-import service.ChangePropagationProcessService;
+import service.ChangePropagationProcess;
 
 import java.util.*;
 
-public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, ClassGraphEdge> implements ChangePropagationChangeListener {
+public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, ClassGraphEdge>{
 
     private Set<ClassGraphNode> _nodes;
     private Map<ClassGraphNode, Set<ClassGraphEdge>> _nodesEdges;
     private Set<ClassGraphEdge> _edges;
-    protected ChangePropagationProcessService _changePropagationProcessService;
+    protected ChangePropagationProcess _changePropagationProcess = ChangePropagationProcess.getInstance();
 
-    public GerneralClassGraphDataModel()
-    {
+    public GerneralClassGraphDataModel() {
         _nodes = new HashSet<>();
         _nodesEdges = new HashMap<>();
         _edges = new HashSet<>();
-    }
-
-    public GerneralClassGraphDataModel(final Set<ClassGraphNode> nodes, final Set<ClassGraphEdge> edges)
-    {
-        this._nodes = nodes;
-        this._edges = edges;
+        addNodeChangeListener();
     }
 
     @Nullable
@@ -79,77 +74,67 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, 
         return null;
     }
 
-    public void setChangePropagationService(final ChangePropagationProcessService service)
-    {
-        this._changePropagationProcessService = service;
-        service.addGraphChangeListener(this);
-        refreshDataModel();
-    }
-    protected void refreshDataModel()
-    {
-                for (ClassNodeMaterial classNodeMaterial : _changePropagationProcessService.getAffectedClassesByChange()) {
-                    addNode(new ClassGraphNode(classNodeMaterial));
-
-
-                    Set<ClassNodeMaterial> topdependencies = _changePropagationProcessService.getModel().getTopDependencies(classNodeMaterial);
-                    Set<ClassNodeMaterial> bottompdependencies = _changePropagationProcessService.getModel().getBottomDependencies(classNodeMaterial);
-                    Set<ClassNodeMaterial> neighbourhood = new HashSet<>();
-                    neighbourhood.addAll(topdependencies);
-                    neighbourhood.addAll(bottompdependencies);
-
-                   Set<ClassNodeMaterial> dependencies = new HashSet<>();
-                   dependencies.addAll(topdependencies);
-                   dependencies.addAll(bottompdependencies);
-
-                   addNeighbourhoodForClass(classNodeMaterial, dependencies);
-
+    private void addNodeChangeListener() {
+        _changePropagationProcess.getAffectedClassesByChange().addListener(new SetChangeListener<ClassNode>() {
+            @Override
+            public void onChanged(Change<? extends ClassNode> change) {
+                if(change.wasAdded())
+                {
+                    refreshDataModel(change.getElementAdded());
                 }
+            }
+        });
     }
-    protected void addNeighbourhoodForClass(final ClassNodeMaterial classNodeMaterial, final Set<ClassNodeMaterial> dependencies)
-    {
 
-        for (ClassNodeMaterial topdependency : dependencies) {
-            if (_changePropagationProcessService.getAffectedClassesByChange().contains(topdependency)) {
+    public void refreshDataModel(final ClassNode changedClassNode) {
+            addNode(new ClassGraphNode(changedClassNode));
 
-                ClassGraphNode dependentNode = new ClassGraphNode(classNodeMaterial);
+
+            Set<ClassNode> topDependencies = _changePropagationProcess.getModel().getTopDependencies(changedClassNode);
+            Set<ClassNode> bottomDependencies = _changePropagationProcess.getModel().getBottomDependencies(changedClassNode);
+
+            addNeighbourhoodForClass(changedClassNode, topDependencies);
+            addNeighbourhoodForClass(changedClassNode, bottomDependencies);
+
+    }
+
+    protected void addNeighbourhoodForClass(final ClassNode classNode, final Set<ClassNode> dependencies) {
+
+        for (ClassNode topdependency : dependencies) {
+           if (_changePropagationProcess.getAffectedClassesByChange().contains(topdependency)) {
+
+                ClassGraphNode dependentNode = new ClassGraphNode(classNode);
                 ClassGraphNode independentNode = new ClassGraphNode(topdependency);
                 RelationshipType type = RelationshipType.DirectedRelationship;
-                ClassGraphEdge edge = new ClassGraphEdge(dependentNode,independentNode,type);
+                ClassGraphEdge edge = new ClassGraphEdge(dependentNode, independentNode, type);
 
                 addEdge(edge);
-            }
+           }
         }
     }
 
-    public void dispose()
-    {
+    public void dispose() {
         _nodes.clear();
         _edges.clear();
         _nodes = null;
         _edges = null;
     }
 
-    public void addNode(final ClassGraphNode node)
-    {
+    public void addNode(final ClassGraphNode node) {
         boolean added = _nodes.add(node);
-        if(added)
-        {
+        if (added) {
             ClassGraphLogger.debug("addNode - Added Node : " + node);
-        }
-        else {
-            ClassGraphLogger.debug("addNode - Node already in model : " +  node);
+        } else {
+            ClassGraphLogger.debug("addNode - Node already in model : " + node);
         }
     }
 
-    public void addEdge(final ClassGraphEdge edge)
-    {
+    public void addEdge(final ClassGraphEdge edge) {
         boolean added = _edges.add(edge);
-        if(added)
-        {
+        if (added) {
             ClassGraphLogger.debug("addEdge - Added Edge : " + edge);
-        }
-        else {
-            ClassGraphLogger.debug("addEdge - Edge already in model : " +  edge);
+        } else {
+            ClassGraphLogger.debug("addEdge - Edge already in model : " + edge);
         }
         addNode(edge.getIndependentNode());
         addNode(edge.getDependentNode());
@@ -157,32 +142,25 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, 
         addNodeEdge(edge.getDependentNode(), edge);
     }
 
-    public void addNodeEdge(final ClassGraphNode node, final ClassGraphEdge edge)
-    {
+    public void addNodeEdge(final ClassGraphNode node, final ClassGraphEdge edge) {
         Set<ClassGraphEdge> nodeEdges = _nodesEdges.get(node);
-        if(nodeEdges == null)
-        {
+        if (nodeEdges == null) {
             nodeEdges = new HashSet<>();
             _nodesEdges.put(node, nodeEdges);
         }
         nodeEdges.add(edge);
     }
 
-    public void addAll(final Set<ClassGraphEdge> edges)
-    {
-        for(ClassGraphEdge edge : edges)
-        {
+    public void addAll(final Set<ClassGraphEdge> edges) {
+        for (ClassGraphEdge edge : edges) {
             addEdge(edge);
         }
     }
 
-    public void removeNodeEdges(final ClassGraphNode node)
-    {
+    public void removeNodeEdges(final ClassGraphNode node) {
         Set<ClassGraphEdge> nodeEdges = _nodesEdges.get(node);
-        if(nodeEdges != null)
-        {
-            for(ClassGraphEdge nodeEdge : nodeEdges)
-            {
+        if (nodeEdges != null) {
+            for (ClassGraphEdge nodeEdge : nodeEdges) {
                 removeEdge(nodeEdge);
             }
         }
@@ -200,21 +178,13 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, 
         return removed;
     }
 
-    public boolean removeEdge(final ClassGraphEdge edge)
-    {
+    public boolean removeEdge(final ClassGraphEdge edge) {
         boolean removed = _edges.remove(edge);
-        if(removed)
-        {
+        if (removed) {
             ClassGraphLogger.debug("removeEdge - Removed edge : " + edge);
-        }
-        else{
+        } else {
             ClassGraphLogger.debug("removeEdge - Edge not in model : " + edge);
         }
         return removed;
-    }
-
-    @Override
-    public void update() {
-        refreshDataModel();
     }
 }

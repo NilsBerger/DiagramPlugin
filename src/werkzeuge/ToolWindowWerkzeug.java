@@ -17,7 +17,7 @@
 package werkzeuge;
 
 import com.intellij.ui.components.JBPanel;
-import service.ChangePropagationProcessService;
+import service.ChangePropagationProcess;
 import werkzeuge.finalcontextwerkzeug.FinalContextWerkzeug;
 import werkzeuge.graphselectionwerkzeug.GraphSelectionWerkzeug;
 import werkzeuge.initialcontextwerkzeug.InitialContextWerkzeug;
@@ -37,7 +37,7 @@ public class ToolWindowWerkzeug{
     private FinalContextWerkzeug _javaFinalContext;
     private FinalContextWerkzeug _swiftFinalContext;
     private TraceabilityWerkzeug _traceabilityWerkzeug;
-    private ChangePropagationProcessService service = ChangePropagationProcessService.getInstance();
+    private ChangePropagationProcess service = ChangePropagationProcess.getInstance();
 
   //private final DependencyPersistenceAutomaton _dependencyPersistenceAutomaton;
 
@@ -48,7 +48,7 @@ public class ToolWindowWerkzeug{
     public ToolWindowWerkzeug()
     {
         //String path = "/Users/nilsberger/Documents/Masterarbeit/IntelliJIdeaDiagramDemo-master/resources/";
-       // _dependencyPersistenceAutomaton = new DependencyPersistenceAutomaton(ChangePropagationProcessService.getInstance(),path);
+       // _dependencyPersistenceAutomaton = new DependencyPersistenceAutomaton(ChangePropagationProcess.getInstance(),path);
 
         //_graphSelection = new GraphSelectionWerkzeug(_dependencyPersistenceAutomaton);
         _initialContext = new InitialContextWerkzeug();

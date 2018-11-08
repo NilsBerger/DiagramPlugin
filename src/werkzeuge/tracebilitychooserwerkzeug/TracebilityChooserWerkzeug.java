@@ -23,9 +23,9 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import de.unihamburg.masterprojekt2016.traceability.TraceabilityLink;
 import de.unihamburg.masterprojekt2016.traceability.TraceabilityPointer;
-import materials.ClassNodeMaterial;
-import materials.JavaClassNodeMaterial;
-import materials.SwiftClassNodeMaterial;
+import materials.ClassNode;
+import materials.JavaClassNode;
+import materials.SwiftClassNode;
 import service.TraceabilityClassNodeService;
 
 import javax.swing.event.MouseInputListener;
@@ -38,29 +38,29 @@ public class TracebilityChooserWerkzeug {
     private TracebilityChooserWerkzeugUI _ui;
     private TraceabilityClassNodeService _service;
     private Project _project;
-    private final ClassNodeMaterial _classNodeMaterial;
+    private final ClassNode _classNode;
 
-    public TracebilityChooserWerkzeug(final ClassNodeMaterial classNodeMaterial)
+    public TracebilityChooserWerkzeug(final ClassNode classNode)
     {
         _project = ProjectManager.getInstance().getOpenProjects()[0];
-        _classNodeMaterial = classNodeMaterial;
+        _classNode = classNode;
         _ui = new TracebilityChooserWerkzeugUI();
         _service = new TraceabilityClassNodeService(_project);
-        List<TraceabilityLink> traceabilityLinks = getTraceabilityLinks(_classNodeMaterial);
+        List<TraceabilityLink> traceabilityLinks = getTraceabilityLinks(_classNode);
         _ui.setContent(traceabilityLinks);
         registerListener();
         show();
     }
 
-    private List<TraceabilityLink> getTraceabilityLinks(final ClassNodeMaterial classNodeMaterial)
+    private List<TraceabilityLink> getTraceabilityLinks(final ClassNode classNode)
     {
-        if(classNodeMaterial instanceof JavaClassNodeMaterial)
+        if(classNode instanceof JavaClassNode)
         {
-            return _service.getJavaTracebiliityLinksForJavaClassNode((JavaClassNodeMaterial) classNodeMaterial);
+            return _service.getJavaTracebiliityLinksForJavaClassNode((JavaClassNode) classNode);
         }
-        if(classNodeMaterial instanceof SwiftClassNodeMaterial)
+        if(classNode instanceof SwiftClassNode)
         {
-            return _service.getSwiftTracebiliityLinksForSwiftClassNode((SwiftClassNodeMaterial) classNodeMaterial);
+            return _service.getSwiftTracebiliityLinksForSwiftClassNode((SwiftClassNode) classNode);
         }
         return Collections.emptyList();
     }
@@ -78,7 +78,6 @@ public class TracebilityChooserWerkzeug {
                 TraceabilityPointer target = link.getTarget();
                 VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByPath(target.getSourceFilePath());
                 new OpenFileDescriptor(_project,virtualFile).navigate(true);
-
             }
 
             @Override

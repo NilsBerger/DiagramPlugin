@@ -16,10 +16,10 @@
 
 package service;
 
-import materials.ClassNodeMaterial;
+import materials.ClassNode;
 
 import java.util.Set;
 
 public interface ChangeAndFixStrategyIF {
-    public boolean accept(Set<ClassNodeMaterial> affectedClasses);
+    public boolean accept(Set<ClassNode> affectedClasses);
 }

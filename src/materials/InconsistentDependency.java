@@ -2,24 +2,29 @@ package materials;
 
 import Utils.HashUtils;
 
-public class InconsistentDependencyMaterial implements DependencyIF
+public class InconsistentDependency implements DependencyIF
 {
-    private final ClassNodeMaterial dependentClass;
-    private final ClassNodeMaterial independentClass;
+    private final ClassNode dependentClass;
+    private final ClassNode independentClass;
 
-    public InconsistentDependencyMaterial(final ClassDependencyMaterial dependency)
+    public InconsistentDependency(final ClassDependency dependency)
     {
         this.dependentClass = dependency.getDependentClass();
         this.independentClass = dependency.getIndependentClass();
     }
+    public InconsistentDependency(final ClassNode dependentClassNode, final ClassNode independetClassNode)
+    {
+        this.dependentClass = dependentClassNode;
+        this.independentClass = independetClassNode;
+    }
 
     @Override
-    public ClassNodeMaterial getDependentClass() {
+    public ClassNode getDependentClass() {
         return dependentClass;
     }
 
     @Override
-    public ClassNodeMaterial getIndependentClass() {
+    public ClassNode getIndependentClass() {
         return independentClass;
     }
     @Override
@@ -43,7 +48,7 @@ public class InconsistentDependencyMaterial implements DependencyIF
             return true;
         if(this.getClass() != obj.getClass())
             return false;
-        final InconsistentDependencyMaterial otherClassNodeFachwert = (InconsistentDependencyMaterial) obj;
+        final InconsistentDependency otherClassNodeFachwert = (InconsistentDependency) obj;
         return  this.getDependentClass().equals(otherClassNodeFachwert.getDependentClass()) &&
                 this.getIndependentClass().equals(otherClassNodeFachwert.getIndependentClass());
     }

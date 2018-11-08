@@ -21,12 +21,12 @@ import Utils.HashUtils;
 /**
  * Created by Nils-Pc on 06.08.2018.
  */
-public class ClassDependencyMaterial implements DependencyIF {
-    protected final ClassNodeMaterial dependentClass;
-    protected final ClassNodeMaterial independentClass;
+public class ClassDependency implements DependencyIF {
+    protected final ClassNode dependentClass;
+    protected final ClassNode independentClass;
 
 
-    public ClassDependencyMaterial(ClassNodeMaterial dependentClass, ClassNodeMaterial independentClass)
+    public ClassDependency(ClassNode dependentClass, ClassNode independentClass)
     {
         if((dependentClass) == null ||(independentClass) == null)
         {
@@ -35,9 +35,9 @@ public class ClassDependencyMaterial implements DependencyIF {
         this.dependentClass = dependentClass;
         this.independentClass = independentClass;
     }
-    public ClassDependencyMaterial switchDependencies()
+    public ClassDependency switchDependencies()
     {
-        return new ClassDependencyMaterial(this.independentClass, this.dependentClass);
+        return new ClassDependency(this.independentClass, this.dependentClass);
     }
 
     /**
@@ -45,7 +45,7 @@ public class ClassDependencyMaterial implements DependencyIF {
      * @return ClassNode
      */
 
-    public ClassNodeMaterial getDependentClass() {
+    public ClassNode getDependentClass() {
         return dependentClass;
     }
 
@@ -53,7 +53,7 @@ public class ClassDependencyMaterial implements DependencyIF {
      * Returns a ClassNode that the depeendent ClassNode depends on.
      * @return
      */
-    public ClassNodeMaterial getIndependentClass() {
+    public ClassNode getIndependentClass() {
         return independentClass;
     }
 
@@ -78,7 +78,7 @@ public class ClassDependencyMaterial implements DependencyIF {
             return true;
         if(this.getClass() != obj.getClass())
             return false;
-        final ClassDependencyMaterial otherClassNodeFachwert = (ClassDependencyMaterial) obj;
+        final ClassDependency otherClassNodeFachwert = (ClassDependency) obj;
         return  this.getDependentClass().equals(otherClassNodeFachwert.getDependentClass()) &&
                 this.getIndependentClass().equals(otherClassNodeFachwert.getIndependentClass());
     }

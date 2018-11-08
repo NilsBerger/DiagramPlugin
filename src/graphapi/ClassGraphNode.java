@@ -1,12 +1,12 @@
 package graphapi;
 
 import Utils.HashUtils;
-import materials.ClassNodeMaterial;
-import materials.JavaClassNodeMaterial;
-import materials.SwiftClassNodeMaterial;
+import materials.ClassNode;
+import materials.JavaClassNode;
+import materials.SwiftClassNode;
 
 public class ClassGraphNode {
-    private ClassNodeMaterial _classNode;
+    private ClassNode _classNode;
     private Type _type;
 
     public enum Type
@@ -14,26 +14,26 @@ public class ClassGraphNode {
        DEFAULT, Java, Swift
     }
 
-    public ClassGraphNode(final ClassNodeMaterial classNodeMaterial)
+    public ClassGraphNode(final ClassNode classNode)
     {
-        _classNode = classNodeMaterial;
-        _type = calaculateType(classNodeMaterial);
+        _classNode = classNode;
+        _type = calaculateType(classNode);
     }
 
-    private Type calaculateType(final ClassNodeMaterial classNodeMaterial)
+    private Type calaculateType(final ClassNode classNode)
     {
-        if(classNodeMaterial instanceof JavaClassNodeMaterial)
+        if(classNode instanceof JavaClassNode)
         {
             return Type.Java;
         }
-        if(classNodeMaterial instanceof SwiftClassNodeMaterial)
+        if(classNode instanceof SwiftClassNode)
         {
             return Type.Swift;
         }
             return Type.DEFAULT;
     }
 
-    public ClassNodeMaterial getClassNode() {
+    public ClassNode getClassNode() {
         return _classNode;
     }
 

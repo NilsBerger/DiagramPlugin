@@ -4,7 +4,7 @@ import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
-import materials.TraceLinkDependencyMaterial;
+import materials.TraceLinkDependency;
 import werkzeuge.DynamicListModel;
 
 import javax.swing.*;
@@ -14,7 +14,7 @@ public class TraceabilityWerkzeugUI {
 
     private JBPanel _mainPanel;
     private JBList _traceabilityList;
-    private DynamicListModel<TraceLinkDependencyMaterial> _model;
+    private DynamicListModel<TraceLinkDependency> _model;
     private JBLabel _label;
 
     public TraceabilityWerkzeugUI()
@@ -45,11 +45,11 @@ public class TraceabilityWerkzeugUI {
         return _mainPanel;
     }
 
-    public DynamicListModel<TraceLinkDependencyMaterial> getModel()
+    public DynamicListModel<TraceLinkDependency> getModel()
     {
         return _model;
     }
 
-    public JBList<TraceLinkDependencyMaterial> getTracebilityList() { return _traceabilityList;}
+    public JBList<TraceLinkDependency> getTracebilityList() { return _traceabilityList;}
 
 }

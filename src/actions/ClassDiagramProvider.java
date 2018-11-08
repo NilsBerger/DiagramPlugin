@@ -2,8 +2,8 @@ package actions;
 
 
 import materials.DependencyIF;
-import service.ChangePropagationProcessService;
-import service.ChangePropagationProcessServiceTest;
+import service.ChangePropagationProcess;
+import service.ChangePropagationProcessTest;
 import service.DotFileParserService;
 import service.RandomChangeAndFixStrategy;
 import com.intellij.diagram.*;
@@ -12,7 +12,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import materials.ClassNodeMaterial;
+import materials.ClassNode;
 import org.intellij.lang.annotations.Pattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -26,22 +26,22 @@ import java.util.Set;
 /**
  * @author Konstantin Bulenkov
  */
-public class ClassDiagramProvider extends BaseDiagramProvider<ClassNodeMaterial> {
+public class ClassDiagramProvider extends BaseDiagramProvider<ClassNode> {
 
     public static final String ID = "ClassDiagramProvider";
     private DiagramElementManager _myElementManager = new ClassDiagramElementManager();
-    private DiagramVfsResolver<ClassNodeMaterial> myVfsResolver = new ClassDiagramVfsResolver();
-    private DiagramExtras<ClassNodeMaterial> myExtras = new ClassDiagramExtras();
+    private DiagramVfsResolver<ClassNode> myVfsResolver = new ClassDiagramVfsResolver();
+    private DiagramExtras<ClassNode> myExtras = new ClassDiagramExtras();
     private DiagramColorManager myColorManager = new ClassDiagramColorManager();
     private DiagramDataModel _diagramDataModel;
 
     private ToolWindowWerkzeug _toolWindowWerkzeug;
-    private final ChangePropagationProcessService _cpProcess;
+    private final ChangePropagationProcess _cpProcess;
 
     public ClassDiagramProvider() {
 
-        _cpProcess = ChangePropagationProcessService.getInstance();
-        _cpProcess.initialize(ChangePropagationProcessServiceTest.getJavaAndSwiftDependencyList(), new RandomChangeAndFixStrategy());
+        _cpProcess = ChangePropagationProcess.getInstance();
+        _cpProcess.initialize(ChangePropagationProcessTest.getJavaAndSwiftDependencyList(), new RandomChangeAndFixStrategy());
         _toolWindowWerkzeug = new ToolWindowWerkzeug();
         Set<DependencyIF> dependencyList = new HashSet<>();
         dependencyList.addAll(DotFileParserService.parseJavaDependenciesFromDotFile(DotFileParserService.JAVA_DOT_FILENAME));
@@ -63,7 +63,7 @@ public class ClassDiagramProvider extends BaseDiagramProvider<ClassNodeMaterial>
 
 
     @Override
-    public DiagramVfsResolver<ClassNodeMaterial> getVfsResolver() {
+    public DiagramVfsResolver<ClassNode> getVfsResolver() {
         return myVfsResolver;
     }
 
@@ -74,12 +74,12 @@ public class ClassDiagramProvider extends BaseDiagramProvider<ClassNodeMaterial>
 
     @NotNull
     @Override
-    public DiagramExtras<ClassNodeMaterial> getExtras() {
+    public DiagramExtras<ClassNode> getExtras() {
         return myExtras;
     }
 
     @Override
-    public DiagramDataModel<ClassNodeMaterial> createDataModel(@NotNull Project project, @Nullable ClassNodeMaterial classNodeMaterial, @Nullable VirtualFile virtualFile, DiagramPresentationModel diagramPresentationModel) {
+    public DiagramDataModel<ClassNode> createDataModel(@NotNull Project project, @Nullable ClassNode classNode, @Nullable VirtualFile virtualFile, DiagramPresentationModel diagramPresentationModel) {
         ToolWindowManager windowManager = ToolWindowManager.getInstance(project);
         ToolWindow window = windowManager.getToolWindow("Class Dependency Graph");
 

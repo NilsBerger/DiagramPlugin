@@ -19,10 +19,9 @@ package actions;
 import Utils.HashUtils;
 import com.intellij.diagram.DiagramBuilder;
 import com.intellij.openapi.application.ApplicationManager;
-import service.ChangePropagationProcessService;
+import service.ChangePropagationProcess;
 import service.GraphChangeListener;
 import com.intellij.diagram.DiagramNodeBase;
-import materials.ClassNodeMaterial;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import werkzeuge.StatusIcons;
@@ -32,24 +31,23 @@ import javax.swing.*;
 /**
  * @author Konstantin Bulenkov
  */
-public class ClassNode extends DiagramNodeBase<ClassNodeMaterial> implements GraphChangeListener {
+public class ClassNode extends DiagramNodeBase<materials.ClassNode>{
 
 
-    private final ClassNodeMaterial _classNodeMaterial;
-    private ChangePropagationProcessService _cp;
+    private final materials.ClassNode _classNode;
+    private ChangePropagationProcess _cp;
     private String _className = "";
     private Icon _icon;
 
 
 
-    public ClassNode(final ClassNodeMaterial material)
+    public ClassNode(final materials.ClassNode material)
     {
         super(ClassDiagramProvider.getInstance());
-        _cp = ChangePropagationProcessService.getInstance();
+        _cp = ChangePropagationProcess.getInstance();
         _className = material.getSimpleClassName();
-        _classNodeMaterial = _cp.getClassNodeMaterial(material);
-        _classNodeMaterial.addGraphChangeListener(this);
-        _icon = StatusIcons.getIconForMarking(_classNodeMaterial.getMarking());
+        _classNode = _cp.getClassNodeMaterial(material);
+        _icon = StatusIcons.getIconForMarking(_classNode.getMarking());
 
     }
     @Nullable
@@ -65,22 +63,11 @@ public class ClassNode extends DiagramNodeBase<ClassNodeMaterial> implements Gra
 
     @NotNull
     @Override
-    public ClassNodeMaterial getIdentifyingElement() {
-        return _classNodeMaterial;
+    public materials.ClassNode getIdentifyingElement() {
+        return _classNode;
     }
 
-    @Override
-    public void update(ClassNodeMaterial dataProvider) {
-        try{
-            _icon = StatusIcons.getIconForMarking(dataProvider.getMarking());
-            DiagramBuilder builder = ClassDiagramProvider.getInstance().getDataModel().getBuilder();
-            ApplicationManager.getApplication().invokeLater(()->  builder.update(true, true));
-        }catch (AssertionError e)
-        {
-            //Error only occurs at the beginning
-        }
-
-    }
+   
 
     @Override
     public boolean equals(final Object obj) {
@@ -98,7 +85,7 @@ public class ClassNode extends DiagramNodeBase<ClassNodeMaterial> implements Gra
     public int hashCode() {
         int hash = 17;
         hash = HashUtils.calcHashCode(hash, _className);
-        hash = HashUtils.calcHashCode(hash, _classNodeMaterial.getClass().getName());
+        hash = HashUtils.calcHashCode(hash, _classNode.getClass().getName());
         return hash;
     }
 }

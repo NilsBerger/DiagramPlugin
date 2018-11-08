@@ -17,6 +17,6 @@
 package materials;
 
 public interface DependencyIF {
-    ClassNodeMaterial getDependentClass();
-    ClassNodeMaterial getIndependentClass();
+    ClassNode getDependentClass();
+    ClassNode getIndependentClass();
 }

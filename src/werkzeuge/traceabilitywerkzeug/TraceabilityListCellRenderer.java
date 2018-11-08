@@ -1,8 +1,8 @@
 package werkzeuge.traceabilitywerkzeug;
 
-import materials.ClassNodeMaterial;
-import materials.JavaClassNodeMaterial;
-import materials.TraceLinkDependencyMaterial;
+import materials.ClassNode;
+import materials.JavaClassNode;
+import materials.TraceLinkDependency;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,9 +12,9 @@ public class TraceabilityListCellRenderer extends DefaultListCellRenderer {
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-        final TraceLinkDependencyMaterial traceLinkDependencyMaterial = (TraceLinkDependencyMaterial) value;
-        ClassNodeMaterial classNode = traceLinkDependencyMaterial.getIndependentClass();
-        ClassNodeMaterial otherClassNode = traceLinkDependencyMaterial.getDependentClass();
+        final TraceLinkDependency traceLinkDependencyMaterial = (TraceLinkDependency) value;
+        ClassNode classNode = traceLinkDependencyMaterial.getIndependentClass();
+        ClassNode otherClassNode = traceLinkDependencyMaterial.getDependentClass();
         double traceLinkValue = traceLinkDependencyMaterial.getTracelinkValue();
         setText(createString(classNode, otherClassNode, traceLinkValue));
         return this;
@@ -27,10 +27,10 @@ public class TraceabilityListCellRenderer extends DefaultListCellRenderer {
      * @param tracelinkValue
      * @return
      */
-    private String createString(final ClassNodeMaterial classNode , final ClassNodeMaterial otherclassNode, double tracelinkValue)
+    private String createString(final ClassNode classNode , final ClassNode otherclassNode, double tracelinkValue)
     {
         String text = "";
-        if(classNode instanceof JavaClassNodeMaterial)
+        if(classNode instanceof JavaClassNode)
         {
             text = "<html><center>" + classNode.getSimpleClassName() + " <"   +  String.format("%.2f", tracelinkValue) + "> " +otherclassNode.getSimpleClassName() + "</center></html>" ;
         }

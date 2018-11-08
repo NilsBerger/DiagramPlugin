@@ -20,8 +20,8 @@ import com.intellij.diagram.DiagramColorManagerBase;
 import com.intellij.diagram.DiagramEdge;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.JBColor;
-import materials.JavaClassNodeMaterial;
-import materials.SwiftClassNodeMaterial;
+import materials.JavaClassNode;
+import materials.SwiftClassNode;
 
 import java.awt.*;
 
@@ -31,11 +31,11 @@ import java.awt.*;
 public class ClassDiagramColorManager extends DiagramColorManagerBase {
   @Override
   public Color getNodeBackground(Project project, Object nodeElement, boolean selected) {
-    if(nodeElement instanceof SwiftClassNodeMaterial)
+    if(nodeElement instanceof SwiftClassNode)
     {
       return new Color(0, 26, 128);
     }
-    if(nodeElement instanceof JavaClassNodeMaterial)
+    if(nodeElement instanceof JavaClassNode)
     {
       return new Color(140, 177, 197);
     }

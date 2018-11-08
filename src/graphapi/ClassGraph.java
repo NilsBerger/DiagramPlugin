@@ -12,10 +12,10 @@ import com.intellij.openapi.graph.base.Node;
 import com.intellij.util.containers.ContainerUtil;
 import java.awt.geom.Point2D;
 
-import materials.ClassNodeMaterial;
-import materials.JavaClassNodeMaterial;
-import service.ChangePropagationChangeListener;
-import service.ChangePropagationProcessService;
+import materials.ClassNode;
+import materials.JavaClassNode;
+import service.ChangePropagationProcess;
+import service.GraphChangeListener;
 
 
 import javax.swing.*;
@@ -23,19 +23,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ClassGraph implements Disposable, ChangePropagationChangeListener {
+public class ClassGraph implements Disposable, GraphChangeListener {
 
     private GraphBuilder<ClassGraphNode, ClassGraphEdge> _graphBuilder;
-    private static final ChangePropagationProcessService _propagationProcessService = ChangePropagationProcessService.getInstance();
+    private static final ChangePropagationProcess _propagationProcessService = ChangePropagationProcess.getInstance();
 
 
     public ClassGraph(Project project, Graph2D graph, Graph2DView view, GerneralClassGraphDataModel dataModel, ClassGraphPresentationModel presentationModel)
     {
         _graphBuilder = GraphBuilderFactory.getInstance(project).createGraphBuilder(graph, view, dataModel, presentationModel);
         presentationModel.setClassGraph(this);
-
-        addGraphSelectionListener();
-        //highlightNode();
+        _propagationProcessService.addGraphChangeListener(this);
     }
 
     public static ClassGraph createGeneralGraph(Project project)
@@ -65,26 +63,7 @@ public class ClassGraph implements Disposable, ChangePropagationChangeListener {
 
         return new ClassGraph(project, graph, view,  dataModel, presentationModel);
     }
-    private void addGraphSelectionListener(){
-        getGraph().addGraph2DSelectionListener(new Graph2DSelectionListener() {
-            @Override
-            public void onGraph2DSelectionEvent(Graph2DSelectionEvent graph2DSelectionEvent) {
-                if(getView().getGraph2D().selectedNodes().ok())
-                {
-//                    for (ClassGraphNode node  :getSelectedClassNodes())
-//                    {
-//                        s
-//                    }
-                   //selectedNode();
-                    final Graph2D graph = _graphBuilder.getGraph();
-                    Node node = selectedNode(new JavaClassNodeMaterial("List"));
-                    //zoomToNode(node);
 
-                }
-            }
-
-        });
-    }
 
     public void zoomToNode(Node node)
     {
@@ -95,7 +74,7 @@ public class ClassGraph implements Disposable, ChangePropagationChangeListener {
     }
     private void selectedNodes()
     {
-        final List<ClassGraphNode> toSelect = new ArrayList<>(Arrays.asList(new ClassGraphNode(new JavaClassNodeMaterial("List"))));
+        final List<ClassGraphNode> toSelect = new ArrayList<>(Arrays.asList(new ClassGraphNode(new JavaClassNode("List"))));
         final Graph2D graph = _graphBuilder.getGraph();
         for(final ClassGraphNode node : toSelect)
         {
@@ -103,9 +82,9 @@ public class ClassGraph implements Disposable, ChangePropagationChangeListener {
             graph.setSelected(graphNode, true);
         }
     }
-    private Node selectedNode(ClassNodeMaterial node)
+    private Node selectedNode(ClassNode node)
     {
-        final ClassNodeMaterial toSelect = node;
+        final ClassNode toSelect = node;
 
         final Graph2D graph = _graphBuilder.getGraph();
         Node node1 = _graphBuilder.getNode(new ClassGraphNode(toSelect));
@@ -159,11 +138,6 @@ public class ClassGraph implements Disposable, ChangePropagationChangeListener {
     public void initialize()
     {
         _graphBuilder.initialize();
-    }
-
-    public void registerListener()
-    {
-        _propagationProcessService.addGraphChangeListener(this);
     }
 
     public JComponent getJComponent()
@@ -241,12 +215,13 @@ public class ClassGraph implements Disposable, ChangePropagationChangeListener {
 
     @Override
     public void dispose() {
-
+        _propagationProcessService.removeChangeListener(this);
     }
 
     @Override
-    public void update() {
+    public void updateView() {
         updateGraph();
+        //updateGraphView();
         fitContent();
     }
 }

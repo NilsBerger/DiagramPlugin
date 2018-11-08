@@ -22,7 +22,6 @@ import valueobjects.Marking;
 
 import java.io.File;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.xml.bind.annotation.*;
@@ -33,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 @XmlRootElement(name = "Class")
-public class ClassNodeMaterial {
+public class ClassNode {
     @XmlTransient
     private String _className;
     @XmlTransient
@@ -46,10 +45,10 @@ public class ClassNodeMaterial {
     private String _sourceFilePath = "";
 
     //JAXB
-    public ClassNodeMaterial()
+    public ClassNode()
     {}
 
-    public ClassNodeMaterial(final String className)
+    public ClassNode(final String className)
     {
         if((className != null) && (className.trim().equals("")))
         {
@@ -60,7 +59,7 @@ public class ClassNodeMaterial {
         this._oldMarking = this._marking;
     }
 
-    public ClassNodeMaterial(final String className, Marking marking)
+    public ClassNode(final String className, Marking marking)
     {
         if((className != null) && (className.trim().equals("")))
         {
@@ -88,16 +87,16 @@ public class ClassNodeMaterial {
     }
 
     /**
-     * Sets a new marking and informs the listeners of the change.
+     * Sets a new marking if it differs form the old one.
+     * Note: Changing the marking does not change the "ChangePropagationGraph".
      * @param marking
      */
-    public synchronized void setMarking(final Marking marking)
+    public void setMarking(final Marking marking)
     {
         if(this._marking != marking)
         {
             _oldMarking = _marking;
             this._marking = marking;
-            notifyChangeListener();
         }
     }
     @Nonnull
@@ -124,28 +123,7 @@ public class ClassNodeMaterial {
         return new ClassNodeFormatter(this).toString();
     }
 
-    public synchronized void addGraphChangeListener(final GraphChangeListener observer)
-    {
-        assert observer != null : "Precondition violated: !=null";
-        _listeners.add(observer);
-    }
-
-    public synchronized void removeChangeListener(final GraphChangeListener observer)
-    {
-        assert observer != null : "Precondition violated: !=null";
-        _listeners.remove(observer);
-    }
-    protected synchronized void notifyChangeListener()
-    {
-        final Iterator<GraphChangeListener> it = _listeners.iterator();
-        while (it.hasNext())
-        {
-            final GraphChangeListener listener = it.next();
-
-            listener.update(this);
-        }
-    }
-    public synchronized Marking getOldMarking() {
+    public Marking getOldMarking() {
         return _oldMarking;
     }
     @Override
@@ -163,7 +141,7 @@ public class ClassNodeMaterial {
             return true;
         if(this.getClass() != obj.getClass())
             return false;
-        final ClassNodeMaterial otherClassNodeFachwert = (ClassNodeMaterial) obj;
+        final ClassNode otherClassNodeFachwert = (ClassNode) obj;
         return this.getSimpleClassName().equals(otherClassNodeFachwert.getSimpleClassName());
     }
 }

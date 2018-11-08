@@ -24,7 +24,7 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
-import materials.ClassNodeMaterial;
+import materials.ClassNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,8 +36,8 @@ import java.util.List;
 /**
  * @author Konstantin Bulenkov
  */
-public class ClassDiagramExtras extends DiagramExtras<ClassNodeMaterial> {
-  private DiagramDnDProvider<ClassNodeMaterial> myDnDProvider = new DiagramDnDProvider<ClassNodeMaterial>() {
+public class ClassDiagramExtras extends DiagramExtras<ClassNode> {
+  private DiagramDnDProvider<ClassNode> myDnDProvider = new DiagramDnDProvider<ClassNode>() {
     @Override
     public boolean isAcceptedForDnD(Object o, Project project) {
       return o instanceof VirtualFile
@@ -47,7 +47,7 @@ public class ClassDiagramExtras extends DiagramExtras<ClassNodeMaterial> {
 
     @Nullable
     @Override
-    public ClassNodeMaterial[] wrapToModelObject(Object o, Project project) {
+    public ClassNode[] wrapToModelObject(Object o, Project project) {
 //      if (o instanceof PsiElement) {
 //        final PsiFile file = ((PsiElement) o).getContainingFile();
 //        if (file != null) {
@@ -58,13 +58,13 @@ public class ClassDiagramExtras extends DiagramExtras<ClassNodeMaterial> {
 //      } else if (o instanceof VirtualFile) {
 //        return new VirtualFile[]{(VirtualFile) o};
 //      }
-      return new ClassNodeMaterial[0];
+      return new ClassNode[0];
     }
   };
 
   @NotNull
   @Override
-  public JComponent createNodeComponent(DiagramNode<ClassNodeMaterial> node, DiagramBuilder builder, Point basePoint, JPanel wrapper) {
+  public JComponent createNodeComponent(DiagramNode<ClassNode> node, DiagramBuilder builder, Point basePoint, JPanel wrapper) {
     if (node.getIdentifyingElement() == null)
     {
         Icon icon2 = AllIcons.Nodes.Desktop;
@@ -136,13 +136,13 @@ public class ClassDiagramExtras extends DiagramExtras<ClassNodeMaterial> {
      */
 @Nullable
   @Override
-  public DiagramDnDProvider<ClassNodeMaterial> getDnDProvider() {
+  public DiagramDnDProvider<ClassNode> getDnDProvider() {
     return myDnDProvider;
   }
 
   @Nullable
   @Override
-  public Object getData(String dataId, List<DiagramNode<ClassNodeMaterial>> nodes, DiagramBuilder builder) {
+  public Object getData(String dataId, List<DiagramNode<ClassNode>> nodes, DiagramBuilder builder) {
 //    if (nodes.size() == 1) {
 //      final VirtualFile file = nodes.get(0).getIdentifyingElement();
 //      if (CommonDataKeys.VIRTUAL_FILE.is(dataId)) {

@@ -20,10 +20,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import de.unihamburg.masterprojekt2016.traceability.TraceabilityLink;
 import de.unihamburg.masterprojekt2016.traceability.TypePointer;
-import materials.ClassNodeMaterial;
-import materials.JavaClassNodeMaterial;
-import materials.SwiftClassNodeMaterial;
-import service.ChangePropagationProcessService;
+import materials.ClassNode;
+import materials.JavaClassNode;
+import materials.SwiftClassNode;
+import service.ChangePropagationProcess;
 import service.TraceabilityClassNodeService;
 
 import javax.swing.event.MouseInputListener;
@@ -35,32 +35,32 @@ public class CorrespondingTraceabilityChooserWerkzeug{
 
     private TracebilityChooserWerkzeugUI _ui;
     private TraceabilityClassNodeService traceabilityClassNodeService;
-    private ChangePropagationProcessService _propagationProcessService;
+    private ChangePropagationProcess _propagationProcessService;
     private Project _project;
-    private final ClassNodeMaterial _classNodeMaterial;
+    private final ClassNode _classNode;
 
-    public CorrespondingTraceabilityChooserWerkzeug(final ClassNodeMaterial classNodeMaterial)
+    public CorrespondingTraceabilityChooserWerkzeug(final ClassNode classNode)
     {
-        _propagationProcessService = ChangePropagationProcessService.getInstance();
+        _propagationProcessService = ChangePropagationProcess.getInstance();
         _project = ProjectManager.getInstance().getOpenProjects()[0];
-        _classNodeMaterial = classNodeMaterial;
+        _classNode = classNode;
         _ui = new TracebilityChooserWerkzeugUI();
         traceabilityClassNodeService = new TraceabilityClassNodeService(_project);
-        List<TraceabilityLink> traceabilityLinks = getTraceabilityLinks(_classNodeMaterial);
+        List<TraceabilityLink> traceabilityLinks = getTraceabilityLinks(_classNode);
         _ui.setContent(traceabilityLinks);
         registerListener();
         show();
     }
 
-    private List<TraceabilityLink> getTraceabilityLinks(final ClassNodeMaterial classNodeMaterial)
+    private List<TraceabilityLink> getTraceabilityLinks(final ClassNode classNode)
     {
-        if(classNodeMaterial instanceof JavaClassNodeMaterial)
+        if(classNode instanceof JavaClassNode)
         {
-            return traceabilityClassNodeService.getSwiftTracebiliityLinksForJavaClassNode((JavaClassNodeMaterial) _classNodeMaterial);
+            return traceabilityClassNodeService.getSwiftTracebiliityLinksForJavaClassNode((JavaClassNode) _classNode);
         }
-        if(classNodeMaterial instanceof SwiftClassNodeMaterial)
+        if(classNode instanceof SwiftClassNode)
         {
-            return traceabilityClassNodeService.getJavaTracebiliityLinksForSwiftClassNode((SwiftClassNodeMaterial) classNodeMaterial);
+            return traceabilityClassNodeService.getJavaTracebiliityLinksForSwiftClassNode((SwiftClassNode) classNode);
         }
         return Collections.emptyList();
     }
@@ -76,13 +76,13 @@ public class CorrespondingTraceabilityChooserWerkzeug{
             public void mouseClicked(MouseEvent e) {
                 TraceabilityLink link = _ui.getJBList().getSelectedValue();
                 link.setSource(new TypePointer());
-                if(_classNodeMaterial instanceof JavaClassNodeMaterial)
+                if(_classNode instanceof JavaClassNode)
                 {
-                    _propagationProcessService.addTraceabilityLinkJavaSource((JavaClassNodeMaterial) _classNodeMaterial, link);
+                    _propagationProcessService.addTraceabilityLinkJavaSource((JavaClassNode) _classNode, link);
                 }
-                if(_classNodeMaterial instanceof SwiftClassNodeMaterial)
+                if(_classNode instanceof SwiftClassNode)
                 {
-                    _propagationProcessService.addTraceabilityLinkSwiftSource((SwiftClassNodeMaterial)_classNodeMaterial, link);
+                    _propagationProcessService.addTraceabilityLinkSwiftSource((SwiftClassNode) _classNode, link);
                 }
 
             }

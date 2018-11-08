@@ -1,6 +1,6 @@
 package service;
 
-import materials.ClassNodeMaterial;
+import materials.ClassNode;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -15,12 +15,12 @@ import java.util.List;
 
 public class DependencyPersistenceAutomaton {
 
-    private ChangePropagationProcessService _process;
+    private ChangePropagationProcess _process;
     private File _directory;
     private String _filename;
     private final ObservableList<File> _xmlfiles;
 
-    public DependencyPersistenceAutomaton(ChangePropagationProcessService propagationProcess, final String directoryPath)
+    public DependencyPersistenceAutomaton(ChangePropagationProcess propagationProcess, final String directoryPath)
     {
         _process = propagationProcess;
         _directory = new File(directoryPath);
@@ -66,7 +66,7 @@ public class DependencyPersistenceAutomaton {
     {
         //String filename = getFilepath();
         String filename = _directory.getCanonicalPath() + "/test.xml";
-        final JAXBContext context = JAXBContext.newInstance(ChangePropagationProcessService.class);
+        final JAXBContext context = JAXBContext.newInstance(ChangePropagationProcess.class);
         final Marshaller marshaller = context.createMarshaller();
 
         try(final OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
@@ -75,25 +75,25 @@ public class DependencyPersistenceAutomaton {
         }
     }
 
-    public void writeClassNodeMaterial(ClassNodeMaterial classNodeMaterial) throws Exception
+    public void writeClassNodeMaterial(ClassNode classNode) throws Exception
     {
         String filename = _directory.getCanonicalPath() +"/testxml";
-        final JAXBContext context = JAXBContext.newInstance(ClassNodeMaterial.class);
+        final JAXBContext context = JAXBContext.newInstance(ClassNode.class);
         final Marshaller marshaller = context.createMarshaller();
 
         try(final OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
         {
-            marshaller.marshal(classNodeMaterial,os);
+            marshaller.marshal(classNode,os);
         }
     }
 
-    public static ClassNodeMaterial readClassNodeMaterial(final String filename) throws Exception {
-        final JAXBContext context = JAXBContext.newInstance(ClassNodeMaterial.class);
+    public static ClassNode readClassNodeMaterial(final String filename) throws Exception {
+        final JAXBContext context = JAXBContext.newInstance(ClassNode.class);
         final Unmarshaller unmarshaller = context.createUnmarshaller();
 
         try (final InputStream in = new BufferedInputStream(new FileInputStream(filename)))
         {
-            return (ClassNodeMaterial) unmarshaller.unmarshal(in);
+            return (ClassNode) unmarshaller.unmarshal(in);
         }
     }
 }

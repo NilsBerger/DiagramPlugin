@@ -1,34 +1,24 @@
 package graphapi;
 
-import materials.ClassNodeMaterial;
-import materials.SwiftClassNodeMaterial;
-
-import java.util.HashSet;
+import materials.ClassNode;
+import materials.SwiftClassNode;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SwiftClassGraphDataModel extends GerneralClassGraphDataModel {
 
     @Override
-    protected void refreshDataModel() {
-        Set<ClassNodeMaterial> getAffectedJavaClassesByChange = _changePropagationProcessService.getAffectedClassesByChange().stream().filter(node -> node instanceof SwiftClassNodeMaterial).collect(Collectors.toSet());
+   public void refreshDataModel(final ClassNode changedClassNode) {
+        if(changedClassNode instanceof SwiftClassNode)
+        {
+            addNode(new ClassGraphNode(changedClassNode));
 
-        for (ClassNodeMaterial classNodeMaterial : getAffectedJavaClassesByChange) {
-            addNode(new ClassGraphNode(classNodeMaterial));
+            Set<ClassNode> topDependencies = _changePropagationProcess.getModel().getTopDependencies(changedClassNode).stream().filter(node -> node instanceof SwiftClassNode).collect(Collectors.toSet());
+            Set<ClassNode> bottompDependencies = _changePropagationProcess.getModel().getBottomDependencies(changedClassNode).stream().filter(node -> node instanceof SwiftClassNode).collect(Collectors.toSet());
 
-
-            Set<ClassNodeMaterial> javatopdependencies = _changePropagationProcessService.getModel().getTopDependencies(classNodeMaterial).stream().filter(node -> node instanceof SwiftClassNodeMaterial).collect(Collectors.toSet());
-            Set<ClassNodeMaterial> javabottompdependencies = _changePropagationProcessService.getModel().getBottomDependencies(classNodeMaterial).stream().filter(node -> node instanceof SwiftClassNodeMaterial).collect(Collectors.toSet());
-            Set<ClassNodeMaterial> neighbourhood = new HashSet<>();
-            neighbourhood.addAll(javatopdependencies);
-            neighbourhood.addAll(javabottompdependencies);
-
-            Set<ClassNodeMaterial> dependencies = new HashSet<>();
-            dependencies.addAll(javatopdependencies);
-            dependencies.addAll(javabottompdependencies);
-
-            addNeighbourhoodForClass(classNodeMaterial, dependencies);
+            addNeighbourhoodForClass(changedClassNode, topDependencies);
+            addNeighbourhoodForClass(changedClassNode, bottompDependencies);
         }
-    }
+   }
 }
 
