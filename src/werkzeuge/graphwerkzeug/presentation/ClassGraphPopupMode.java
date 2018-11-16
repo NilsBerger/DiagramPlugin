@@ -1,4 +1,4 @@
-package graphapi;
+package werkzeuge.graphwerkzeug.presentation;
 
 import com.intellij.openapi.graph.base.Node;
 import com.intellij.openapi.graph.view.PopupMode;

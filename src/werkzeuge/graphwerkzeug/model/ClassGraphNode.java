@@ -1,4 +1,4 @@
-package graphapi;
+package werkzeuge.graphwerkzeug.model;
 
 import Utils.HashUtils;
 import materials.ClassNode;

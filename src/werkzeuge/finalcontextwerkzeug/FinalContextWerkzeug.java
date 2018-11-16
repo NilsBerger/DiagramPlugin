@@ -1,20 +1,3 @@
-
-/*
- * Copyright 1998-2018 Konstantin Bulenkov
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package werkzeuge.finalcontextwerkzeug;
 
 import service.ChangePropagationProcess;
@@ -23,6 +6,7 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.components.JBPanel;
 import materials.ClassNode;
 import materials.JavaClassNode;
+import service.GraphChangeListener;
 import valueobjects.Marking;
 import materials.SwiftClassNode;
 import javafx.collections.SetChangeListener;
@@ -35,7 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class FinalContextWerkzeug {
+public class FinalContextWerkzeug implements GraphChangeListener {
 
     private final FinalContextWerkzeugUI _ui;
     private final ChangePropagationProcess _cpProcess;
@@ -64,7 +48,9 @@ public class FinalContextWerkzeug {
         _popup.add(_showSourcecodeItem);
         _popup.add(_showCorrespondingClassItem);
         _cpProcess = ChangePropagationProcess.getInstance();
+        _cpProcess.addGraphChangeListener(this);
         registerUIActions();
+
     }
     private void addEntry(final ClassNode classnode)
     {
@@ -145,6 +131,15 @@ public class FinalContextWerkzeug {
                 new CorrespondingTraceabilityChooserWerkzeug(_selectedClass);
             }
         });
+    }
+
+    @Override
+    public void updateView() {
+        _ui.getPanel().revalidate();
+        _ui.getModel().reload();
+        _ui.getJBList().repaint();
+        _ui.getJBList().revalidate();
+        _ui.getRenderer().repaint();
     }
 
     public JBPanel getPanel()

@@ -49,4 +49,11 @@ public class DynamicListModel<E> extends AbstractListModel<E> {
     {
         return _entries.contains(e);
     }
+
+    public void reload()
+    {
+        rowContentChanged(0, _entries.size()-1);
+    }
+
+
 }

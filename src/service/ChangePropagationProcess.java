@@ -3,6 +3,7 @@ package service;
 import de.unihamburg.masterprojekt2016.traceability.TraceabilityLink;
 import de.unihamburg.masterprojekt2016.traceability.TypePointer;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import materials.*;
@@ -26,10 +27,15 @@ public class ChangePropagationProcess{
     private ChangeAndFixStrategyIF _strategy;
     @XmlElement (name = "Graph")
     private ChangePropagationModel _model;
-    @XmlElement (name = "AffectedClasses")
-    private final ObservableSet<ClassNode> _affectedClassesByChange  = FXCollections.observableSet(new HashSet<>());
+
+    private final ObservableSet<DependencyIF> _affectedEdges  = FXCollections.observableSet(new HashSet<>());
     @XmlElement (name = "InitClasses")
     private final ObservableSet<ClassNode> _initialChangedClasse = FXCollections.observableSet(new HashSet<>());
+
+    @XmlElement (name = "AffectedClasses")
+    private final ObservableSet<ClassNode> _affectedNodes = FXCollections.observableSet(new HashSet<>());
+
+    private final ObservableMap<ClassNode, Set<DependencyIF>> _affectedNodeEdges = FXCollections.observableHashMap();
 
     private final ObservableSet<TraceLinkDependency> _traceabilityLinks = FXCollections.observableSet(new HashSet<>());
 
@@ -48,7 +54,8 @@ public class ChangePropagationProcess{
     }
     public void clear()
     {
-        _affectedClassesByChange.clear();
+        _affectedNodes.clear();
+        _affectedEdges.clear();
         _initialChangedClasse.clear();
     }
 
@@ -60,7 +67,7 @@ public class ChangePropagationProcess{
 
         assert classNode != null : "ClassNode should not be null";
 
-        if (!_strategy.accept(_affectedClassesByChange)) {
+        if (!_strategy.accept(_affectedNodes)) {
             return false;
         }
         final ClassNode changedClass = getClassNodeMaterial(classNode);
@@ -116,9 +123,26 @@ public class ChangePropagationProcess{
                 classNode.setMarking(Marking.NEXT);
             }
         }
-        _affectedClassesByChange.add(changedClass);
-        _affectedClassesByChange.addAll(affectedNodes);
+        addAffectedNode(changedClass);
+        addAffectedNodes(affectedNodes);
+       // addAffectedEdgesBetweenAffectedNodes();
     }
+
+//    private void addAffectedEdgesBetweenAffectedNodes() {
+//        _affectedNodes.addListener(new SetChangeListener<ClassNode>() {
+//            @Override
+//            public void onChanged(Change<? extends ClassNode> change) {
+//                if(change.wasAdded())
+//                {
+//                    ClassNode addedNode = change.getElementAdded();
+//                    Set<ClassNode> topDependencies = _model.getTopDependencies(addedNode);
+//                    Set<ClassNode> bottomDependencies = _model.getBottomDependencies(addedNode);
+//
+//                    for(Set<ClassNode> topDependencies)
+//                }
+//            }
+//        });
+//    }
 
     private ClassNode getClassToVisit(final ClassNode classNode) {
         for (ClassNode node : getNextMarkedClasses()) {
@@ -129,6 +153,52 @@ public class ChangePropagationProcess{
         //Should not happen because no concurrency
         assert true : "Should never be here";
         return null;
+    }
+
+    private void addAffectedNode(final ClassNode node)
+    {
+        boolean added = _affectedNodes.add(node);
+        if(added)
+        {
+            System.out.println("addNode - Added AffectedClassNode : " + node);
+        }
+        else {
+            System.out.println("addNode - AffectedClassNode already in model : " +  node);
+        }
+    }
+    private void addAffectedNodes(Set<ClassNode> affectedNodes)
+    {
+        for(ClassNode node : affectedNodes)
+        {
+            addAffectedNode(node);
+        }
+    }
+
+    private void addEdge(final DependencyIF edge)
+    {
+        boolean added = _affectedEdges.add(edge);
+        if(added)
+        {
+            System.out.println("addEdge - Added AffectedEdge : " + edge);
+        }
+        else {
+            System.out.println("addEdge - AffectedEdge already in model : " +  edge);
+        }
+        addAffectedNode(edge.getDependentClass());
+        addAffectedNode(edge.getIndependentClass());
+        addNodeEdge(edge.getDependentClass(), edge);
+        addNodeEdge(edge.getIndependentClass(), edge);
+    }
+
+    public void addNodeEdge(final ClassNode node, final DependencyIF edge)
+    {
+        Set<DependencyIF> nodeEdges = _affectedNodeEdges.get(node);
+        if(nodeEdges == null)
+        {
+            nodeEdges = new HashSet<>();
+            _affectedNodeEdges.put(node, nodeEdges);
+        }
+        nodeEdges.add(edge);
     }
 
     public ChangePropagationModel getModel()
@@ -204,14 +274,16 @@ public class ChangePropagationProcess{
      * @return
      */
     public Set<ClassNode> getNextMarkedClasses() {
-        return _affectedClassesByChange.stream().filter(classes -> classes.getMarking() == Marking.NEXT).collect(Collectors.toSet());
+        return _affectedNodes.stream().filter(classes -> classes.getMarking() == Marking.NEXT).collect(Collectors.toSet());
     }
 
     public ObservableSet<ClassNode> getAffectedClassesByChange() {
-        return _affectedClassesByChange;
+        return _affectedNodes;
     }
 
     public ObservableSet<ClassNode> getInitalChangedClasses(){return _initialChangedClasse;}
+
+    public ObservableMap<ClassNode, Set<DependencyIF>> getAffectedNodeEdges(){return _affectedNodeEdges;}
 
     public ObservableSet<TraceLinkDependency> getTraceLinkDepenendecySet(){return _traceabilityLinks;}
 }

@@ -21,27 +21,27 @@ public class TraceabilityClassNodeService {
         _project = currentProject;
     }
 
-    public List<TraceabilityLink> getJavaTracebiliityLinksForJavaClassNode(final JavaClassNode javaClassNodeMaterial)
+    public List<TraceabilityLink> getJavaTracebiliityLinksForJavaClassNode(final JavaClassNode javaNode)
     {
         ITraceabilityRecoveryService service = ServiceManager.getService(_project, ITraceabilityRecoveryService.class);
-        return filterListForTypPointer(service.getSortedTraceabilityLinksForQuery(Language.JAVA, javaClassNodeMaterial.getSimpleClassName()));
+        return filterListForTypPointer(service.getSortedTraceabilityLinksForQuery(Language.JAVA, javaNode.getSimpleClassName()));
     }
 
-    public List<TraceabilityLink> getJavaTracebiliityLinksForSwiftClassNode(final SwiftClassNode swiftClassNodeMaterial)
+    public List<TraceabilityLink> getJavaTracebiliityLinksForSwiftClassNode(final SwiftClassNode swiftNode)
     {
         ITraceabilityRecoveryService service = ServiceManager.getService(_project, ITraceabilityRecoveryService.class);
-        return filterListForTypPointer(service.getSortedTraceabilityLinksForQuery(Language.JAVA, swiftClassNodeMaterial.getSimpleClassName()));
+        return filterListForTypPointer(service.getSortedTraceabilityLinksForQuery(Language.JAVA, swiftNode.getSimpleClassName()));
     }
 
-    public List<TraceabilityLink> getSwiftTracebiliityLinksForJavaClassNode(final JavaClassNode javaClassNodeMaterial)
+    public List<TraceabilityLink> getSwiftTracebiliityLinksForJavaClassNode(final JavaClassNode javaNode)
     {
         ITraceabilityRecoveryService service = ServiceManager.getService(_project, ITraceabilityRecoveryService.class);
-        return filterListForTypPointer(service.getSortedTraceabilityLinksForQuery(Language.SWIFT, javaClassNodeMaterial.getSimpleClassName()));
+        return filterListForTypPointer(service.getSortedTraceabilityLinksForQuery(Language.SWIFT, javaNode.getSimpleClassName()));
     }
-    public List<TraceabilityLink> getSwiftTracebiliityLinksForSwiftClassNode(final SwiftClassNode swiftClassNodeMaterial)
+    public List<TraceabilityLink> getSwiftTracebiliityLinksForSwiftClassNode(final SwiftClassNode swiftNode)
     {
         ITraceabilityRecoveryService service = ServiceManager.getService(_project, ITraceabilityRecoveryService.class);
-        return filterListForTypPointer(service.getSortedTraceabilityLinksForQuery(Language.SWIFT, swiftClassNodeMaterial.getSimpleClassName()));
+        return filterListForTypPointer(service.getSortedTraceabilityLinksForQuery(Language.SWIFT, swiftNode.getSimpleClassName()));
 
     }
     private List<TraceabilityLink> filterListForTypPointer(List<TraceabilityLink> traceabilityLinkList)

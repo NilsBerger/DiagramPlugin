@@ -1,19 +1,3 @@
-/*
- * Copyright 1998-2018 Konstantin Bulenkov
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package werkzeuge.finalcontextwerkzeug;
 
 import com.intellij.ui.components.JBLabel;
@@ -32,14 +16,16 @@ public class FinalContextWerkzeugUI {
     private  JBPanel _mainPanel;
     private JBList _finalContextList;
     private DynamicListModel<ClassNode> _model;
+    private ClassNodeCellRenderer _renderer;
     private JBLabel _label;
 
     public FinalContextWerkzeugUI()
     {
         _finalContextList = new JBList();
         _model = new DynamicListModel<ClassNode>(new ArrayList<ClassNode>());
+        _renderer = new ClassNodeCellRenderer();
         _finalContextList.setModel(_model);
-        _finalContextList.setCellRenderer(new ClassNodeCellRenderer());
+        _finalContextList.setCellRenderer(_renderer);
         createLabel();
         createMainPanel();
 
@@ -72,7 +58,7 @@ public class FinalContextWerkzeugUI {
     {
         return _model;
     }
-
+    public ClassNodeCellRenderer getRenderer() {return _renderer;}
     public JBPanel getPanel()
     {
         return _mainPanel;

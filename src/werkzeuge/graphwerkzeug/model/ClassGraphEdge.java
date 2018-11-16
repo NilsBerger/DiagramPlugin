@@ -1,7 +1,8 @@
-package graphapi;
+package werkzeuge.graphwerkzeug.model;
 
 
 import Utils.HashUtils;
+import werkzeuge.graphwerkzeug.presentation.RelationshipType;
 
 public class ClassGraphEdge {
     private ClassGraphNode _dependentNode;

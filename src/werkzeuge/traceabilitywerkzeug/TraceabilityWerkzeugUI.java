@@ -32,6 +32,7 @@ public class TraceabilityWerkzeugUI {
         _mainPanel.add(new JBScrollPane(_traceabilityList));
         _traceabilityList.setModel(_model);
         _traceabilityList.setCellRenderer(new TraceabilityListCellRenderer());
+        _traceabilityList.setVisibleRowCount(20);
         _traceabilityList.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
     }
 

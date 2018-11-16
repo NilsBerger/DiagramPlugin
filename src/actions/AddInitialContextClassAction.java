@@ -4,8 +4,6 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
-import graphapi.ClassGraph;
-import graphapi.ClassGraphToolWindow;
 import materials.DependencyIF;
 import materials.JavaClassNode;
 import service.ChangePropagationProcess;
@@ -35,23 +33,6 @@ public class AddInitialContextClassAction extends AnAction {
             PsiNamedElement namedElement = (PsiNamedElement) element;
             propagationProcessService.change(new JavaClassNode(namedElement.getName()));
 
-            //ClassGraph generalClassGraph = element.getProject().getUserData(ClassGraphToolWindow.GENERAL_GRAPH_KEY);
-            //generalClassGraph.clear();
-            //generalClassGraph.getDataModel().setChangePropagationService(propagationProcessService);
-            //generalClassGraph.updateGraph();
-            //generalClassGraph.fitContent();
-
-            //ClassGraph javaClassGraph = element.getProject().getUserData(ClassGraphToolWindow.JAVA_GRAPH_KEY);
-            //javaClassGraph.clear();
-            //javaClassGraph.getDataModel().setChangePropagationService(propagationProcessService);
-            //javaClassGraph.updateGraph();
-            //javaClassGraph.fitContent();
-
-            //ClassGraph swiftClassGraph = element.getProject().getUserData(ClassGraphToolWindow.SWIFT_GRAPH_KEY);
-            //swiftClassGraph.clear();
-            //swiftClassGraph.getDataModel().setChangePropagationService(propagationProcessService);
-            //swiftClassGraph.updateGraph();
-           //swiftClassGraph.fitContent();
         }
     }
 

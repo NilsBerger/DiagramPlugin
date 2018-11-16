@@ -1,4 +1,4 @@
-package graphapi;
+package werkzeuge.graphwerkzeug.presentation;
 
 
 import com.intellij.openapi.Disposable;
@@ -16,6 +16,8 @@ import materials.ClassNode;
 import materials.JavaClassNode;
 import service.ChangePropagationProcess;
 import service.GraphChangeListener;
+import werkzeuge.graphwerkzeug.model.*;
+import werkzeuge.graphwerkzeug.util.ClassGraphLogger;
 
 
 import javax.swing.*;
@@ -34,6 +36,18 @@ public class ClassGraph implements Disposable, GraphChangeListener {
         _graphBuilder = GraphBuilderFactory.getInstance(project).createGraphBuilder(graph, view, dataModel, presentationModel);
         presentationModel.setClassGraph(this);
         _propagationProcessService.addGraphChangeListener(this);
+        graph.addGraph2DSelectionListener(new Graph2DSelectionListener() {
+            @Override
+            public void onGraph2DSelectionEvent(Graph2DSelectionEvent graph2DSelectionEvent) {
+                if(graph2DSelectionEvent.isNodeSelection())
+                {
+                    Node node = (Node) graph2DSelectionEvent.getSubject();
+                    ClassGraphNode classNode = _graphBuilder.getNodeObject(node);
+                    System.out.println(classNode.getClassNode());
+                }
+
+            }
+        });
     }
 
     public static ClassGraph createGeneralGraph(Project project)

@@ -20,7 +20,7 @@ public class InitialContextWerkzeug {
     {
         _ui = new InitialContextWerkzeugUI();
         _ui.setLabelText("Initial Context");
-        _ui.getPanel().add(createAndRegisterToolbar());
+        //_ui.getPanel().add(createAndRegisterToolbar());
         _cpProcess = ChangePropagationProcess.getInstance();
         registerUIActions();
     }
@@ -42,15 +42,14 @@ public class InitialContextWerkzeug {
        });
     }
 
-    private JPanel createAndRegisterToolbar()
-    {
-        return _ui.getToolbarDecorator().setAddAction(new AnActionButtonRunnable() {
-            @Override
-            public void run(AnActionButton anActionButton) {
-                _cpProcess.change(new SwiftClassNode("C"));
-            }
-        }).disableUpAction().disableDownAction().createPanel();
-    }
+    //// {
+//        return _ui.getToolbarDecorator().setAddAction(new AnActionButtonRunnable() {
+//            @Override
+//            public void run(AnActionButton anActionButton) {
+//                _cpProcess.change(new SwiftClassNode("C"));
+//            }
+//        }).disableUpAction().disableDownAction().createPanel();
+   // }
 
     private void addEntry(final ClassNode initialClassNode)
     {

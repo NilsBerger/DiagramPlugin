@@ -1,22 +1,39 @@
-package graphapi;
+/*
+ * Copyright 1998-2018 Konstantin Bulenkov
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import com.intellij.icons.AllIcons;
+package werkzeuge.graphwerkzeug;
+
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.graph.builder.actions.*;
 import com.intellij.openapi.graph.builder.actions.layout.ApplyCurrentLayoutAction;
 import com.intellij.openapi.graph.builder.actions.printing.PrintGraphAction;
 import com.intellij.openapi.graph.builder.actions.printing.PrintPreviewAction;
-import com.intellij.ui.TabbedPane;
+import com.intellij.openapi.graph.view.Graph2D;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTabbedPane;
 import org.jetbrains.annotations.NotNull;
 import werkzeuge.StatusIcons;
 import werkzeuge.ToolWindowWerkzeug;
+import werkzeuge.graphwerkzeug.model.ClassGraphFilterer;
+import werkzeuge.graphwerkzeug.presentation.ClassGraph;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class ClassGraphComponent {
+public class ClassGraphWindowWerkzeugUI {
     private final static Icon _ICON = StatusIcons.getBlankIcon();
     private final JComponent _myComponent;
     private ClassGraph _generalClassGraph;
@@ -27,7 +44,7 @@ public class ClassGraphComponent {
 
 
 
-    public ClassGraphComponent( @NotNull ClassGraph classGraph, ClassGraph javaClassGraph, ClassGraph swiftClassGraph, ToolWindowWerkzeug werkzeug) {
+    public ClassGraphWindowWerkzeugUI(@NotNull ClassGraph classGraph, ClassGraph javaClassGraph, ClassGraph swiftClassGraph, ToolWindowWerkzeug werkzeug) {
         _generalClassGraph = classGraph;
         _javaClassGraph = javaClassGraph;
         _swiftClassGraph = swiftClassGraph;
@@ -90,8 +107,6 @@ public class ClassGraphComponent {
 
         actions.add(new ApplyCurrentLayoutAction(classgraph.getGraph()));
         actions.addSeparator();
-        actions.add(new ApplyCustomLayoutAction(classgraph.getGraph()));
-        actions.addSeparator();
 
         //actions.add(new DeleteSelectionAction());
         actions.addSeparator();
@@ -99,6 +114,7 @@ public class ClassGraphComponent {
         actions.add(new PrintGraphAction(_generalClassGraph.getGraph()));
         actions.add(new PrintPreviewAction(_generalClassGraph.getGraph()));
         actions.addSeparator();
+        //actions.add(new NodeHideAction(classgraph));
 
         return actions;
     }
@@ -125,6 +141,23 @@ public class ClassGraphComponent {
     {
         return _swiftClassGraph;
     }
+
+    class NodeHideAction extends AbstractGraphAction {
+        private ClassGraph _classGraph;
+        private ClassGraphFilterer _filter;
+
+        public NodeHideAction(ClassGraph classGraph)
+        {
+            _classGraph = classGraph;
+            _filter = new ClassGraphFilterer(_classGraph);
+        }
+        @Override
+        protected void actionPerformed(AnActionEvent anActionEvent, Graph2D graph2D) {
+            _filter.update(graph2D, _classGraph.getView());
+        }
+
+    }
 }
+
 
 

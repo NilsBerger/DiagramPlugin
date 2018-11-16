@@ -1,10 +1,14 @@
-package graphapi;
+package werkzeuge.graphwerkzeug.presentation;
 
 import com.intellij.openapi.graph.base.Graph;
 import com.intellij.openapi.graph.builder.components.BasicGraphPresentationModel;
 import com.intellij.openapi.graph.view.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import werkzeuge.graphwerkzeug.ClassGraphPopupMenu;
+import werkzeuge.graphwerkzeug.model.ClassGraphEdge;
+import werkzeuge.graphwerkzeug.model.ClassGraphNode;
+import werkzeuge.graphwerkzeug.model.GerneralClassGraphDataModel;
 
 public class ClassGraphPresentationModel extends BasicGraphPresentationModel<ClassGraphNode, ClassGraphEdge> {
     private ClassGraph _classGraph;
@@ -55,6 +59,8 @@ public class ClassGraphPresentationModel extends BasicGraphPresentationModel<Cla
 
 
 
+
+
     private GerneralClassGraphDataModel getDataModel()
     {
         return _classGraph.getDataModel();
@@ -68,10 +74,10 @@ public class ClassGraphPresentationModel extends BasicGraphPresentationModel<Cla
         {
             defaultPopupMode = (PopupMode) vm;
         }
-        ClassGraphPopupMode popupMode = new ClassGraphPopupMode(_classGraph, defaultPopupMode);
+        ClassGraphPopupMenu popupMode = new ClassGraphPopupMenu(_classGraph);
         editMode.setPopupMode(popupMode);
 
-        editMode.allowMoveSelection(true);
+        editMode.allowMoveSelection(false);
         editMode.allowMoving(true);
         editMode.allowNodeCreation(false);
         editMode.allowEdgeCreation(false);

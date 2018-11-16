@@ -1,19 +1,3 @@
-/*
- * Copyright 1998-2018 Konstantin Bulenkov
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package werkzeuge;
 
 import com.intellij.openapi.project.Project;
@@ -50,31 +34,41 @@ public class ToolWindowWerkzeugUI extends SimpleToolWindowPanel {
 
         createSelectClassDependencyGraph();
         _listPanel = new JBPanel();
-        _listPanel.setLayout(new GridBagLayout());
-
-        GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(5,5,5,5);
-        c.weightx = 2.0;
-
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridheight = GridBagConstraints.REMAINDER;
-
-        c.gridx = 0;
-        c.gridy = 0;
-        _listPanel.add(initialContext, c);
-
-        c.gridx = 1;
-        c.gridy = 0;
-        _listPanel.add(finalContextJava, c);
-
-        c.gridx = 2;
-        c.gridy = 0;
-        _listPanel.add(finalContextSwift, c);
-
-        c.gridx = 3;
-        c.gridy = 0;
-        _listPanel.add(tracelinkPanel, c);
-        _listPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+ //       _listPanel.setLayout(new GridBagLayout());
+//
+//        GridBagConstraints c = new GridBagConstraints();
+//        c.insets = new Insets(5,5,5,5);
+//        c.weightx = 1.0;
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        //c.gridheight = GridBagConstraints.REMAINDER;
+//        c.weighty = 0.0;
+//
+//        c.gridx = 0;
+//        c.gridy = 0;
+//        _listPanel.add(initialContext, c);
+//
+//        c.gridx = 1;
+//        c.gridy = 0;
+//        _listPanel.add(finalContextJava, c);
+//
+//        c.gridx = 2;
+//        c.gridy = 0;
+//        _listPanel.add(finalContextSwift, c);
+//
+//        c.gridx = 3;
+//        c.gridy = 0;
+//        _listPanel.add(tracelinkPanel, c);
+//        _listPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        _listPanel.setLayout(new BoxLayout(_listPanel, BoxLayout.X_AXIS));
+        _listPanel.setBorder(new EmptyBorder(10,10,10,10));
+        initialContext.setBorder(new EmptyBorder(5,5,5,5));
+        finalContextJava.setBorder(new EmptyBorder(5,5,5,5));
+        finalContextSwift.setBorder(new EmptyBorder(5,5,5,5));
+        tracelinkPanel.setBorder(new EmptyBorder(5,5,5,5));
+        _listPanel.add(initialContext);
+        _listPanel.add(finalContextJava);
+        _listPanel.add(finalContextSwift);
+        _listPanel.add(tracelinkPanel);
 
         _panel.add(graphSelection, BorderLayout.NORTH);
         _panel.add(_listPanel, BorderLayout.CENTER);

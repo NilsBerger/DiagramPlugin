@@ -1,19 +1,3 @@
-/*
- * Copyright 1998-2018 Konstantin Bulenkov
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package werkzeuge.initialcontextwerkzeug;
 
 import com.intellij.ui.ToolbarDecorator;
@@ -26,6 +10,7 @@ import werkzeuge.ClassNodeCellRenderer;
 import werkzeuge.DynamicListModel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class InitialContextWerkzeugUI {
@@ -34,7 +19,7 @@ public class InitialContextWerkzeugUI {
     private JBList _initialContextList;
     private DynamicListModel<ClassNode> _model;
     private JBLabel _label;
-    private ToolbarDecorator _toolbarDecorator;
+   //private ToolbarDecorator _toolbarDecorator;
 
     public InitialContextWerkzeugUI()
     {
@@ -42,7 +27,7 @@ public class InitialContextWerkzeugUI {
         createJBList();
         createMainPanel();
         _initialContextList.setCellRenderer(new ClassNodeCellRenderer());
-        initToolbar();
+        //initToolbar();
     }
 
     private void createMainPanel() {
@@ -50,8 +35,8 @@ public class InitialContextWerkzeugUI {
         _mainPanel.setLayout(new BoxLayout(_mainPanel, BoxLayout.Y_AXIS));
         _initialContextList.setModel(_model);
         _mainPanel.add(_label);
+        _label.setAlignmentY(Component.CENTER_ALIGNMENT);
         _mainPanel.add(new JBScrollPane(_initialContextList));
-        _mainPanel.setSize(300,100);
     }
 
     private void createLabel()
@@ -65,10 +50,9 @@ public class InitialContextWerkzeugUI {
         _model = new DynamicListModel<>(new ArrayList<ClassNode>());
     }
 
-    private void initToolbar()
-    {
-        _toolbarDecorator = ToolbarDecorator.createDecorator(_initialContextList);
-    }
+   // private void initToolbar()
+   // {
+   //// }
 
     public void setLabelText(final String text)
     {
@@ -88,8 +72,8 @@ public class InitialContextWerkzeugUI {
         return _mainPanel;
     }
 
-    public ToolbarDecorator getToolbarDecorator()
-    {
-        return _toolbarDecorator;
-    }
+    //public ToolbarDecorator getToolbarDecorator()
+   // {
+   //     return _toolbarDecorator;
+    //}
 }

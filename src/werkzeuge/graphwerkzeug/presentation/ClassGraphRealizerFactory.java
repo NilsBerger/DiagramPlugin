@@ -1,7 +1,8 @@
-package graphapi;
+package werkzeuge.graphwerkzeug.presentation;
 
 import com.intellij.openapi.graph.GraphManager;
 import com.intellij.openapi.graph.view.*;
+import werkzeuge.graphwerkzeug.model.ClassGraphNode;
 
 import java.awt.*;
 
@@ -18,7 +19,6 @@ public class ClassGraphRealizerFactory {
 
         setNodeColor(nodeRealizer, classGraphNode);
         setNodeShape(nodeRealizer);
-        //setNodeOnSelectionListener();
         return nodeRealizer;
     }
 
@@ -31,7 +31,6 @@ public class ClassGraphRealizerFactory {
         nodeRealizer.setShapeType(ShapeNodeRealizer.RECT);
     }
 
-    //private static void setNodeSelectionRealizer()
 
     public static void setNodeColor(final Graph2DNodeRealizer nodeRealizer, ClassGraphNode classGraphNode)
     {
@@ -64,6 +63,11 @@ public class ClassGraphRealizerFactory {
         nodeRealizer.addLabel(nameLabel);
         return nameLabel;
     }
+
+//    private static void onSelectOpenPopupMenu(NodeRealizer nodeRealizer, ClassGraphNode classGraphNode)
+//    {
+//        classGraphNode.
+//    }
 
 
 

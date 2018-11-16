@@ -45,7 +45,7 @@
   <project-components>
     <!-- Add your project components here -->
     <component>
-      <implementation-class>graphapi.ClassGraphToolWindow</implementation-class>
+      <implementation-class>werkzeuge.graphwerkzeug.ClassGraphWindowWerkzeug</implementation-class>
     </component>
   </project-components>
 
@@ -70,7 +70,7 @@
             text="Add affected Class"
             description="Add class that is affected by the change"/>
 
-    <group id="ClassGraphEditor" text="Change Propagation Class Diagram" popup="true">
+    <group id="ClassGraphEditor" text="Change Propagation Diagram Tool" popup="true">
       <reference id="Add Class"/>
       <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
       <add-to-group group-id="StructureViewPopupMenu" anchor="last"/>

@@ -1,4 +1,4 @@
-package graphapi;
+package werkzeuge.graphwerkzeug.presentation;
 
 import com.intellij.openapi.graph.builder.GraphBuilder;
 import com.intellij.openapi.graph.builder.renderer.BasicGraphNodeRenderer;
@@ -26,4 +26,6 @@ public class ClassNodeRenderer extends BasicGraphNodeRenderer {
     protected Color getSelectionColor() {
         return new Color(199,99,199);
     }
+
+
 }
