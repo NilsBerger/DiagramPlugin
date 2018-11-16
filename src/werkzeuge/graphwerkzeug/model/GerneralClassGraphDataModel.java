@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import service.ChangePropagationProcess;
 import werkzeuge.graphwerkzeug.util.ClassGraphLogger;
-import werkzeuge.graphwerkzeug.presentation.RelationshipType;
+import valueobjects.RelationshipType;
 
 import java.util.*;
 
