@@ -279,6 +279,17 @@ public class ChangePropagationProcess{
         return _affectedNodes.stream().filter(classes -> classes.getMarking() == Marking.NEXT).collect(Collectors.toSet());
     }
 
+    public Set<ClassDependency> getAffectedDependencies(ClassNode node )
+    {
+        Set<ClassDependency> dependencies = new HashSet<>();
+        Set<ClassNode> neighbourhood = _model.getNeighbourhood(node);
+        for(ClassNode neighbourhoodNode : neighbourhood)
+        {
+            //
+        }
+        return dependencies;
+    }
+
     public ObservableSet<ClassNode> getAffectedClassesByChange() {
         return _affectedNodes;
     }

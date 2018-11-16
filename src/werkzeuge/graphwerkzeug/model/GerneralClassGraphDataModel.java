@@ -1,38 +1,24 @@
-/*
- * Copyright 1998-2018 Konstantin Bulenkov
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package werkzeuge.graphwerkzeug.model;
 
 import com.intellij.openapi.graph.builder.GraphDataModel;
 import com.intellij.openapi.graph.builder.NodesGroup;
 import javafx.collections.SetChangeListener;
+import materials.ClassDependency;
 import materials.ClassNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import service.ChangePropagationProcess;
+import valueobjects.ClassNodeType;
 import werkzeuge.graphwerkzeug.util.ClassGraphLogger;
 import valueobjects.RelationshipType;
 
 import java.util.*;
 
-public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, ClassGraphEdge>{
+public class GerneralClassGraphDataModel extends GraphDataModel<ClassNode, ClassDependency>{
 
-    private Set<ClassGraphNode> _nodes;
-    private Map<ClassGraphNode, Set<ClassGraphEdge>> _nodesEdges;
-    private Set<ClassGraphEdge> _edges;
+    private Set<ClassNode> _nodes;
+    private Map<ClassNode, Set<ClassDependency>> _nodesEdges;
+    private Set<ClassDependency> _edges;
     protected ChangePropagationProcess _changePropagationProcess = ChangePropagationProcess.getInstance();
 
     public GerneralClassGraphDataModel() {
@@ -44,50 +30,50 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, 
 
     @Nullable
     @Override
-    public NodesGroup getGroup(ClassGraphNode classGraphNode) {
+    public NodesGroup getGroup(ClassNode classNode) {
         //TODO
-        return super.getGroup(classGraphNode);
+        return super.getGroup(classNode);
     }
 
     @NotNull
     @Override
-    public Collection<ClassGraphNode> getNodes() {
+    public Collection<ClassNode> getNodes() {
         return _nodes;
     }
 
     @NotNull
     @Override
-    public Collection<ClassGraphEdge> getEdges() {
+    public Collection<ClassDependency> getEdges() {
         return _edges;
     }
 
     @NotNull
     @Override
-    public ClassGraphNode getSourceNode(final ClassGraphEdge classGraphEdge) {
-        return classGraphEdge.getIndependentNode();
+    public ClassNode getSourceNode(final ClassDependency classDependency) {
+        return classDependency.getIndependentClass();
     }
 
     @NotNull
     @Override
-    public ClassGraphNode getTargetNode(final ClassGraphEdge classGraphEdge) {
-        return classGraphEdge.getDependentNode();
+    public ClassNode getTargetNode(final ClassDependency classDependency) {
+        return classDependency.getDependentClass();
     }
 
     @NotNull
     @Override
-    public String getNodeName(final ClassGraphNode classGraphNode) {
-        return classGraphNode.getName();
+    public String getNodeName(final ClassNode classNode) {
+        return classNode.getSimpleClassName();
     }
 
     @NotNull
     @Override
-    public String getEdgeName(ClassGraphEdge classGraphEdge) {
-        return classGraphEdge.getRelationshipType().name();
+    public String getEdgeName(ClassDependency classDependency) {
+        return classDependency.getRelationshipType().name();
     }
 
     @Nullable
     @Override
-    public ClassGraphEdge createEdge(@NotNull ClassGraphNode classGraphNode, @NotNull ClassGraphNode n1) {
+    public ClassDependency createEdge(@NotNull ClassNode classGraphNode, @NotNull ClassNode n1) {
         return null;
     }
 
@@ -104,7 +90,7 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, 
     }
 
     public void refreshDataModel(final ClassNode changedClassNode) {
-            addNode(new ClassGraphNode(changedClassNode));
+            addNode(changedClassNode);
 
 
             Set<ClassNode> topDependencies = _changePropagationProcess.getModel().getTopDependencies(changedClassNode);
@@ -120,11 +106,7 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, 
         for (ClassNode topdependency : dependencies) {
            if (_changePropagationProcess.getAffectedClassesByChange().contains(topdependency)) {
 
-                ClassGraphNode dependentNode = new ClassGraphNode(classNode);
-                ClassGraphNode independentNode = new ClassGraphNode(topdependency);
-                RelationshipType type = RelationshipType.DirectedRelationship;
-                ClassGraphEdge edge = new ClassGraphEdge(dependentNode, independentNode, type);
-
+                ClassDependency edge = new ClassDependency(classNode, topdependency, RelationshipType.DirectedRelationship);
                 addEdge(edge);
            }
         }
@@ -137,7 +119,7 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, 
         _edges = null;
     }
 
-    public void addNode(final ClassGraphNode node) {
+    public void addNode(final ClassNode node) {
         boolean added = _nodes.add(node);
         if (added) {
             ClassGraphLogger.debug("addNode - Added Node : " + node);
@@ -146,21 +128,21 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, 
         }
     }
 
-    public void addEdge(final ClassGraphEdge edge) {
+    public void addEdge(final ClassDependency edge) {
         boolean added = _edges.add(edge);
         if (added) {
             ClassGraphLogger.debug("addEdge - Added Edge : " + edge);
         } else {
             ClassGraphLogger.debug("addEdge - Edge already in model : " + edge);
         }
-        addNode(edge.getIndependentNode());
-        addNode(edge.getDependentNode());
-        addNodeEdge(edge.getIndependentNode(), edge);
-        addNodeEdge(edge.getDependentNode(), edge);
+        addNode(edge.getIndependentClass());
+        addNode(edge.getDependentClass());
+        addNodeEdge(edge.getIndependentClass(), edge);
+        addNodeEdge(edge.getDependentClass(), edge);
     }
 
-    public void addNodeEdge(final ClassGraphNode node, final ClassGraphEdge edge) {
-        Set<ClassGraphEdge> nodeEdges = _nodesEdges.get(node);
+    public void addNodeEdge(final ClassNode node, final ClassDependency edge) {
+        Set<ClassDependency> nodeEdges = _nodesEdges.get(node);
         if (nodeEdges == null) {
             nodeEdges = new HashSet<>();
             _nodesEdges.put(node, nodeEdges);
@@ -168,22 +150,22 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, 
         nodeEdges.add(edge);
     }
 
-    public void addAll(final Set<ClassGraphEdge> edges) {
-        for (ClassGraphEdge edge : edges) {
+    public void addAll(final Set<ClassDependency> edges) {
+        for (ClassDependency edge : edges) {
             addEdge(edge);
         }
     }
 
-    public void removeNodeEdges(final ClassGraphNode node) {
-        Set<ClassGraphEdge> nodeEdges = _nodesEdges.get(node);
+    public void removeNodeEdges(final ClassNode node) {
+        Set<ClassDependency> nodeEdges = _nodesEdges.get(node);
         if (nodeEdges != null) {
-            for (ClassGraphEdge nodeEdge : nodeEdges) {
+            for (ClassDependency nodeEdge : nodeEdges) {
                 removeEdge(nodeEdge);
             }
         }
     }
 
-    public boolean removeNode(final ClassGraphNode node) {
+    public boolean removeNode(final ClassNode node) {
         boolean removed = _nodes.remove(node);
         if (removed) {
             ClassGraphLogger.debug("removeNode - Removed node : " + node);
@@ -195,7 +177,7 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassGraphNode, 
         return removed;
     }
 
-    public boolean removeEdge(final ClassGraphEdge edge) {
+    public boolean removeEdge(final ClassDependency edge) {
         boolean removed = _edges.remove(edge);
         if (removed) {
             ClassGraphLogger.debug("removeEdge - Removed edge : " + edge);

@@ -20,8 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import service.ChangePropagationProcess;
 import valueobjects.ClassNodeType;
 import werkzeuge.ToolWindowWerkzeug;
-import werkzeuge.graphwerkzeug.model.ClassGraphEdge;
-import werkzeuge.graphwerkzeug.model.ClassGraphNode;
 import werkzeuge.graphwerkzeug.presentation.ClassGraph;
 
 import javax.swing.*;
@@ -151,13 +149,12 @@ public class ClassGraphWindowWerkzeug implements ProjectComponent {
         _javaClassGraph.getGraph().addGraph2DSelectionListener(new Graph2DSelectionListener() {
             @Override
             public void onGraph2DSelectionEvent(Graph2DSelectionEvent graph2DSelectionEvent) {
-                GraphBuilder<ClassGraphNode, ClassGraphEdge> graphBuilder = _javaClassGraph.getGraphBuilder();
+                GraphBuilder<ClassNode, ClassDependency> graphBuilder = _javaClassGraph.getGraphBuilder();
                 if(graph2DSelectionEvent.isNodeSelection())
                 {
                     final Graph2DView view = _javaClassGraph.getView();
                     Node selectedNode = (Node)graph2DSelectionEvent.getSubject();
-                    ClassGraphNode classGraphNode = graphBuilder.getNodeObject(selectedNode);
-                    ClassNode classNode = classGraphNode.getClassNode();
+                    ClassNode classGraphNode = graphBuilder.getNodeObject(selectedNode);
                     int x = (int) view.getGraph2D().getX(selectedNode);
                     int y = (int) view.getGraph2D().getY(selectedNode);
 
@@ -183,7 +180,7 @@ public class ClassGraphWindowWerkzeug implements ProjectComponent {
     private void zoomToNode(ClassGraph graph, ClassNode classNode)
     {
         final Graph2DView view = graph.getView();
-        Node node = graph.getNode(new ClassGraphNode(classNode));
+        Node node = graph.getNode(classNode);
         double x = view.getGraph2D().getX(node);
         double y = view.getGraph2D().getY(node);
         graph.getView().focusView(1.0, new Point2D.Double(x,y),true);

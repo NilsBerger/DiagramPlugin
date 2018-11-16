@@ -3,14 +3,14 @@ package werkzeuge.graphwerkzeug.presentation;
 import com.intellij.openapi.graph.base.Graph;
 import com.intellij.openapi.graph.builder.components.BasicGraphPresentationModel;
 import com.intellij.openapi.graph.view.*;
+import materials.ClassDependency;
+import materials.ClassNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import werkzeuge.graphwerkzeug.ClassGraphPopupMenu;
-import werkzeuge.graphwerkzeug.model.ClassGraphEdge;
-import werkzeuge.graphwerkzeug.model.ClassGraphNode;
 import werkzeuge.graphwerkzeug.model.GerneralClassGraphDataModel;
 
-public class ClassGraphPresentationModel extends BasicGraphPresentationModel<ClassGraphNode, ClassGraphEdge> {
+public class ClassGraphPresentationModel extends BasicGraphPresentationModel<ClassNode, ClassDependency> {
     private ClassGraph _classGraph;
 
     public ClassGraphPresentationModel(final Graph graph)
@@ -86,13 +86,13 @@ public class ClassGraphPresentationModel extends BasicGraphPresentationModel<Cla
 
 
     @Override
-    public String getNodeTooltip(@Nullable ClassGraphNode node) {
-        return node.getName();
+    public String getNodeTooltip(@Nullable ClassNode node) {
+        return node.getSimpleClassName();
     }
 
     @NotNull
     @Override
-    public NodeRealizer getNodeRealizer(@Nullable ClassGraphNode node) {
+    public NodeRealizer getNodeRealizer(@Nullable ClassNode node) {
         return ClassGraphRealizerFactory.createDefaultNodeRealizer(node);
     }
 }

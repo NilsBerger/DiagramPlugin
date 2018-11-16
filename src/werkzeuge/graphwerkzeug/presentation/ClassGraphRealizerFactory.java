@@ -2,17 +2,17 @@ package werkzeuge.graphwerkzeug.presentation;
 
 import com.intellij.openapi.graph.GraphManager;
 import com.intellij.openapi.graph.view.*;
-import werkzeuge.graphwerkzeug.model.ClassGraphNode;
+import materials.ClassNode;
 
 import java.awt.*;
 
 public class ClassGraphRealizerFactory {
 
-    public static NodeRealizer createDefaultNodeRealizer(final ClassGraphNode classGraphNode)
+    public static NodeRealizer createDefaultNodeRealizer(final ClassNode classGraphNode)
     {
         Graph2DNodeRealizer nodeRealizer = GraphManager.getGraphManager().createGraph2DNodeRealizer();
 
-        String nameText = classGraphNode.getName();
+        String nameText = classGraphNode.getSimpleClassName();
         NodeLabel nameLabel = addNodeNameLabel(nameText, nodeRealizer);
 
         calculateAndSetNodeSize(nodeRealizer, nameLabel);
@@ -32,9 +32,9 @@ public class ClassGraphRealizerFactory {
     }
 
 
-    public static void setNodeColor(final Graph2DNodeRealizer nodeRealizer, ClassGraphNode classGraphNode)
+    public static void setNodeColor(final Graph2DNodeRealizer nodeRealizer, ClassNode classGraphNode)
     {
-        ClassGraphNode.Type type = classGraphNode.getType();
+        //ClassGraphNode.Type type = classGraphNode.getType();
         Color color = Color.WHITE;
 //        switch(type)
 //        {

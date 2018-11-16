@@ -28,7 +28,7 @@ public class SwiftClassGraphDataModel extends GerneralClassGraphDataModel {
    public void refreshDataModel(final ClassNode changedClassNode) {
         if(changedClassNode.getType() == ClassNodeType.Swift)
         {
-            addNode(new ClassGraphNode(changedClassNode));
+            addNode(changedClassNode);
 
             Set<ClassNode> topDependencies = _changePropagationProcess.getModel().getTopDependencies(changedClassNode).stream().filter(node -> node.getType() == ClassNodeType.Swift).collect(Collectors.toSet());
             Set<ClassNode> bottompDependencies = _changePropagationProcess.getModel().getBottomDependencies(changedClassNode).stream().filter(node -> node.getType() == ClassNodeType.Swift).collect(Collectors.toSet());

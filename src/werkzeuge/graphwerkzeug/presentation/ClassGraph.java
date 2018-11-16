@@ -12,6 +12,7 @@ import com.intellij.openapi.graph.base.Node;
 import com.intellij.util.containers.ContainerUtil;
 import java.awt.geom.Point2D;
 
+import materials.ClassDependency;
 import materials.ClassNode;
 import service.ChangePropagationProcess;
 import service.GraphChangeListener;
@@ -27,7 +28,7 @@ import java.util.List;
 
 public class ClassGraph implements Disposable, GraphChangeListener {
 
-    private GraphBuilder<ClassGraphNode, ClassGraphEdge> _graphBuilder;
+    private GraphBuilder<ClassNode, ClassDependency> _graphBuilder;
     private static final ChangePropagationProcess _propagationProcessService = ChangePropagationProcess.getInstance();
 
 
@@ -42,8 +43,7 @@ public class ClassGraph implements Disposable, GraphChangeListener {
                 if(graph2DSelectionEvent.isNodeSelection())
                 {
                     Node node = (Node) graph2DSelectionEvent.getSubject();
-                    ClassGraphNode classNode = _graphBuilder.getNodeObject(node);
-                    System.out.println(classNode.getClassNode());
+                    ClassNode classNode = _graphBuilder.getNodeObject(node);
                 }
 
             }
@@ -88,32 +88,23 @@ public class ClassGraph implements Disposable, GraphChangeListener {
     }
     private void selectedNodes()
     {
-        final List<ClassGraphNode> toSelect = new ArrayList<>(Arrays.asList(new ClassGraphNode(new ClassNode("List", ClassNodeType.Java))));
+        final List<ClassNode> toSelect = new ArrayList<>(Arrays.asList(new ClassNode("List", ClassNodeType.Java)));
         final Graph2D graph = _graphBuilder.getGraph();
-        for(final ClassGraphNode node : toSelect)
+        for(final ClassNode node : toSelect)
         {
             Node graphNode = _graphBuilder.getNode(node);
             graph.setSelected(graphNode, true);
         }
     }
-    private Node selectedNode(ClassNode node)
+
+    public List<ClassNode> getSelectedClassNodes()
     {
-        final ClassNode toSelect = node;
-
-        final Graph2D graph = _graphBuilder.getGraph();
-        Node node1 = _graphBuilder.getNode(new ClassGraphNode(toSelect));
-        return node1;
-
-    }
-
-    public List<ClassGraphNode> getSelectedClassNodes()
-    {
-        final List<ClassGraphNode> selected = new ArrayList<>();
+        final List<ClassNode> selected = new ArrayList<>();
         final Graph2D graph = _graphBuilder.getGraph();
         for(final Node node : graph.getNodeArray())
         {
             if(graph.isSelected(node)){
-                final ClassGraphNode nodeObject = _graphBuilder.getNodeObject(node);
+                final ClassNode nodeObject = _graphBuilder.getNodeObject(node);
                 if(nodeObject != null)
                 {
                     ContainerUtil.addIfNotNull(nodeObject, selected);
@@ -164,25 +155,25 @@ public class ClassGraph implements Disposable, GraphChangeListener {
         getGraph().clear();
     }
 
-    public ClassGraphNode getClassGraphNode(Node node)
+    public ClassNode getClassGraphNode(Node node)
     {
         return  _graphBuilder.getNodeObject(node);
     }
-    public ClassGraphEdge getClassGraphEdge(Edge edge)
+    public ClassDependency getClassGraphEdge(Edge edge)
     {
         return _graphBuilder.getEdgeObject(edge);
     }
-    public Node getNode(ClassGraphNode node)
+    public Node getNode(ClassNode node)
     {
         return _graphBuilder.getNode(node);
     }
 
-    public Edge getEdge(ClassGraphEdge edge)
+    public Edge getEdge(ClassDependency edge)
     {
         return _graphBuilder.getEdge(edge);
     }
 
-    public void removeNode(ClassGraphNode classGraphNode)
+    public void removeNode(ClassNode classGraphNode)
     {
         Node node = _graphBuilder.getNode(classGraphNode);
         getDataModel().getNodes().remove(classGraphNode);
@@ -194,7 +185,7 @@ public class ClassGraph implements Disposable, GraphChangeListener {
         getGraph().removeNode(node);
     }
 
-    public GraphBuilder<ClassGraphNode, ClassGraphEdge> getGraphBuilder() {
+    public GraphBuilder<ClassNode, ClassDependency> getGraphBuilder() {
         return _graphBuilder;
     }
 

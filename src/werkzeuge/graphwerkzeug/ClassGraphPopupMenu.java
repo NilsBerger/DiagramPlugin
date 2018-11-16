@@ -6,7 +6,6 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import materials.ClassNode;
 import service.ChangePropagationProcess;
 import valueobjects.Marking;
-import werkzeuge.graphwerkzeug.model.ClassGraphNode;
 import werkzeuge.graphwerkzeug.presentation.ClassGraph;
 
 import javax.swing.*;
@@ -43,8 +42,7 @@ public class ClassGraphPopupMenu extends PopupMode {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            ClassGraphNode nodeObject = _classGraph.getGraphBuilder().getNodeObject(_node);
-            ClassNode classNode = nodeObject.getClassNode();
+            ClassNode classNode = _classGraph.getGraphBuilder().getNodeObject(_node);
             _process.updateNeigbbourhood(classNode, Marking.CHANGED);
         }
     }
@@ -58,8 +56,7 @@ public class ClassGraphPopupMenu extends PopupMode {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            ClassGraphNode nodeObject = _classGraph.getGraphBuilder().getNodeObject(_node);
-            ClassNode classNode = nodeObject.getClassNode();
+            ClassNode classNode = _classGraph.getGraphBuilder().getNodeObject(_node);
             _process.updateNeigbbourhood(classNode, Marking.PROPAGATES);
         }
     }
@@ -73,8 +70,7 @@ public class ClassGraphPopupMenu extends PopupMode {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            ClassGraphNode nodeObject = _classGraph.getGraphBuilder().getNodeObject(_node);
-            ClassNode classNode = nodeObject.getClassNode();
+            ClassNode classNode = _classGraph.getGraphBuilder().getNodeObject(_node);
             _process.updateNeigbbourhood(classNode, Marking.INSPECTED);
         }
     }
