@@ -2,12 +2,10 @@ package werkzeuge.graphwerkzeug;
 
 import com.intellij.openapi.components.ProjectComponent;
 import com.intellij.openapi.graph.base.Node;
-import com.intellij.openapi.graph.base.NodeCursor;
 import com.intellij.openapi.graph.builder.GraphBuilder;
 import com.intellij.openapi.graph.view.Graph2DSelectionEvent;
 import com.intellij.openapi.graph.view.Graph2DSelectionListener;
 import com.intellij.openapi.graph.view.Graph2DView;
-import com.intellij.openapi.graph.view.PopupMode;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
@@ -16,11 +14,11 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
+import materials.ClassDependency;
 import materials.ClassNode;
-import materials.TraceLinkDependency;
+import materials.JavaClassNode;
 import org.jetbrains.annotations.NotNull;
 import service.ChangePropagationProcess;
-import valueobjects.Marking;
 import werkzeuge.ToolWindowWerkzeug;
 import werkzeuge.graphwerkzeug.model.ClassGraphEdge;
 import werkzeuge.graphwerkzeug.model.ClassGraphNode;
@@ -129,10 +127,21 @@ public class ClassGraphWindowWerkzeug implements ProjectComponent {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                e.getSource();
-               TraceLinkDependency link = _werkzeug.getTaceabilityWerkzeug().getTraceablilityList().getSelectedValue();
-
-               zoomToNode(_javaClassGraph, link.getJavaClassNode());
-               zoomToNode(_swiftClassGraph, link.getSwiftClassNodeMaterial());
+               ClassDependency link = _werkzeug.getTaceabilityWerkzeug().getTraceablilityList().getSelectedValue();
+               if(link.getIndependentClass() instanceof JavaClassNode)
+               {
+                   zoomToNode(_javaClassGraph, link.getIndependentClass());
+               }
+               else{
+                   zoomToNode(_swiftClassGraph, link.getIndependentClass());
+               }
+                if(link.getDependentClass() instanceof JavaClassNode)
+                {
+                    zoomToNode(_javaClassGraph, link.getDependentClass());
+                }
+                else{
+                    zoomToNode(_swiftClassGraph, link.getDependentClass());
+                }
             }
         });
     }

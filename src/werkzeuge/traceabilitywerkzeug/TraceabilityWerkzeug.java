@@ -2,7 +2,7 @@ package werkzeuge.traceabilitywerkzeug;
 
 import com.intellij.ui.components.JBList;
 import javafx.collections.SetChangeListener;
-import materials.TraceLinkDependency;
+import materials.ClassDependency;
 import service.ChangePropagationProcess;
 
 import javax.swing.*;
@@ -21,16 +21,16 @@ public class TraceabilityWerkzeug
 
     private void registerTraceLinkListener()
     {
-        _changePropagationProcess.getTraceLinkDepenendecySet().addListener(new SetChangeListener<TraceLinkDependency>() {
+        _changePropagationProcess.getTraceLinkDepenendecySet().addListener(new SetChangeListener<ClassDependency>() {
             @Override
-            public void onChanged(Change<? extends TraceLinkDependency> change) {
+            public void onChanged(Change change) {
                 if(change.wasAdded())
                 {
-                    _ui.getModel().addEntry(change.getElementAdded());
+                    _ui.getModel().addEntry((ClassDependency) change.getElementAdded());
                 }
                 if(change.wasRemoved())
                 {
-                    _ui.getModel().removeEntry(change.getElementRemoved());
+                    _ui.getModel().removeEntry((ClassDependency) change.getElementRemoved());
                 }
             }
         });
@@ -46,7 +46,7 @@ public class TraceabilityWerkzeug
     {
         return _ui.getPanel();
     }
-    public JBList<TraceLinkDependency> getTraceablilityList()
+    public JBList<ClassDependency> getTraceablilityList()
     {
         return  _ui.getTracebilityList();
     }

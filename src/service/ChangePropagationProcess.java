@@ -8,6 +8,7 @@ import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import materials.*;
 import valueobjects.Marking;
+import valueobjects.RelationshipType;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,16 +29,16 @@ public class ChangePropagationProcess{
     @XmlElement (name = "Graph")
     private ChangePropagationModel _model;
 
-    private final ObservableSet<DependencyIF> _affectedEdges  = FXCollections.observableSet(new HashSet<>());
+    private final ObservableSet<ClassDependency> _affectedEdges  = FXCollections.observableSet(new HashSet<>());
     @XmlElement (name = "InitClasses")
     private final ObservableSet<ClassNode> _initialChangedClasse = FXCollections.observableSet(new HashSet<>());
 
     @XmlElement (name = "AffectedClasses")
     private final ObservableSet<ClassNode> _affectedNodes = FXCollections.observableSet(new HashSet<>());
 
-    private final ObservableMap<ClassNode, Set<DependencyIF>> _affectedNodeEdges = FXCollections.observableHashMap();
+    private final ObservableMap<ClassNode, Set<ClassDependency>> _affectedNodeEdges = FXCollections.observableHashMap();
 
-    private final ObservableSet<TraceLinkDependency> _traceabilityLinks = FXCollections.observableSet(new HashSet<>());
+    private final ObservableSet<ClassDependency> _traceabilityLinks = FXCollections.observableSet(new HashSet<>());
 
     private static Set<GraphChangeListener> _listeners = new HashSet<>();
 
@@ -46,7 +47,7 @@ public class ChangePropagationProcess{
         return _INSTANCE;
     }
 
-    public void initialize(final Set<? extends DependencyIF> classdependencies, ChangeAndFixStrategyIF strategy)
+    public void initialize(final Set<? extends ClassDependency> classdependencies, ChangeAndFixStrategyIF strategy)
     {
          clear();
          _model = new ChangePropagationModel(classdependencies);
@@ -174,7 +175,7 @@ public class ChangePropagationProcess{
         }
     }
 
-    private void addEdge(final DependencyIF edge)
+    private void addEdge(final ClassDependency edge)
     {
         boolean added = _affectedEdges.add(edge);
         if(added)
@@ -190,9 +191,9 @@ public class ChangePropagationProcess{
         addNodeEdge(edge.getIndependentClass(), edge);
     }
 
-    public void addNodeEdge(final ClassNode node, final DependencyIF edge)
+    public void addNodeEdge(final ClassNode node, final ClassDependency edge)
     {
-        Set<DependencyIF> nodeEdges = _affectedNodeEdges.get(node);
+        Set<ClassDependency> nodeEdges = _affectedNodeEdges.get(node);
         if(nodeEdges == null)
         {
             nodeEdges = new HashSet<>();
@@ -230,9 +231,9 @@ public class ChangePropagationProcess{
         updateNeigbbourhood(swiftClassNode, Marking.CHANGED);
 
         //Add Dependency
-        TraceLinkDependency dependencyMaterial = new TraceLinkDependency((JavaClassNode) classNodeMaterial, (SwiftClassNode) swiftClassNode, traceabilityLink.getProbability());
-        _traceabilityLinks.add(dependencyMaterial);
-        _model.addEdge(dependencyMaterial);
+        ClassDependency traceDependency = new ClassDependency(classNodeMaterial,swiftClassNode, RelationshipType.TraceabilityRelationship, traceabilityLink.getProbability());
+        _traceabilityLinks.add(traceDependency);
+        _model.addEdge(traceDependency);
     }
     public void addTraceabilityLinkSwiftSource(final SwiftClassNode swiftClassNodeMaterial, final TraceabilityLink traceabilityLink)
     {
@@ -242,9 +243,9 @@ public class ChangePropagationProcess{
         updateNeigbbourhood(javaClassNode, Marking.CHANGED);
 
         //Add Dependency
-        TraceLinkDependency dependencyMaterial = new TraceLinkDependency((JavaClassNode) javaClassNode, (SwiftClassNode) swiftClassNodeMaterial, traceabilityLink.getProbability());
-        _traceabilityLinks.add(dependencyMaterial);
-        _model.addEdge(dependencyMaterial);
+        ClassDependency traceDependency = new ClassDependency(javaClassNode, swiftClassNodeMaterial,RelationshipType.TraceabilityRelationship, traceabilityLink.getProbability());
+        _traceabilityLinks.add(traceDependency);
+        _model.addEdge(traceDependency);
     }
 
     public void addGraphChangeListener(final GraphChangeListener observer)
@@ -283,7 +284,7 @@ public class ChangePropagationProcess{
 
     public ObservableSet<ClassNode> getInitalChangedClasses(){return _initialChangedClasse;}
 
-    public ObservableMap<ClassNode, Set<DependencyIF>> getAffectedNodeEdges(){return _affectedNodeEdges;}
+    public ObservableMap<ClassNode, Set<ClassDependency>> getAffectedNodeEdges(){return _affectedNodeEdges;}
 
-    public ObservableSet<TraceLinkDependency> getTraceLinkDepenendecySet(){return _traceabilityLinks;}
+    public ObservableSet<ClassDependency> getTraceLinkDepenendecySet(){return _traceabilityLinks;}
 }

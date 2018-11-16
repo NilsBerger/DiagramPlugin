@@ -4,7 +4,7 @@ import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
-import materials.DependencyIF;
+import materials.ClassDependency;
 import materials.JavaClassNode;
 import service.ChangePropagationProcess;
 import service.DotFileParserService;
@@ -23,7 +23,7 @@ public class AddInitialContextClassAction extends AnAction {
 
         ChangePropagationProcess propagationProcessService = ChangePropagationProcess.getInstance();
 
-        Set<DependencyIF> dependencyList = new HashSet<>();
+        Set<ClassDependency> dependencyList = new HashSet<>();
         dependencyList.addAll(DotFileParserService.parseJavaDependenciesFromDotFile(DotFileParserService.JAVA_DOT_FILENAME));
         dependencyList.addAll(DotFileParserService.parseSwiftDependenciesFromDotFile(DotFileParserService.DEPCHECK_FILENAME));
         propagationProcessService.initialize(dependencyList, new RandomChangeAndFixStrategy());

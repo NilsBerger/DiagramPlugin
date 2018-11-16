@@ -1,9 +1,9 @@
 package service;
 
 import materials.ClassDependency;
-import materials.DependencyIF;
 import materials.JavaClassNode;
 import materials.SwiftClassNode;
+import valueobjects.RelationshipType;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,9 +27,9 @@ public class DotFileParserService{
     {
     }
 
-    public static Set<DependencyIF> parseJavaDependenciesFromDotFile(final String filepath)
+    public static Set<ClassDependency> parseJavaDependenciesFromDotFile(final String filepath)
     {
-        Set<DependencyIF> dependencies = new HashSet<>();
+        Set<ClassDependency> dependencies = new HashSet<>();
         File dotFile = new File(filepath);
         if(!dotFile.isFile())
         {
@@ -49,7 +49,7 @@ public class DotFileParserService{
                     String[] parts = line.split(delimiter);
                     JavaClassNode dependentClass = new JavaClassNode(parts[0]);
                     JavaClassNode independentClass = new JavaClassNode(parts[1]);
-                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass);
+                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass, RelationshipType.DirectedRelationship);
                     dependencies.add(classDependency);
                 }
             }
@@ -58,15 +58,15 @@ public class DotFileParserService{
         }
         final String lang = ".lang";
         //Delete "lang." dependencies
-        Iterator<DependencyIF> it = dependencies.iterator();
+        Iterator<ClassDependency> it = dependencies.iterator();
         while(it.hasNext())
         {
-            DependencyIF dependencyIF = it.next();
-           if(dependencyIF.getDependentClass().getFullClassName().contains(lang))
+            ClassDependency dependency = it.next();
+           if(dependency.getDependentClass().getFullClassName().contains(lang))
            {
                it.remove();
            }
-           if(dependencyIF.getIndependentClass().getFullClassName().contains(lang))
+           if(dependency.getIndependentClass().getFullClassName().contains(lang))
            {
                it.remove();
            }
@@ -74,9 +74,9 @@ public class DotFileParserService{
         return dependencies;
     }
 
-    public static List<DependencyIF> parseSwiftDependenciesFromDotFile(final String filepath)
+    public static List<ClassDependency> parseSwiftDependenciesFromDotFile(final String filepath)
     {
-        List<DependencyIF> dependencies = new ArrayList<>();
+        List<ClassDependency> dependencies = new ArrayList<>();
         File dotFile = new File(filepath);
         if(!dotFile.isFile())
         {
@@ -96,7 +96,7 @@ public class DotFileParserService{
                     String[] parts = line.split(delimiter);
                     SwiftClassNode dependentClass = new SwiftClassNode(parts[0]);
                     SwiftClassNode independentClass = new SwiftClassNode(parts[1]);
-                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass);
+                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass, RelationshipType.DirectedRelationship);
                     dependencies.add(classDependency);
                 }
             }

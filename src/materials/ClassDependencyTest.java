@@ -17,6 +17,7 @@
 package materials;
 
 import org.junit.Test;
+import valueobjects.RelationshipType;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -26,8 +27,8 @@ public class ClassDependencyTest {
     @Test
     public void equalsAndHashCodeTest() {
 
-        ClassDependency classDependency = new ClassDependency(new JavaClassNode("a"), new JavaClassNode("b"));
-        ClassDependency otherclassDependency = new ClassDependency(new JavaClassNode("a"), new JavaClassNode("b"));
+        ClassDependency classDependency = new ClassDependency(new JavaClassNode("a"), new JavaClassNode("b"), RelationshipType.DirectedRelationship);
+        ClassDependency otherclassDependency = new ClassDependency(new JavaClassNode("a"), new JavaClassNode("b"), RelationshipType.DirectedRelationship);
 
         assertThat(classDependency, is((classDependency)));
         assertThat(classDependency, is(otherclassDependency));
@@ -40,7 +41,7 @@ public class ClassDependencyTest {
     public void getDependenciesTest() {
         JavaClassNode javaClassNodeMaterial = new JavaClassNode("a");
         SwiftClassNode swiftClassNodeMaterial = new SwiftClassNode("b");
-        ClassDependency classDependency = new ClassDependency(javaClassNodeMaterial, swiftClassNodeMaterial);
+        ClassDependency classDependency = new ClassDependency(javaClassNodeMaterial, swiftClassNodeMaterial, RelationshipType.DirectedRelationship);
 
         assertThat(javaClassNodeMaterial, is(classDependency.getDependentClass()));
         assertThat(swiftClassNodeMaterial, is(classDependency.getIndependentClass()));
@@ -52,8 +53,8 @@ public class ClassDependencyTest {
 
         JavaClassNode javaClassNodeMaterial = new JavaClassNode("a");
         SwiftClassNode swiftClassNodeMaterial = new SwiftClassNode("b");
-        ClassDependency classDependency = new ClassDependency(javaClassNodeMaterial, swiftClassNodeMaterial);
-        ClassDependency switchedClassDependency = new ClassDependency(swiftClassNodeMaterial, javaClassNodeMaterial);
+        ClassDependency classDependency = new ClassDependency(javaClassNodeMaterial, swiftClassNodeMaterial, RelationshipType.DirectedRelationship);
+        ClassDependency switchedClassDependency = new ClassDependency(swiftClassNodeMaterial, javaClassNodeMaterial, RelationshipType.DirectedRelationship);
 
         assertThat(classDependency, is(switchedClassDependency.switchDependencies()));
     }

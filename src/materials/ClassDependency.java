@@ -1,43 +1,35 @@
-/*
- * Copyright 1998-2018 Konstantin Bulenkov
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package materials;
 
 import Utils.HashUtils;
+import valueobjects.RelationshipType;
 
 /**
  * Created by Nils-Pc on 06.08.2018.
  */
-public class ClassDependency implements DependencyIF {
-    protected final ClassNode dependentClass;
-    protected final ClassNode independentClass;
+public class ClassDependency{
+    private final ClassNode dependentClass;
+    private final ClassNode independentClass;
+    private RelationshipType _relationshipType;
+    private double _tracelinkvalue = 0;
 
 
-    public ClassDependency(ClassNode dependentClass, ClassNode independentClass)
+    public ClassDependency(ClassNode dependentClass, ClassNode independentClass, RelationshipType relationshipType)
     {
-        if((dependentClass) == null ||(independentClass) == null)
-        {
-            throw new IllegalArgumentException("ClassNode should not be null");
-        }
         this.dependentClass = dependentClass;
         this.independentClass = independentClass;
+        this._relationshipType = relationshipType;
+    }
+
+    public ClassDependency(ClassNode dependentClass, ClassNode independentClass, RelationshipType relationshipType, double tracelinkValue)
+    {
+        this.dependentClass = dependentClass;
+        this.independentClass = independentClass;
+        this._relationshipType = relationshipType;
+        this._tracelinkvalue = tracelinkValue;
     }
     public ClassDependency switchDependencies()
     {
-        return new ClassDependency(this.independentClass, this.dependentClass);
+        return new ClassDependency(this.independentClass, this.dependentClass, this._relationshipType, this._tracelinkvalue);
     }
 
     /**
@@ -55,6 +47,30 @@ public class ClassDependency implements DependencyIF {
      */
     public ClassNode getIndependentClass() {
         return independentClass;
+    }
+
+    public RelationshipType getRelationshipType() {
+        return _relationshipType;
+    }
+
+    public void setRelationshipType(RelationshipType type){
+        _relationshipType = type;
+    }
+
+    /**
+     * @return The Trace Link Value of the dependency
+     */
+    public double getTracelinkValue() {
+        return _tracelinkvalue;
+    }
+
+    /**
+     * Sets
+     * @param tracelinkvalue A value between 0.0 and 100.0.
+     */
+    public void setTracelinkvalue(double tracelinkvalue) {
+        assert tracelinkvalue >=0 && tracelinkvalue <= 100.00 : "Precondition violated: Trace-Link not between 0.0 and 100.0";
+        this._tracelinkvalue = tracelinkvalue;
     }
 
     @Override
@@ -80,6 +96,8 @@ public class ClassDependency implements DependencyIF {
             return false;
         final ClassDependency otherClassNodeFachwert = (ClassDependency) obj;
         return  this.getDependentClass().equals(otherClassNodeFachwert.getDependentClass()) &&
-                this.getIndependentClass().equals(otherClassNodeFachwert.getIndependentClass());
+                this.getIndependentClass().equals(otherClassNodeFachwert.getIndependentClass()) &&
+                this.getRelationshipType() == otherClassNodeFachwert.getRelationshipType() &&
+                this._tracelinkvalue == otherClassNodeFachwert.getTracelinkValue();
     }
 }

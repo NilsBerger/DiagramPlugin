@@ -1,8 +1,8 @@
 package werkzeuge.traceabilitywerkzeug;
 
+import materials.ClassDependency;
 import materials.ClassNode;
 import materials.JavaClassNode;
-import materials.TraceLinkDependency;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +12,7 @@ public class TraceabilityListCellRenderer extends DefaultListCellRenderer {
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-        final TraceLinkDependency traceLinkDependencyMaterial = (TraceLinkDependency) value;
+        final ClassDependency traceLinkDependencyMaterial = (ClassDependency) value;
         ClassNode classNode = traceLinkDependencyMaterial.getIndependentClass();
         ClassNode otherClassNode = traceLinkDependencyMaterial.getDependentClass();
         double traceLinkValue = traceLinkDependencyMaterial.getTracelinkValue();

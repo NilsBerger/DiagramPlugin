@@ -4,6 +4,7 @@ import materials.*;
 import org.hamcrest.core.IsNull;
 import org.junit.Test;
 import valueobjects.Marking;
+import valueobjects.RelationshipType;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -172,7 +173,7 @@ public class ChangePropagationProcessTest {
         assertThat(affectedClasses, hasSize(2));
         assertThat(markedClasses,hasItem(new JavaClassNode("Search")));
         assertThat(markedClasses, hasSize(1));
-        Set<InconsistentDependency> inconsistencies = propagationProcess.getModel().getInconsistencies();
+        Set<ClassDependency> inconsistencies = propagationProcess.getModel().getInconsistencies();
         assertThat(inconsistencies, hasSize(1));
 
         //Selected by programmer
@@ -417,7 +418,7 @@ public class ChangePropagationProcessTest {
         assertThat(propagationProcess.change(new JavaClassNode("Main")), is(true));
     }
 
-    public static final  Set<DependencyIF> getSimpleDependencyList()
+    public static final  Set<ClassDependency> getSimpleDependencyList()
     {
         ClassNode main = new JavaClassNode("Main");
         ClassNode search = new JavaClassNode("Search");
@@ -426,21 +427,21 @@ public class ChangePropagationProcessTest {
         ClassNode data = new JavaClassNode("Data");
         ClassNode init = new JavaClassNode("Init");
 
-        Set<DependencyIF> dependencyFachwertList = new HashSet<>();
+        Set<ClassDependency> dependencyFachwertList = new HashSet<>();
         //conistent
-        dependencyFachwertList.add(new ClassDependency(input,main));
-        dependencyFachwertList.add(new ClassDependency(search,main));
-        dependencyFachwertList.add(new ClassDependency(init,main));
-        dependencyFachwertList.add(new ClassDependency(input,search));
-        dependencyFachwertList.add(new ClassDependency(c,search));
-        dependencyFachwertList.add(new ClassDependency(data,search));
-        dependencyFachwertList.add(new ClassDependency(data,init));
+        dependencyFachwertList.add(new ClassDependency(input,main, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(search,main, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(init,main, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(input,search, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(c,search, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(data,search, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(data,init, RelationshipType.DirectedRelationship));
 
         return dependencyFachwertList;
     }
 
 
-    public static final Set<DependencyIF> getSimpleDependencyFromPaperWithInconsistencies()
+    public static final Set<ClassDependency> getSimpleDependencyFromPaperWithInconsistencies()
     {
         ClassNode main = new JavaClassNode("Main");
         ClassNode search = new JavaClassNode("Search");
@@ -449,29 +450,29 @@ public class ChangePropagationProcessTest {
         ClassNode data = new JavaClassNode("Data");
         ClassNode init = new JavaClassNode("Init");
 
-        Set<DependencyIF> dependencyList = new HashSet<>();
+        Set<ClassDependency> dependencyList = new HashSet<>();
         //conistent
 
-        dependencyList.add(new ClassDependency(main, input));
-        dependencyList.add(new ClassDependency(main, search));
-        dependencyList.add(new ClassDependency(main, init));
-        dependencyList.add(new ClassDependency(search, input));
-        dependencyList.add(new ClassDependency(search, c));
-        dependencyList.add(new ClassDependency(search, data));
-        dependencyList.add(new ClassDependency(init, data));
+        dependencyList.add(new ClassDependency(main, input, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(main, search, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(main, init, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(search, input, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(search, c, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(search, data, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(init, data, RelationshipType.DirectedRelationship));
 
-        dependencyList.add(new InconsistentDependency(new ClassDependency(main, input)));
-        dependencyList.add(new InconsistentDependency(new ClassDependency(main, search)));
-        dependencyList.add(new InconsistentDependency(new ClassDependency(main, init)));
-        dependencyList.add(new InconsistentDependency(new ClassDependency(search, input)));
-        dependencyList.add(new InconsistentDependency(new ClassDependency(search, c)));
-        dependencyList.add(new InconsistentDependency(new ClassDependency(search, data)));
-        dependencyList.add(new InconsistentDependency(new ClassDependency(init, data)));
+        dependencyList.add(new ClassDependency(main, input, RelationshipType.InconsistentRealtionship));
+        dependencyList.add(new ClassDependency(main, search, RelationshipType.InconsistentRealtionship));
+        dependencyList.add(new ClassDependency(main, init, RelationshipType.InconsistentRealtionship));
+        dependencyList.add(new ClassDependency(search, input, RelationshipType.InconsistentRealtionship));
+        dependencyList.add(new ClassDependency(search, c, RelationshipType.InconsistentRealtionship));
+        dependencyList.add(new ClassDependency(search, data, RelationshipType.InconsistentRealtionship));
+        dependencyList.add(new ClassDependency(init, data, RelationshipType.InconsistentRealtionship));
 
         return dependencyList;
     }
 
-    public static final Set<DependencyIF> getSimpleDependencyFromPaper()
+    public static final Set<ClassDependency> getSimpleDependencyFromPaper()
     {
         ClassNode main = new JavaClassNode("Main");
         ClassNode search = new JavaClassNode("Search");
@@ -480,22 +481,22 @@ public class ChangePropagationProcessTest {
         ClassNode data = new JavaClassNode("Data");
         ClassNode init = new JavaClassNode("Init");
 
-        Set<DependencyIF> dependencyList = new HashSet<>();
+        Set<ClassDependency> dependencyList = new HashSet<>();
         //conistent
 
 
-        dependencyList.add(new ClassDependency(main,input));
-        dependencyList.add(new ClassDependency(main, search));
-        dependencyList.add(new ClassDependency(main, init));
-        dependencyList.add(new ClassDependency(search, input));
-        dependencyList.add(new ClassDependency(search, c));
-        dependencyList.add(new ClassDependency(search, data));
-        dependencyList.add(new ClassDependency(init, data));
+        dependencyList.add(new ClassDependency(main,input, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(main, search, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(main, init, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(search, input, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(search, c, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(search, data, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(init, data, RelationshipType.DirectedRelationship));
 
         return dependencyList;
     }
 
-    public static final Set<DependencyIF> getSimpleDependencyFromPaperWithTraceLink()
+    public static final Set<ClassDependency> getSimpleDependencyFromPaperWithTraceLink()
     {
         ClassNode main = new JavaClassNode("Main");
         ClassNode search = new JavaClassNode("Search");
@@ -505,36 +506,36 @@ public class ChangePropagationProcessTest {
         ClassNode data = new JavaClassNode("Data");
         ClassNode init = new JavaClassNode("Init");
 
-        Set<DependencyIF> dependencyList = new HashSet<>();
+        Set<ClassDependency> dependencyList = new HashSet<>();
         //conistent
 
 
-        dependencyList.add(new ClassDependency(main,input));
-        dependencyList.add(new ClassDependency(main, search));
-        dependencyList.add(new ClassDependency(main, init));
-        dependencyList.add(new ClassDependency(search, input));
-        dependencyList.add(new ClassDependency(search, c));
-        dependencyList.add(new ClassDependency(search, data));
-        dependencyList.add(new ClassDependency(search, searchswift));
-        dependencyList.add(new ClassDependency(init, data));
+        dependencyList.add(new ClassDependency(main,input, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(main, search, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(main, init, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(search, input, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(search, c, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(search, data, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(search, searchswift, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(init, data, RelationshipType.DirectedRelationship));
 
         return dependencyList;
     }
 
-    public static final Set<DependencyIF> getSmallGraph()
+    public static final Set<ClassDependency> getSmallGraph()
     {
         ClassNode a = new JavaClassNode("a");
         ClassNode b = new JavaClassNode("b");
         ClassNode c = new JavaClassNode("c");
 
-        Set<DependencyIF> dependencyFachwertList = new HashSet<>();
+        Set<ClassDependency> dependencyFachwertList = new HashSet<>();
         //conistent
-        dependencyFachwertList.add(new ClassDependency(a,b));
-        dependencyFachwertList.add(new ClassDependency(b,c));
+        dependencyFachwertList.add(new ClassDependency(a,b, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(b,c, RelationshipType.DirectedRelationship));
         return dependencyFachwertList;
     }
 
-    public static final Set<DependencyIF> getJavaAndSwiftDependencyList()
+    public static final Set<ClassDependency> getJavaAndSwiftDependencyList()
     {
         ClassNode javaMain = new JavaClassNode("java.Main");
         ClassNode javaSearch = new JavaClassNode("java.Search");
@@ -543,15 +544,15 @@ public class ChangePropagationProcessTest {
         ClassNode javaData = new JavaClassNode("java.Data");
         ClassNode javaInit = new JavaClassNode("java.Init");
 
-        Set<DependencyIF> dependencyFachwertList = new HashSet<>();
+        Set<ClassDependency> dependencyFachwertList = new HashSet<>();
         //conistent
-        dependencyFachwertList.add(new ClassDependency(javaInput,javaMain));
-        dependencyFachwertList.add(new ClassDependency(javaSearch,javaMain));
-        dependencyFachwertList.add(new ClassDependency(javaInit,javaMain));
-        dependencyFachwertList.add(new ClassDependency(javaInput,javaSearch));
-        dependencyFachwertList.add(new ClassDependency(javaC,javaSearch));
-        dependencyFachwertList.add(new ClassDependency(javaData,javaSearch));
-        dependencyFachwertList.add(new ClassDependency(javaData,javaInit));
+        dependencyFachwertList.add(new ClassDependency(javaInput,javaMain, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(javaSearch,javaMain, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(javaInit,javaMain, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(javaInput,javaSearch, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(javaC,javaSearch, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(javaData,javaSearch, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(javaData,javaInit, RelationshipType.DirectedRelationship));
 
         ClassNode swiftMain = new SwiftClassNode("swift.Main");
         ClassNode swiftSearch = new SwiftClassNode("swift..Search");
@@ -561,13 +562,13 @@ public class ChangePropagationProcessTest {
         ClassNode swiftInit = new SwiftClassNode("swift.Init");
 
         //conistent
-        dependencyFachwertList.add(new ClassDependency(swiftInput,swiftMain));
-        dependencyFachwertList.add(new ClassDependency(swiftSearch,swiftMain));
-        dependencyFachwertList.add(new ClassDependency(swiftInit,swiftMain));
-        dependencyFachwertList.add(new ClassDependency(swiftInput,swiftSearch));
-        dependencyFachwertList.add(new ClassDependency(swiftC,swiftSearch));
-        dependencyFachwertList.add(new ClassDependency(swiftData,swiftSearch));
-        dependencyFachwertList.add(new ClassDependency(swiftData,swiftInit));
+        dependencyFachwertList.add(new ClassDependency(swiftInput,swiftMain, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(swiftSearch,swiftMain, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(swiftInit,swiftMain, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(swiftInput,swiftSearch, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(swiftC,swiftSearch, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(swiftData,swiftSearch, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(swiftData,swiftInit, RelationshipType.DirectedRelationship));
 
         //TraceLinks
 

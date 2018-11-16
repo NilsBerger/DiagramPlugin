@@ -1,7 +1,7 @@
 package actions;
 
 
-import materials.DependencyIF;
+import materials.ClassDependency;
 import service.ChangePropagationProcess;
 import service.ChangePropagationProcessTest;
 import service.DotFileParserService;
@@ -43,7 +43,7 @@ public class ClassDiagramProvider extends BaseDiagramProvider<ClassNode> {
         _cpProcess = ChangePropagationProcess.getInstance();
         _cpProcess.initialize(ChangePropagationProcessTest.getJavaAndSwiftDependencyList(), new RandomChangeAndFixStrategy());
         _toolWindowWerkzeug = new ToolWindowWerkzeug();
-        Set<DependencyIF> dependencyList = new HashSet<>();
+        Set<ClassDependency> dependencyList = new HashSet<>();
         dependencyList.addAll(DotFileParserService.parseJavaDependenciesFromDotFile(DotFileParserService.JAVA_DOT_FILENAME));
         dependencyList.addAll(DotFileParserService.parseSwiftDependenciesFromDotFile(DotFileParserService.DEPCHECK_FILENAME));
         _cpProcess.initialize(dependencyList, new RandomChangeAndFixStrategy());

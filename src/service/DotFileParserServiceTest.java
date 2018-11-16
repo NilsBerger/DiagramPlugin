@@ -1,6 +1,6 @@
 package service;
 
-import materials.DependencyIF;
+import materials.ClassDependency;
 import materials.JavaClassNode;
 import materials.SwiftClassNode;
 import org.junit.Test;
@@ -21,12 +21,12 @@ public class DotFileParserServiceTest
     public void paserJavaDepenendicesFormDotFileTest()
     {
 
-        Set<DependencyIF> dependencies = DotFileParserService.parseJavaDependenciesFromDotFile(_filepath);
+        Set<ClassDependency> dependencies = DotFileParserService.parseJavaDependenciesFromDotFile(_filepath);
 
         assertThat(dependencies.size(), greaterThan(0));
         assertThat(dependencies.size(), is(13));
 
-        for(DependencyIF dependency : dependencies)
+        for(ClassDependency dependency : dependencies)
         {
             assertThat(dependency.getDependentClass(), is(instanceOf(JavaClassNode.class)));
             assertThat(dependency.getIndependentClass(), is(instanceOf(JavaClassNode.class)));
@@ -37,12 +37,12 @@ public class DotFileParserServiceTest
     public void paserSwiftDepenendicesFormDotFileTest()
     {
 
-        List<DependencyIF> dependencies = DotFileParserService.parseSwiftDependenciesFromDotFile(_filepath);
+        List<ClassDependency> dependencies = DotFileParserService.parseSwiftDependenciesFromDotFile(_filepath);
 
         assertThat(dependencies.size(), greaterThan(0));
         assertThat(dependencies.size(), is(21));
 
-        for(DependencyIF dependency : dependencies)
+        for(ClassDependency dependency : dependencies)
         {
             assertThat(dependency.getDependentClass(), is(instanceOf(SwiftClassNode.class)));
             assertThat(dependency.getIndependentClass(), is(instanceOf(SwiftClassNode.class)));

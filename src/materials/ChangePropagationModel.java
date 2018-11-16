@@ -1,17 +1,19 @@
 package materials;
 
 
+import valueobjects.RelationshipType;
+
 import java.util.*;
 
 public class ChangePropagationModel {
 
     private Set<ClassNode> _oldnodes;
-    private Set<DependencyIF> _oldedges;
-    private Map<ClassNode, Set<DependencyIF>> _oldnodesEdges;
+    private Set<ClassDependency> _oldedges;
+    private Map<ClassNode, Set<ClassDependency>> _oldnodesEdges;
 
     private Set<ClassNode> _nodes;
-    private Set<DependencyIF> _edges;
-    private Map<ClassNode, Set<DependencyIF>> _nodesEdges;
+    private Set<ClassDependency> _edges;
+    private Map<ClassNode, Set<ClassDependency>> _nodesEdges;
 
 
     public ChangePropagationModel()
@@ -21,7 +23,7 @@ public class ChangePropagationModel {
         _edges = new HashSet<>();
     }
 
-    public ChangePropagationModel(final Set<? extends DependencyIF> classdependencies)
+    public ChangePropagationModel(final Set<? extends ClassDependency> classdependencies)
     {
         _nodes = new HashSet<>();
         _nodesEdges = new HashMap<>();
@@ -39,12 +41,12 @@ public class ChangePropagationModel {
         {
             _oldnodes.add(nodesIterator.next());
         }
-        Iterator<DependencyIF> edgesIterator = _edges.iterator();
+        Iterator<ClassDependency> edgesIterator = _edges.iterator();
         while(edgesIterator.hasNext())
         {
             _oldedges.add(edgesIterator.next());
         }
-        for(Map.Entry<ClassNode, Set<DependencyIF>> entry : _nodesEdges.entrySet())
+        for(Map.Entry<ClassNode, Set<ClassDependency>> entry : _nodesEdges.entrySet())
         {
             _oldnodesEdges.put(entry.getKey(), entry.getValue());
         }
@@ -62,7 +64,7 @@ public class ChangePropagationModel {
         }
     }
 
-    public void addEdge(final DependencyIF edge)
+    public void addEdge(final ClassDependency edge)
     {
         boolean added = _edges.add(edge);
         if(added)
@@ -78,9 +80,9 @@ public class ChangePropagationModel {
         addNodeEdge(edge.getIndependentClass(), edge);
     }
 
-    public void addNodeEdge(final ClassNode node, final DependencyIF edge)
+    public void addNodeEdge(final ClassNode node, final ClassDependency edge)
     {
-        Set<DependencyIF> nodeEdges = _nodesEdges.get(node);
+        Set<ClassDependency> nodeEdges = _nodesEdges.get(node);
         if(nodeEdges == null)
         {
             nodeEdges = new HashSet<>();
@@ -93,9 +95,9 @@ public class ChangePropagationModel {
      *
      * @param edges
      */
-    public void addAll(final Set<? extends DependencyIF> edges)
+    public void addAll(final Set<? extends ClassDependency> edges)
     {
-        for(DependencyIF edge : edges)
+        for(ClassDependency edge : edges)
         {
             addEdge(edge);
         }
@@ -103,10 +105,10 @@ public class ChangePropagationModel {
 
     public void removeNodeEdges(final ClassNode node)
     {
-        Set<DependencyIF> nodeEdges = _nodesEdges.get(node);
+        Set<ClassDependency> nodeEdges = _nodesEdges.get(node);
         if(nodeEdges != null)
         {
-            for(DependencyIF nodeEdge : nodeEdges)
+            for(ClassDependency nodeEdge : nodeEdges)
             {
                 removeEdge(nodeEdge);
             }
@@ -125,7 +127,7 @@ public class ChangePropagationModel {
         return removed;
     }
 
-    public boolean removeEdge(final DependencyIF edge)
+    public boolean removeEdge(final ClassDependency edge)
     {
         boolean removed = _edges.remove(edge);
         if(removed)
@@ -140,11 +142,11 @@ public class ChangePropagationModel {
 
     public Set<ClassNode> getTopDependencies(final ClassNode classNode)
     {
-        Set<DependencyIF> edgesForNode = _nodesEdges.get(classNode);
+        Set<ClassDependency> edgesForNode = _nodesEdges.get(classNode);
         Set<ClassNode> topDependencies = new HashSet();
-        for(DependencyIF edge: edgesForNode)
+        for(ClassDependency edge: edgesForNode)
         {
-            if(!(edge instanceof InconsistentDependency))
+            if(edge.getRelationshipType() != RelationshipType.TraceabilityRelationship)
             {
                 if(!edge.getIndependentClass().equals(classNode))
                 {
@@ -157,9 +159,9 @@ public class ChangePropagationModel {
     public Set<ClassNode> getBottomDependencies(final ClassNode classNode)
     {
         Set<ClassNode> topDependencies = new HashSet();
-        for(DependencyIF edge: _nodesEdges.get(classNode))
+        for(ClassDependency edge: _nodesEdges.get(classNode))
         {
-            if(!(edge instanceof InconsistentDependency))
+            if(edge.getRelationshipType() != RelationshipType.TraceabilityRelationship)
             {
                 if(!edge.getDependentClass().equals(classNode))
                 {
@@ -172,9 +174,9 @@ public class ChangePropagationModel {
     public Set<ClassNode> getTopInconsistencies(final ClassNode classNode)
     {
         Set<ClassNode> bottomDependencies = new HashSet();
-        for(DependencyIF edge: _nodesEdges.get(classNode))
+        for(ClassDependency edge: _nodesEdges.get(classNode))
         {
-            if(edge instanceof InconsistentDependency)
+            if(edge.getRelationshipType() == RelationshipType.InconsistentRealtionship)
             {
                 if(!edge.getIndependentClass().equals(classNode))
                 {
@@ -186,11 +188,11 @@ public class ChangePropagationModel {
     }
     public Set<ClassNode> getBottomInconsistencies(final ClassNode classNode)
     {
-        Set<DependencyIF> edgesForNode = _nodesEdges.get(classNode);
+        Set<ClassDependency> edgesForNode = _nodesEdges.get(classNode);
         Set<ClassNode> topDependencies = new HashSet();
-        for(DependencyIF edge: edgesForNode)
+        for(ClassDependency edge: edgesForNode)
         {
-            if(edge instanceof InconsistentDependency)
+            if(edge.getRelationshipType() == RelationshipType.InconsistentRealtionship)
             {
                 if(!edge.getDependentClass().equals(classNode))
                 {
@@ -231,27 +233,28 @@ public class ChangePropagationModel {
         assert changedNode != null : "ClassNode should not be null";
         assert _nodesEdges.containsKey(changedNode) : "ClassNode not contained in graph";
 
-        Set<DependencyIF> dependencies = _nodesEdges.get(changedNode);
-        Set<InconsistentDependency> newInconsistencies = new HashSet<>();
-        Iterator<DependencyIF> it= dependencies.iterator();
+        Set<ClassDependency> dependencies = _nodesEdges.get(changedNode);
+        Set<ClassDependency> newInconsistencies = new HashSet<>();
+        Iterator<ClassDependency> it= dependencies.iterator();
 
         while(it.hasNext())
         {
-            DependencyIF dependency = it.next();
-            if(!(dependency instanceof InconsistentDependency) && dependency instanceof ClassDependency)
+            ClassDependency dependency = it.next();
+            if(dependency.getRelationshipType() != RelationshipType.InconsistentRealtionship)
             {
-                boolean isReflexiv = ((ClassDependency) dependency).dependentClass.equals(changedNode) &&
-                        ((ClassDependency) dependency).independentClass.equals(dependency);
+                boolean isReflexiv = dependency.getDependentClass().equals(changedNode) &&
+                         dependency.getIndependentClass().equals(changedNode);
                 if(isReflexiv)
                 {
-                    newInconsistencies.add(new InconsistentDependency((ClassDependency) dependency));
+                    ClassDependency reflexivDependency = new ClassDependency(dependency.getDependentClass(), dependency.getIndependentClass(), RelationshipType.InconsistentRealtionship);
+                    newInconsistencies.add(reflexivDependency);
                     break;
                 }
                 if(dependency.getIndependentClass().equals(changedNode) )
                 {
                     if(!inconcistencyBetweenNodes(dependency.getDependentClass(), dependency.getIndependentClass()))
                     {
-                        newInconsistencies.add(new InconsistentDependency(changedNode, dependency.getDependentClass()));
+                        newInconsistencies.add(new ClassDependency(changedNode, dependency.getDependentClass(), RelationshipType.InconsistentRealtionship));
                     }
 
                 }
@@ -259,7 +262,7 @@ public class ChangePropagationModel {
                 {
                     if(!inconcistencyBetweenNodes(dependency.getDependentClass(), dependency.getIndependentClass()))
                     {
-                        newInconsistencies.add(new InconsistentDependency((ClassDependency) dependency));
+                        newInconsistencies.add(new ClassDependency(dependency.getDependentClass(), dependency.getIndependentClass(), RelationshipType.InconsistentRealtionship));
                     }
 
                 }
@@ -269,14 +272,14 @@ public class ChangePropagationModel {
         addAll(newInconsistencies);
     }
 
-    public Set<InconsistentDependency> getInconsistencies()
+    public Set<ClassDependency> getInconsistencies()
     {
-        Set<InconsistentDependency> inconsistencies = new HashSet<>();
-        for(DependencyIF dependency : _edges)
+        Set<ClassDependency> inconsistencies = new HashSet<>();
+        for(ClassDependency dependency : _edges)
         {
-            if(dependency instanceof InconsistentDependency)
+            if(dependency.getRelationshipType() == RelationshipType.InconsistentRealtionship)
             {
-                inconsistencies.add((InconsistentDependency) dependency);
+                inconsistencies.add(dependency);
             }
         }
         return inconsistencies;
@@ -286,11 +289,11 @@ public class ChangePropagationModel {
     {
         assert _nodesEdges.containsKey(a) : "ClassNode stored as a key";
         assert _nodesEdges.containsKey(b) : "ClassNode stored as a key";
-        for(DependencyIF dependency : _edges)
+        for(ClassDependency dependency : _edges)
         {
             boolean dependent = dependency.getDependentClass().equals(a) || dependency.getDependentClass().equals(b);
             boolean independent = dependency.getIndependentClass().equals(a) || dependency.getIndependentClass().equals(b);
-            boolean isInconsistency = (dependency instanceof InconsistentDependency);
+            boolean isInconsistency = (dependency.getRelationshipType() == RelationshipType.InconsistentRealtionship);
             boolean inconsistency = dependent && independent && isInconsistency;
             if(inconsistency)
                 return true;
