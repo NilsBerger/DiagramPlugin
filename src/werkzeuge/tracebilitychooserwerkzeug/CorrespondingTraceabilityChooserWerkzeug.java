@@ -21,10 +21,9 @@ import com.intellij.openapi.project.ProjectManager;
 import de.unihamburg.masterprojekt2016.traceability.TraceabilityLink;
 import de.unihamburg.masterprojekt2016.traceability.TypePointer;
 import materials.ClassNode;
-import materials.JavaClassNode;
-import materials.SwiftClassNode;
 import service.ChangePropagationProcess;
 import service.TraceabilityClassNodeService;
+import valueobjects.ClassNodeType;
 
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseEvent;
@@ -54,13 +53,13 @@ public class CorrespondingTraceabilityChooserWerkzeug{
 
     private List<TraceabilityLink> getTraceabilityLinks(final ClassNode classNode)
     {
-        if(classNode instanceof JavaClassNode)
+        if(classNode.getType() == ClassNodeType.Java)
         {
-            return traceabilityClassNodeService.getSwiftTracebiliityLinksForJavaClassNode((JavaClassNode) _classNode);
+            return traceabilityClassNodeService.getSwiftTracebiliityLinksForJavaClassNode(_classNode);
         }
-        if(classNode instanceof SwiftClassNode)
+        if(classNode.getType() == ClassNodeType.Swift)
         {
-            return traceabilityClassNodeService.getJavaTracebiliityLinksForSwiftClassNode((SwiftClassNode) classNode);
+            return traceabilityClassNodeService.getJavaTracebiliityLinksForSwiftClassNode(classNode);
         }
         return Collections.emptyList();
     }
@@ -76,13 +75,13 @@ public class CorrespondingTraceabilityChooserWerkzeug{
             public void mouseClicked(MouseEvent e) {
                 TraceabilityLink link = _ui.getJBList().getSelectedValue();
                 link.setSource(new TypePointer());
-                if(_classNode instanceof JavaClassNode)
+                if(_classNode.getType() == ClassNodeType.Java)
                 {
-                    _propagationProcessService.addTraceabilityLinkJavaSource((JavaClassNode) _classNode, link);
+                    _propagationProcessService.addTraceabilityLinkJavaSource(_classNode, link);
                 }
-                if(_classNode instanceof SwiftClassNode)
+                if(_classNode.getType() == ClassNodeType.Swift)
                 {
-                    _propagationProcessService.addTraceabilityLinkSwiftSource((SwiftClassNode) _classNode, link);
+                    _propagationProcessService.addTraceabilityLinkSwiftSource(_classNode, link);
                 }
 
             }

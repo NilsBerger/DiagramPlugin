@@ -24,9 +24,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import de.unihamburg.masterprojekt2016.traceability.TraceabilityLink;
 import de.unihamburg.masterprojekt2016.traceability.TraceabilityPointer;
 import materials.ClassNode;
-import materials.JavaClassNode;
-import materials.SwiftClassNode;
 import service.TraceabilityClassNodeService;
+import valueobjects.ClassNodeType;
 
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseEvent;
@@ -54,13 +53,13 @@ public class TracebilityChooserWerkzeug {
 
     private List<TraceabilityLink> getTraceabilityLinks(final ClassNode classNode)
     {
-        if(classNode instanceof JavaClassNode)
+        if(classNode.getType() == ClassNodeType.Java)
         {
-            return _service.getJavaTracebiliityLinksForJavaClassNode((JavaClassNode) classNode);
+            return _service.getJavaTracebiliityLinksForJavaClassNode(classNode);
         }
-        if(classNode instanceof SwiftClassNode)
+        if(classNode.getType() ==  ClassNodeType.Swift)
         {
-            return _service.getSwiftTracebiliityLinksForSwiftClassNode((SwiftClassNode) classNode);
+            return _service.getSwiftTracebiliityLinksForSwiftClassNode(classNode);
         }
         return Collections.emptyList();
     }

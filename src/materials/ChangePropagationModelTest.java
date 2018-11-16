@@ -1,23 +1,8 @@
-/*
- * Copyright 1998-2018 Konstantin Bulenkov
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package materials;
 
 import org.junit.Test;
 import service.ChangePropagationProcessTest;
+import valueobjects.ClassNodeType;
 import valueobjects.RelationshipType;
 
 
@@ -33,15 +18,15 @@ public class ChangePropagationModelTest {
     public void getTopDependencies() {
         ChangePropagationModel modelMaterial = new ChangePropagationModel(ChangePropagationProcessTest.getSimpleDependencyFromPaper());
 
-        JavaClassNode search = new JavaClassNode("Search");
+        ClassNode search = new ClassNode("Search", ClassNodeType.Java);
         Set<ClassNode> searchTopDependencies = modelMaterial.getTopDependencies(search);
 
         assertThat(searchTopDependencies, hasSize(3));
-        assertThat(searchTopDependencies, hasItem(new JavaClassNode("Input")));
-        assertThat(searchTopDependencies, hasItem(new JavaClassNode("C")));
-        assertThat(searchTopDependencies, hasItem(new JavaClassNode("Data")));
+        assertThat(searchTopDependencies, hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(searchTopDependencies, hasItem(new ClassNode("C", ClassNodeType.Java)));
+        assertThat(searchTopDependencies, hasItem(new ClassNode("Data", ClassNodeType.Java)));
 
-        JavaClassNode c = new JavaClassNode("C");
+        ClassNode c = new ClassNode("C", ClassNodeType.Java);
         Set<ClassNode> cTopDependencies = modelMaterial.getTopDependencies(c);
 
         assertThat(cTopDependencies, hasSize(0));
@@ -50,15 +35,14 @@ public class ChangePropagationModelTest {
     @Test
     public void getBottomDependencies() {
         ChangePropagationModel modelMaterial = new ChangePropagationModel(ChangePropagationProcessTest.getSimpleDependencyFromPaper());
-
-        JavaClassNode data = new JavaClassNode("Data");
+        ClassNode data = new ClassNode("Data", ClassNodeType.Java);
         Set<ClassNode> searchBottomDependencies = modelMaterial.getBottomDependencies(data);
 
         assertThat(searchBottomDependencies, hasSize(2));
-        assertThat(searchBottomDependencies, hasItem(new JavaClassNode("Search")));
-        assertThat(searchBottomDependencies, hasItem(new JavaClassNode("Init")));
+        assertThat(searchBottomDependencies, hasItem(new ClassNode("Search", ClassNodeType.Java)));
+        assertThat(searchBottomDependencies, hasItem(new ClassNode("Init", ClassNodeType.Java)));
 
-        JavaClassNode main = new JavaClassNode("Main");
+        ClassNode main = new ClassNode("Main", ClassNodeType.Java);
         Set<ClassNode> cTopDependencies = modelMaterial.getBottomDependencies(main);
 
         assertThat(cTopDependencies, hasSize(0));
@@ -68,15 +52,15 @@ public class ChangePropagationModelTest {
     public void getTopInconsistencies() {
         ChangePropagationModel modelMaterial = new ChangePropagationModel(ChangePropagationProcessTest.getSimpleDependencyFromPaperWithInconsistencies());
 
-        JavaClassNode search = new JavaClassNode("Search");
+        ClassNode search = new ClassNode("Search", ClassNodeType.Java);
         Set<ClassNode> searchTopDependencies = modelMaterial.getTopInconsistencies(search);
 
         assertThat(searchTopDependencies, hasSize(3));
-        assertThat(searchTopDependencies, hasItem(new JavaClassNode("Input")));
-        assertThat(searchTopDependencies, hasItem(new JavaClassNode("C")));
-        assertThat(searchTopDependencies, hasItem(new JavaClassNode("Data")));
+        assertThat(searchTopDependencies, hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(searchTopDependencies, hasItem(new ClassNode("C", ClassNodeType.Java)));
+        assertThat(searchTopDependencies, hasItem(new ClassNode("Data", ClassNodeType.Java)));
 
-        JavaClassNode c = new JavaClassNode("C");
+        ClassNode c = new ClassNode("C", ClassNodeType.Java);
         Set<ClassNode> cTopDependencies = modelMaterial.getTopInconsistencies(c);
 
         assertThat(cTopDependencies, hasSize(0));
@@ -86,14 +70,14 @@ public class ChangePropagationModelTest {
     public void getBottomInconsistencies() {
         ChangePropagationModel modelMaterial = new ChangePropagationModel(ChangePropagationProcessTest.getSimpleDependencyFromPaperWithInconsistencies());
 
-        JavaClassNode data = new JavaClassNode("Data");
+        ClassNode data = new ClassNode("Data", ClassNodeType.Java);
         Set<ClassNode> searchTopDependencies = modelMaterial.getBottomInconsistencies(data);
 
         assertThat(searchTopDependencies, hasSize(2));
-        assertThat(searchTopDependencies, hasItem(new JavaClassNode("Search")));
-        assertThat(searchTopDependencies, hasItem(new JavaClassNode("Init")));
+        assertThat(searchTopDependencies, hasItem(new ClassNode("Search", ClassNodeType.Java)));
+        assertThat(searchTopDependencies, hasItem(new ClassNode("Init", ClassNodeType.Java)));
 
-        JavaClassNode main = new JavaClassNode("Main");
+        ClassNode main = new ClassNode("Main", ClassNodeType.Java);
         Set<ClassNode> cTopDependencies = modelMaterial.getBottomInconsistencies(main);
 
         assertThat(cTopDependencies, hasSize(0));
@@ -103,16 +87,16 @@ public class ChangePropagationModelTest {
     public void createInconsistenciesTest() {
         ChangePropagationModel modelMaterial = new ChangePropagationModel(ChangePropagationProcessTest.getSimpleDependencyFromPaper());
 
-        modelMaterial.createInconsistencies(new JavaClassNode("C"));
-        ClassDependency cToSearch = new ClassDependency(new JavaClassNode("C"), new JavaClassNode("Search"), RelationshipType.InconsistentRealtionship);
+        modelMaterial.createInconsistencies(new ClassNode("C", ClassNodeType.Java));
+        ClassDependency cToSearch = new ClassDependency(new ClassNode("C", ClassNodeType.Java), new ClassNode("Search", ClassNodeType.Java), RelationshipType.InconsistentRealtionship);
         Set<ClassDependency> inconsistencies = modelMaterial.getInconsistencies();
         assertThat(inconsistencies, hasSize(1));
         assertThat(inconsistencies, hasItem(cToSearch));
 
-        modelMaterial.createInconsistencies(new JavaClassNode("Search"));
-        ClassDependency searchToInput = new ClassDependency(new JavaClassNode("Search"), new JavaClassNode("Input"), RelationshipType.InconsistentRealtionship);
-        ClassDependency searchToData = new ClassDependency(new JavaClassNode("Search"), new JavaClassNode("Data"), RelationshipType.InconsistentRealtionship);
-        ClassDependency searchToMain = new ClassDependency(new JavaClassNode("Search"), new JavaClassNode("Main"), RelationshipType.InconsistentRealtionship);
+        modelMaterial.createInconsistencies(new ClassNode("Search", ClassNodeType.Java));
+        ClassDependency searchToInput = new ClassDependency(new ClassNode("Search", ClassNodeType.Java), new ClassNode("Input", ClassNodeType.Java), RelationshipType.InconsistentRealtionship);
+        ClassDependency searchToData = new ClassDependency(new ClassNode("Search", ClassNodeType.Java), new ClassNode("Data", ClassNodeType.Java), RelationshipType.InconsistentRealtionship);
+        ClassDependency searchToMain = new ClassDependency(new ClassNode("Search", ClassNodeType.Java), new ClassNode("Main", ClassNodeType.Java), RelationshipType.InconsistentRealtionship);
         //InconsistentDependency searchToC = new InconsistentDependency(new JavaClassNode("Search"), new JavaClassNode("C"));
         inconsistencies = modelMaterial.getInconsistencies();
         assertThat(inconsistencies, hasSize(4));
@@ -123,8 +107,8 @@ public class ChangePropagationModelTest {
         //assertThat(inconsistencies, hasItem(searchToC));
 
 
-        modelMaterial.createInconsistencies(new JavaClassNode("Data"));
-        ClassDependency dataToInit = new ClassDependency(new JavaClassNode("Data"), new JavaClassNode("Init"), RelationshipType.InconsistentRealtionship);
+        modelMaterial.createInconsistencies(new ClassNode("Data", ClassNodeType.Java));
+        ClassDependency dataToInit = new ClassDependency(new ClassNode("Data", ClassNodeType.Java), new ClassNode("Init", ClassNodeType.Java), RelationshipType.InconsistentRealtionship);
         inconsistencies = modelMaterial.getInconsistencies();
         assertThat(inconsistencies, hasSize(5));
         assertThat(inconsistencies, hasItem(dataToInit));

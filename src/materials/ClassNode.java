@@ -18,6 +18,7 @@ package materials;
 
 import Utils.HashUtils;
 import service.GraphChangeListener;
+import valueobjects.ClassNodeType;
 import valueobjects.Marking;
 
 import java.io.File;
@@ -42,13 +43,13 @@ public class ClassNode {
     @XmlTransient
     private Marking _oldMarking;
 
+    private final ClassNodeType _type;
+
     private String _sourceFilePath = "";
 
-    //JAXB
-    public ClassNode()
-    {}
 
-    public ClassNode(final String className)
+
+    public ClassNode(final String className, ClassNodeType type)
     {
         if((className != null) && (className.trim().equals("")))
         {
@@ -57,9 +58,10 @@ public class ClassNode {
         this._className = className;
         this._listeners = ConcurrentHashMap.newKeySet();
         this._oldMarking = this._marking;
+        this._type = type;
     }
 
-    public ClassNode(final String className, Marking marking)
+    public ClassNode(final String className, Marking marking, ClassNodeType type)
     {
         if((className != null) && (className.trim().equals("")))
         {
@@ -68,6 +70,7 @@ public class ClassNode {
         this._className = className;
         this._listeners = new HashSet<>();
         this._marking = marking;
+        this._type = type;
     }
     @XmlAttribute(name = "FQN")
     public String getFullClassName()
@@ -84,6 +87,11 @@ public class ClassNode {
     @XmlAttribute(name = "Marking")
     public synchronized Marking getMarking() {
         return _marking;
+    }
+
+    public ClassNodeType getType()
+    {
+        return _type;
     }
 
     /**
@@ -142,7 +150,8 @@ public class ClassNode {
         if(this.getClass() != obj.getClass())
             return false;
         final ClassNode otherClassNodeFachwert = (ClassNode) obj;
-        return this.getSimpleClassName().equals(otherClassNodeFachwert.getSimpleClassName());
+        return this.getSimpleClassName().equals(otherClassNodeFachwert.getSimpleClassName()) &&
+                this._type == otherClassNodeFachwert.getType();
     }
 }
 

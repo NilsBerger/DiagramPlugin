@@ -1,14 +1,14 @@
 package service;
 
 import materials.ClassNode;
-import materials.SwiftClassNode;
+import valueobjects.ClassNodeType;
 
 public class ClassNodeFilter {
     private ClassNodeFilter(){}
 
     public static boolean isClassNodeFromAPI(ClassNode classNode)
     {
-        if(classNode instanceof SwiftClassNode)
+        if(classNode.getType() == ClassNodeType.Swift)
         {
             return false;
         }

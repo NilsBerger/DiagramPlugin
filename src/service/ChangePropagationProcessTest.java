@@ -3,6 +3,7 @@ package service;
 import materials.*;
 import org.hamcrest.core.IsNull;
 import org.junit.Test;
+import valueobjects.ClassNodeType;
 import valueobjects.Marking;
 import valueobjects.RelationshipType;
 
@@ -21,35 +22,35 @@ public class ChangePropagationProcessTest {
     {
         ChangePropagationProcess propgatatesProcess = ChangePropagationProcess.getInstance();
         propgatatesProcess.initialize(getSimpleDependencyFromPaper(), new RandomChangeAndFixStrategy());
-        propgatatesProcess.change(new JavaClassNode("C"));
+        propgatatesProcess.change(new ClassNode("C", ClassNodeType.Java));
 
         Set<ClassNode> affectedClasses = propgatatesProcess.getAffectedClassesByChange();
         Set<ClassNode> classesMarkedByNext = propgatatesProcess.getNextMarkedClasses();
 
         //Tests
         assertThat(affectedClasses, hasSize(2));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Search")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("C")));
+        assertThat(affectedClasses, hasItem(new ClassNode("Search", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("C", ClassNodeType.Java)));
 
         assertThat(classesMarkedByNext, hasSize(1));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("Search")));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Search", ClassNodeType.Java)));
 
         // "Search" --> Marking "Change"
-        propgatatesProcess.updateNeigbbourhood(new JavaClassNode("Search"), Marking.CHANGED);
+        propgatatesProcess.updateNeigbbourhood(new ClassNode("Search", ClassNodeType.Java), Marking.CHANGED);
         affectedClasses = propgatatesProcess.getAffectedClassesByChange();
         classesMarkedByNext = propgatatesProcess.getNextMarkedClasses();
 
         assertThat(affectedClasses, hasSize(5));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Search")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("C")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Input")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Data")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Main")));
+        assertThat(affectedClasses, hasItem(new ClassNode("Search", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("C", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Data", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Main", ClassNodeType.Java)));
 
         assertThat(classesMarkedByNext, hasSize(3));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("Input")));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("Data")));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("Main")));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Data", ClassNodeType.Java)));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Main", ClassNodeType.Java)));
 
     }
 
@@ -59,35 +60,35 @@ public class ChangePropagationProcessTest {
     {
         ChangePropagationProcess propgatatesProcess = ChangePropagationProcess.getInstance();
         propgatatesProcess.initialize(getSimpleDependencyFromPaper(), new RandomChangeAndFixStrategy());
-        propgatatesProcess.change(new JavaClassNode("C"));
+        propgatatesProcess.change(new ClassNode("C", ClassNodeType.Java));
 
         Set<ClassNode> affectedClasses = propgatatesProcess.getAffectedClassesByChange();
         Set<ClassNode> classesMarkedByNext = propgatatesProcess.getNextMarkedClasses();
 
         //Tests
         assertThat(affectedClasses, hasSize(2));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Search")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("C")));
+        assertThat(affectedClasses, hasItem(new ClassNode("Search", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("C", ClassNodeType.Java)));
 
         assertThat(classesMarkedByNext, hasSize(1));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("Search")));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Search", ClassNodeType.Java)));
 
         // "Search" --> Marking "PROPAGATES"
-        propgatatesProcess.updateNeigbbourhood(new JavaClassNode("Search"), Marking.PROPAGATES);
+        propgatatesProcess.updateNeigbbourhood(new ClassNode("Search", ClassNodeType.Java), Marking.PROPAGATES);
         affectedClasses = propgatatesProcess.getAffectedClassesByChange();
         classesMarkedByNext = propgatatesProcess.getNextMarkedClasses();
 
         assertThat(affectedClasses, hasSize(5));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Search")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("C")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Input")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Data")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Main")));
+        assertThat(affectedClasses, hasItem(new ClassNode("Search", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("C", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Data", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Main", ClassNodeType.Java)));
 
         assertThat(classesMarkedByNext, hasSize(3));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("Input")));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("Data")));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("Main")));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Data", ClassNodeType.Java)));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Main", ClassNodeType.Java)));
     }
 
     @Test
@@ -95,23 +96,23 @@ public class ChangePropagationProcessTest {
     {
         ChangePropagationProcess propgatatesProcess = ChangePropagationProcess.getInstance();
         propgatatesProcess.initialize(getSmallGraph(), new RandomChangeAndFixStrategy());
-        propgatatesProcess.change(new JavaClassNode("a"));
+        propgatatesProcess.change(new ClassNode("a", ClassNodeType.Java));
 
         Set<ClassNode> affectedClasses = propgatatesProcess.getAffectedClassesByChange();
         Set<ClassNode> classesMarkedByNext = propgatatesProcess.getNextMarkedClasses();
 
         //Tests
         assertThat(affectedClasses, hasSize(2));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("a")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("b")));
+        assertThat(affectedClasses, hasItem(new ClassNode("a", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("b", ClassNodeType.Java)));
 
 
         assertThat(classesMarkedByNext, hasSize(1));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("b")));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("b", ClassNodeType.Java)));
 
         // Change if "b" has Marking "NEXT"
         assertThat(classesMarkedByNext, hasSize(1));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("b")));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("b", ClassNodeType.Java)));
 
         ClassNode b = classesMarkedByNext.stream().filter(item -> item.getSimpleClassName().equals("b")).findFirst().orElse(null);
         assertThat(b.getMarking(), is(Marking.NEXT));
@@ -128,23 +129,23 @@ public class ChangePropagationProcessTest {
         ChangePropagationProcess propgatatesProcess = ChangePropagationProcess.getInstance();
         propgatatesProcess.initialize(getSmallGraph(), new RandomChangeAndFixStrategy());
 
-        propgatatesProcess.change(new JavaClassNode("a"));
+        propgatatesProcess.change(new ClassNode("a", ClassNodeType.Java));
 
         Set<ClassNode> affectedClasses = propgatatesProcess.getAffectedClassesByChange();
         Set<ClassNode> classesMarkedByNext = propgatatesProcess.getNextMarkedClasses();
 
         //Tests
         assertThat(affectedClasses, hasSize(2));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("a")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("b")));
+        assertThat(affectedClasses, hasItem(new ClassNode("a", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("b", ClassNodeType.Java)));
 
 
         assertThat(classesMarkedByNext, hasSize(1));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("b")));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("b", ClassNodeType.Java)));
 
         // Change if "b" has Marking "NEXT"
         assertThat(classesMarkedByNext, hasSize(1));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("b")));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("b", ClassNodeType.Java)));
 
         ClassNode b = classesMarkedByNext.stream().filter(item -> item.getSimpleClassName().equals("b")).findFirst().orElse(null);
         assertThat(b.getMarking(), is(Marking.NEXT));
@@ -163,95 +164,95 @@ public class ChangePropagationProcessTest {
     {
         ChangePropagationProcess propagationProcess = ChangePropagationProcess.getInstance();
         propagationProcess.initialize(getJavaAndSwiftDependencyList(), new RandomChangeAndFixStrategy());
-        propagationProcess.change(new JavaClassNode("C"));
+        propagationProcess.change(new ClassNode("C", ClassNodeType.Java));
 
         Set<ClassNode> affectedClasses = propagationProcess.getAffectedClassesByChange();
         Set<ClassNode> markedClasses = propagationProcess.getNextMarkedClasses();
 
 
-        assertThat(affectedClasses, hasItem(new JavaClassNode("C")));
+        assertThat(affectedClasses, hasItem(new ClassNode("C", ClassNodeType.Java)));
         assertThat(affectedClasses, hasSize(2));
-        assertThat(markedClasses,hasItem(new JavaClassNode("Search")));
+        assertThat(markedClasses,hasItem(new ClassNode("Search", ClassNodeType.Java)));
         assertThat(markedClasses, hasSize(1));
         Set<ClassDependency> inconsistencies = propagationProcess.getModel().getInconsistencies();
         assertThat(inconsistencies, hasSize(1));
 
         //Selected by programmer
-        ClassNode selectedSearchClass = propagationProcess.select(new JavaClassNode("Search"));
+        ClassNode selectedSearchClass = propagationProcess.select(new ClassNode("Search", ClassNodeType.Java));
         propagationProcess.updateNeigbbourhood(selectedSearchClass,Marking.CHANGED);
 
         //Next change propagation
         affectedClasses = propagationProcess.getAffectedClassesByChange();
         markedClasses = propagationProcess.getNextMarkedClasses();
 
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Search")));
-        assertThat(affectedClasses,hasItem(new JavaClassNode("Main")));
-        assertThat(affectedClasses,hasItem(new JavaClassNode("Input")));
-        assertThat(affectedClasses,hasItem(new JavaClassNode("Data")));
-        assertThat(affectedClasses,hasItem(new JavaClassNode("C")));
+        assertThat(affectedClasses, hasItem(new ClassNode("Search", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Main", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Data", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("C", ClassNodeType.Java)));
         assertThat(affectedClasses, hasSize(5));
-        assertThat(markedClasses,hasItem(new JavaClassNode("Main")));
-        assertThat(markedClasses,hasItem(new JavaClassNode("Input")));
-        assertThat(markedClasses,hasItem(new JavaClassNode("Data")));
+        assertThat(markedClasses, hasItem(new ClassNode("Main", ClassNodeType.Java)));
+        assertThat(markedClasses, hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(markedClasses, hasItem(new ClassNode("Data", ClassNodeType.Java)));
         assertThat(markedClasses, hasSize(3));
 
         //--------------------------------------------------------------------------------------------------------------
         //Visit "Input" --> Inspected
 
-        selectedSearchClass = propagationProcess.select(new JavaClassNode("Input"));
+        selectedSearchClass = propagationProcess.select(new ClassNode("Input", ClassNodeType.Java));
         selectedSearchClass.setMarking(Marking.INSPECTED);
 
         affectedClasses = propagationProcess.getAffectedClassesByChange();
         markedClasses = propagationProcess.getNextMarkedClasses();
 
-        assertThat(markedClasses,hasItem(new JavaClassNode("Main")));
-        assertThat(markedClasses,hasItem(new JavaClassNode("Data")));
+        assertThat(markedClasses,hasItem(new ClassNode("Main", ClassNodeType.Java)));
+        assertThat(markedClasses,hasItem(new ClassNode("Data", ClassNodeType.Java)));
         assertThat(markedClasses,hasSize(2));
 
         //--------------------------------------------------------------------------------------------------------------
         //Visit "Main" --> Inspected
-        selectedSearchClass = propagationProcess.select(new JavaClassNode("Main"));
+        selectedSearchClass = propagationProcess.select(new ClassNode("Main", ClassNodeType.Java));
         selectedSearchClass.setMarking(Marking.INSPECTED);
 
         affectedClasses = propagationProcess.getAffectedClassesByChange();
         markedClasses = propagationProcess.getNextMarkedClasses();
 
-        assertThat(markedClasses,hasItem(new JavaClassNode("Data")));
+        assertThat(markedClasses,hasItem(new ClassNode("Data", ClassNodeType.Java)));
         assertThat(markedClasses, hasSize(1));
 
         //--------------------------------------------------------------------------------------------------------------
         //Visit "Data" --> Changed
-        selectedSearchClass = propagationProcess.select(new JavaClassNode("Data"));
+        selectedSearchClass = propagationProcess.select(new ClassNode("Data", ClassNodeType.Java));
         propagationProcess.updateNeigbbourhood(selectedSearchClass, Marking.CHANGED);
 
         affectedClasses = propagationProcess.getAffectedClassesByChange();
         markedClasses = propagationProcess.getNextMarkedClasses();
 
-        assertThat(affectedClasses,hasItem(new JavaClassNode("Search")));
-        assertThat(affectedClasses,hasItem(new JavaClassNode("Main")));
-        assertThat(affectedClasses,hasItem(new JavaClassNode("Input")));
-        assertThat(affectedClasses,hasItem(new JavaClassNode("Data")));
-        assertThat(affectedClasses,hasItem(new JavaClassNode("C")));
-        assertThat(affectedClasses,hasItem(new JavaClassNode("Init")));
+        assertThat(affectedClasses,hasItem(new ClassNode("Search", ClassNodeType.Java)));
+        assertThat(affectedClasses,hasItem(new ClassNode("Main", ClassNodeType.Java)));
+        assertThat(affectedClasses,hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(affectedClasses,hasItem(new ClassNode("Data", ClassNodeType.Java)));
+        assertThat(affectedClasses,hasItem(new ClassNode("C", ClassNodeType.Java)));
+        assertThat(affectedClasses,hasItem(new ClassNode("Init", ClassNodeType.Java)));
         assertThat(affectedClasses, hasSize(6));
 
-        assertThat(markedClasses,hasItem(new JavaClassNode("Init")));
+        assertThat(markedClasses,hasItem(new ClassNode("Init", ClassNodeType.Java)));
         assertThat(markedClasses, hasSize(1));
 
         //--------------------------------------------------------------------------------------------------------------
         //Visit "Init" --> Changed
-        selectedSearchClass = propagationProcess.select(new JavaClassNode("Init"));
+        selectedSearchClass = propagationProcess.select(new ClassNode("Init", ClassNodeType.Java));
         propagationProcess.updateNeigbbourhood(selectedSearchClass, Marking.INSPECTED);
 
         affectedClasses = propagationProcess.getAffectedClassesByChange();
         markedClasses = propagationProcess.getNextMarkedClasses();
 
-        assertThat(affectedClasses,hasItem(new JavaClassNode("Search")));
-        assertThat(affectedClasses,hasItem(new JavaClassNode("Main")));
-        assertThat(affectedClasses,hasItem(new JavaClassNode("Input")));
-        assertThat(affectedClasses,hasItem(new JavaClassNode("Data")));
-        assertThat(affectedClasses,hasItem(new JavaClassNode("C")));
-        assertThat(affectedClasses,hasItem(new JavaClassNode("Init")));
+        assertThat(affectedClasses,hasItem(new ClassNode("Search", ClassNodeType.Java)));
+        assertThat(affectedClasses,hasItem(new ClassNode("Main", ClassNodeType.Java)));
+        assertThat(affectedClasses,hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(affectedClasses,hasItem(new ClassNode("Data", ClassNodeType.Java)));
+        assertThat(affectedClasses,hasItem(new ClassNode("C", ClassNodeType.Java)));
+        assertThat(affectedClasses,hasItem(new ClassNode("Init", ClassNodeType.Java)));
         assertThat(affectedClasses, hasSize(6));
 
         //assertThat(markedClasses, hasItem(new ClassNodeMaterial("Main")));
@@ -263,93 +264,93 @@ public class ChangePropagationProcessTest {
     public void basicCPProcessWithTraceLinks() {
         ChangePropagationProcess propagationProcess = ChangePropagationProcess.getInstance();
         propagationProcess.initialize(getJavaAndSwiftDependencyList(), new RandomChangeAndFixStrategy());
-        propagationProcess.change(new JavaClassNode("C"));
+        propagationProcess.change(new ClassNode("C", ClassNodeType.Java));
 
         Set<ClassNode> affectedClasses = propagationProcess.getAffectedClassesByChange();
         Set<ClassNode> markedClasses = propagationProcess.getNextMarkedClasses();
 
-        assertThat(affectedClasses, hasItem(new JavaClassNode("C")));
+        assertThat(affectedClasses, hasItem(new ClassNode("C", ClassNodeType.Java)));
         assertThat(affectedClasses, hasSize(2));
-        assertThat(markedClasses, hasItem(new JavaClassNode("Search")));
+        assertThat(markedClasses, hasItem(new ClassNode("Search", ClassNodeType.Java)));
         assertThat(markedClasses, hasSize(1));
 
         //Selected by programmer
-        ClassNode selectedSearchClass = propagationProcess.select(new JavaClassNode("Search"));
+        ClassNode selectedSearchClass = propagationProcess.select(new ClassNode("Search", ClassNodeType.Java));
         propagationProcess.updateNeigbbourhood(selectedSearchClass, Marking.PROPAGATES);
 
         //Next change propagation
         affectedClasses = propagationProcess.getAffectedClassesByChange();
         markedClasses = propagationProcess.getNextMarkedClasses();
 
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Search")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Main")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Input")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Data")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("C")));
+        assertThat(affectedClasses, hasItem(new ClassNode("Search", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Main", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Data", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("C", ClassNodeType.Java)));
         assertThat(affectedClasses, hasSize(5));
-        assertThat(markedClasses, hasItem(new JavaClassNode("Main")));
-        assertThat(markedClasses, hasItem(new JavaClassNode("Input")));
-        assertThat(markedClasses, hasItem(new JavaClassNode("Data")));
+        assertThat(markedClasses, hasItem(new ClassNode("Main", ClassNodeType.Java)));
+        assertThat(markedClasses, hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(markedClasses, hasItem(new ClassNode("Data", ClassNodeType.Java)));
         assertThat(markedClasses, hasSize(3));
 
         //--------------------------------------------------------------------------------------------------------------
         //Visit "Input" --> Inspected
 
-        selectedSearchClass = propagationProcess.select(new JavaClassNode("Input"));
+        selectedSearchClass = propagationProcess.select(new ClassNode("Input", ClassNodeType.Java));
         selectedSearchClass.setMarking(Marking.INSPECTED);
 
         affectedClasses = propagationProcess.getAffectedClassesByChange();
         markedClasses = propagationProcess.getNextMarkedClasses();
 
-        assertThat(markedClasses, hasItem(new JavaClassNode("Main")));
-        assertThat(markedClasses, hasItem(new JavaClassNode("Data")));
+        assertThat(markedClasses, hasItem(new ClassNode("Main", ClassNodeType.Java)));
+        assertThat(markedClasses, hasItem(new ClassNode("Data", ClassNodeType.Java)));
         assertThat(markedClasses, hasSize(2));
 
         //--------------------------------------------------------------------------------------------------------------
         //Visit "Main" --> Inspected
-        selectedSearchClass = propagationProcess.select(new JavaClassNode("Main"));
+        selectedSearchClass = propagationProcess.select(new ClassNode("Main", ClassNodeType.Java));
         selectedSearchClass.setMarking(Marking.INSPECTED);
 
         affectedClasses = propagationProcess.getAffectedClassesByChange();
         markedClasses = propagationProcess.getNextMarkedClasses();
 
-        assertThat(markedClasses, hasItem(new JavaClassNode("Data")));
+        assertThat(markedClasses, hasItem(new ClassNode("Data", ClassNodeType.Java)));
         assertThat(markedClasses, hasSize(1));
 
         //--------------------------------------------------------------------------------------------------------------
         //Visit "Data" --> Changed
-        selectedSearchClass = propagationProcess.select(new JavaClassNode("Data"));
+        selectedSearchClass = propagationProcess.select(new ClassNode("Data", ClassNodeType.Java));
         propagationProcess.updateNeigbbourhood(selectedSearchClass, Marking.CHANGED);
 
         affectedClasses = propagationProcess.getAffectedClassesByChange();
         markedClasses = propagationProcess.getNextMarkedClasses();
 
         assertThat(affectedClasses, hasSize(6));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Search")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Main")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Input")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Data")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("C")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Init")));
+        assertThat(affectedClasses, hasItem(new ClassNode("Search", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Main", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Data", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("C", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Init", ClassNodeType.Java)));
         assertThat(affectedClasses, hasSize(6));
 
-        assertThat(markedClasses, hasItem(new JavaClassNode("Init")));
+        assertThat(markedClasses, hasItem(new ClassNode("Init", ClassNodeType.Java)));
         assertThat(markedClasses, hasSize(1));
 
         //--------------------------------------------------------------------------------------------------------------
         //Visit "Init" --> Changed
-        selectedSearchClass = propagationProcess.select(new JavaClassNode("Init"));
+        selectedSearchClass = propagationProcess.select(new ClassNode("Init", ClassNodeType.Java));
         selectedSearchClass.setMarking(Marking.INSPECTED);
 
         affectedClasses = propagationProcess.getAffectedClassesByChange();
         markedClasses = propagationProcess.getNextMarkedClasses();
 
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Search")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Main")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Input")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Data")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("C")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Init")));
+        assertThat(affectedClasses, hasItem(new ClassNode("Search", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Main", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Data", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("C", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Init", ClassNodeType.Java)));
         assertThat(affectedClasses, hasSize(6));
 
         //assertThat(markedClasses, hasItem(new ClassNodeMaterial("Main")));
@@ -365,38 +366,38 @@ public class ChangePropagationProcessTest {
     {
         ChangePropagationProcess propgatatesProcess = ChangePropagationProcess.getInstance();
         propgatatesProcess.initialize(getSimpleDependencyFromPaperWithTraceLink(), new RandomChangeAndFixStrategy());
-        propgatatesProcess.change(new JavaClassNode("C"));
+        propgatatesProcess.change(new ClassNode("C", ClassNodeType.Java));
 
         Set<ClassNode> affectedClasses = propgatatesProcess.getAffectedClassesByChange();
         Set<ClassNode> classesMarkedByNext = propgatatesProcess.getNextMarkedClasses();
 
         //Tests
         assertThat(affectedClasses, hasSize(2));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Search")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("C")));
+        assertThat(affectedClasses, hasItem(new ClassNode("Search", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("C", ClassNodeType.Java)));
 
         assertThat(classesMarkedByNext, hasSize(1));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("Search")));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Search", ClassNodeType.Java)));
 
         // "Search" --> Marking "Change"
-        propgatatesProcess.updateNeigbbourhood(new JavaClassNode("Search"), Marking.CHANGED);
+        propgatatesProcess.updateNeigbbourhood(new ClassNode("Search", ClassNodeType.Java), Marking.CHANGED);
         affectedClasses = propgatatesProcess.getAffectedClassesByChange();
         classesMarkedByNext = propgatatesProcess.getNextMarkedClasses();
         assertThat(affectedClasses, hasSize(6));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Search")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("C")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Input")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Data")));
-        assertThat(affectedClasses, hasItem(new JavaClassNode("Main")));
-        assertThat(affectedClasses, hasItem(new SwiftClassNode("Search")));
+        assertThat(affectedClasses, hasItem(new ClassNode("Search", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("C", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Data", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Main", ClassNodeType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("Search", ClassNodeType.Swift)));
 
         assertThat(classesMarkedByNext, hasSize(4));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("Input")));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("Data")));
-        assertThat(classesMarkedByNext, hasItem(new JavaClassNode("Main")));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Input", ClassNodeType.Java)));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Data", ClassNodeType.Java)));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Main", ClassNodeType.Java)));
 
         //Neighbour through Trace Link
-        assertThat(classesMarkedByNext, hasItem(new SwiftClassNode("Search")));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Search", ClassNodeType.Swift)));
 
 
     }
@@ -406,26 +407,26 @@ public class ChangePropagationProcessTest {
     {
         ChangePropagationProcess propagationProcess = ChangePropagationProcess.getInstance();
         propagationProcess.initialize(getSimpleDependencyList(), new StrictChangeAndFixStrategy());
-        assertThat(propagationProcess.change(new JavaClassNode("C")), is(true));
-        assertThat(propagationProcess.change(new JavaClassNode("Main")), is(false));
+        assertThat(propagationProcess.change(new ClassNode("C", ClassNodeType.Java)), is(true));
+        assertThat(propagationProcess.change(new ClassNode("Main", ClassNodeType.Java)), is(false));
     }
     @Test
     public void strategyRandom()
     {
         ChangePropagationProcess propagationProcess = ChangePropagationProcess.getInstance();
         propagationProcess.initialize(getSimpleDependencyList(), new RandomChangeAndFixStrategy());
-        assertThat(propagationProcess.change(new JavaClassNode("C")), is(true));
-        assertThat(propagationProcess.change(new JavaClassNode("Main")), is(true));
+        assertThat(propagationProcess.change(new ClassNode("C", ClassNodeType.Java)), is(true));
+        assertThat(propagationProcess.change(new ClassNode("Main", ClassNodeType.Java)), is(true));
     }
 
     public static final  Set<ClassDependency> getSimpleDependencyList()
     {
-        ClassNode main = new JavaClassNode("Main");
-        ClassNode search = new JavaClassNode("Search");
-        ClassNode input = new JavaClassNode("Input");
-        ClassNode c = new JavaClassNode("C");
-        ClassNode data = new JavaClassNode("Data");
-        ClassNode init = new JavaClassNode("Init");
+        ClassNode main = new ClassNode("Main", ClassNodeType.Java);
+        ClassNode search = new ClassNode("Search", ClassNodeType.Java);
+        ClassNode input = new ClassNode("Input", ClassNodeType.Java);
+        ClassNode c = new ClassNode("C", ClassNodeType.Java);
+        ClassNode data = new ClassNode("Data", ClassNodeType.Java);
+        ClassNode init = new ClassNode("Init", ClassNodeType.Java);
 
         Set<ClassDependency> dependencyFachwertList = new HashSet<>();
         //conistent
@@ -443,12 +444,12 @@ public class ChangePropagationProcessTest {
 
     public static final Set<ClassDependency> getSimpleDependencyFromPaperWithInconsistencies()
     {
-        ClassNode main = new JavaClassNode("Main");
-        ClassNode search = new JavaClassNode("Search");
-        ClassNode input = new JavaClassNode("Input");
-        ClassNode c = new JavaClassNode("C");
-        ClassNode data = new JavaClassNode("Data");
-        ClassNode init = new JavaClassNode("Init");
+        ClassNode main = new ClassNode("Main", ClassNodeType.Java);
+        ClassNode search = new ClassNode("Search", ClassNodeType.Java);
+        ClassNode input = new ClassNode("Input", ClassNodeType.Java);
+        ClassNode c = new ClassNode("C", ClassNodeType.Java);
+        ClassNode data = new ClassNode("Data", ClassNodeType.Java);
+        ClassNode init = new ClassNode("Init", ClassNodeType.Java);
 
         Set<ClassDependency> dependencyList = new HashSet<>();
         //conistent
@@ -474,12 +475,12 @@ public class ChangePropagationProcessTest {
 
     public static final Set<ClassDependency> getSimpleDependencyFromPaper()
     {
-        ClassNode main = new JavaClassNode("Main");
-        ClassNode search = new JavaClassNode("Search");
-        ClassNode input = new JavaClassNode("Input");
-        ClassNode c = new JavaClassNode("C");
-        ClassNode data = new JavaClassNode("Data");
-        ClassNode init = new JavaClassNode("Init");
+        ClassNode main = new ClassNode("Main", ClassNodeType.Java);
+        ClassNode search = new ClassNode("Search", ClassNodeType.Java);
+        ClassNode input = new ClassNode("Input", ClassNodeType.Java);
+        ClassNode c = new ClassNode("C", ClassNodeType.Java);
+        ClassNode data = new ClassNode("Data", ClassNodeType.Java);
+        ClassNode init = new ClassNode("Init", ClassNodeType.Java);
 
         Set<ClassDependency> dependencyList = new HashSet<>();
         //conistent
@@ -498,13 +499,13 @@ public class ChangePropagationProcessTest {
 
     public static final Set<ClassDependency> getSimpleDependencyFromPaperWithTraceLink()
     {
-        ClassNode main = new JavaClassNode("Main");
-        ClassNode search = new JavaClassNode("Search");
-        ClassNode searchswift = new SwiftClassNode("Search");
-        ClassNode input = new JavaClassNode("Input");
-        ClassNode c = new JavaClassNode("C");
-        ClassNode data = new JavaClassNode("Data");
-        ClassNode init = new JavaClassNode("Init");
+        ClassNode main = new ClassNode("Main", ClassNodeType.Java);
+        ClassNode search = new ClassNode("Search", ClassNodeType.Java);
+        ClassNode searchswift = new ClassNode("Search", ClassNodeType.Swift);
+        ClassNode input = new ClassNode("Input", ClassNodeType.Java);
+        ClassNode c = new ClassNode("C", ClassNodeType.Java);
+        ClassNode data = new ClassNode("Data", ClassNodeType.Java);
+        ClassNode init = new ClassNode("Init", ClassNodeType.Java);
 
         Set<ClassDependency> dependencyList = new HashSet<>();
         //conistent
@@ -524,9 +525,9 @@ public class ChangePropagationProcessTest {
 
     public static final Set<ClassDependency> getSmallGraph()
     {
-        ClassNode a = new JavaClassNode("a");
-        ClassNode b = new JavaClassNode("b");
-        ClassNode c = new JavaClassNode("c");
+        ClassNode a = new ClassNode("a", ClassNodeType.Java);
+        ClassNode b = new ClassNode("b", ClassNodeType.Java);
+        ClassNode c = new ClassNode("c", ClassNodeType.Java);
 
         Set<ClassDependency> dependencyFachwertList = new HashSet<>();
         //conistent
@@ -537,12 +538,12 @@ public class ChangePropagationProcessTest {
 
     public static final Set<ClassDependency> getJavaAndSwiftDependencyList()
     {
-        ClassNode javaMain = new JavaClassNode("java.Main");
-        ClassNode javaSearch = new JavaClassNode("java.Search");
-        ClassNode javaInput = new JavaClassNode("java.Input");
-        ClassNode javaC = new JavaClassNode("java.C");
-        ClassNode javaData = new JavaClassNode("java.Data");
-        ClassNode javaInit = new JavaClassNode("java.Init");
+        ClassNode javaMain = new ClassNode("java.Main", ClassNodeType.Java);
+        ClassNode javaSearch = new ClassNode("java.Search", ClassNodeType.Java);
+        ClassNode javaInput = new ClassNode("java.Input", ClassNodeType.Java);
+        ClassNode javaC = new ClassNode("java.C", ClassNodeType.Java);
+        ClassNode javaData = new ClassNode("java.Data", ClassNodeType.Java);
+        ClassNode javaInit = new ClassNode("java.Init", ClassNodeType.Java);
 
         Set<ClassDependency> dependencyFachwertList = new HashSet<>();
         //conistent
@@ -554,12 +555,12 @@ public class ChangePropagationProcessTest {
         dependencyFachwertList.add(new ClassDependency(javaData,javaSearch, RelationshipType.DirectedRelationship));
         dependencyFachwertList.add(new ClassDependency(javaData,javaInit, RelationshipType.DirectedRelationship));
 
-        ClassNode swiftMain = new SwiftClassNode("swift.Main");
-        ClassNode swiftSearch = new SwiftClassNode("swift..Search");
-        ClassNode swiftInput = new SwiftClassNode("swift.Input");
-        ClassNode swiftC = new SwiftClassNode("swift.C");
-        ClassNode swiftData = new SwiftClassNode("swift.Data");
-        ClassNode swiftInit = new SwiftClassNode("swift.Init");
+        ClassNode swiftMain = new ClassNode("swift.Main", ClassNodeType.Swift);
+        ClassNode swiftSearch = new ClassNode("swift.Search", ClassNodeType.Swift);
+        ClassNode swiftInput = new ClassNode("swift.Input", ClassNodeType.Swift);
+        ClassNode swiftC = new ClassNode("swift.C", ClassNodeType.Swift);
+        ClassNode swiftData = new ClassNode("swift.Data", ClassNodeType.Swift);
+        ClassNode swiftInit = new ClassNode("swift.Init", ClassNodeType.Swift);
 
         //conistent
         dependencyFachwertList.add(new ClassDependency(swiftInput,swiftMain, RelationshipType.DirectedRelationship));

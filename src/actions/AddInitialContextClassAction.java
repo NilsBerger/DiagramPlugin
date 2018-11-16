@@ -5,10 +5,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import materials.ClassDependency;
-import materials.JavaClassNode;
+import materials.ClassNode;
 import service.ChangePropagationProcess;
 import service.DotFileParserService;
 import service.RandomChangeAndFixStrategy;
+import valueobjects.ClassNodeType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,7 +32,7 @@ public class AddInitialContextClassAction extends AnAction {
 
         if (psiElementLanguage.equals(javaLanguage)) {
             PsiNamedElement namedElement = (PsiNamedElement) element;
-            propagationProcessService.change(new JavaClassNode(namedElement.getName()));
+            propagationProcessService.change(new ClassNode(namedElement.getName(), ClassNodeType.Java));
 
         }
     }

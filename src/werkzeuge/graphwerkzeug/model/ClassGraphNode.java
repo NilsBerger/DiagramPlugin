@@ -2,8 +2,6 @@ package werkzeuge.graphwerkzeug.model;
 
 import Utils.HashUtils;
 import materials.ClassNode;
-import materials.JavaClassNode;
-import materials.SwiftClassNode;
 
 public class ClassGraphNode {
     private ClassNode _classNode;
@@ -22,11 +20,11 @@ public class ClassGraphNode {
 
     private Type calaculateType(final ClassNode classNode)
     {
-        if(classNode instanceof JavaClassNode)
+        if(classNode instanceof ClassNode)
         {
             return Type.Java;
         }
-        if(classNode instanceof SwiftClassNode)
+        if(classNode instanceof ClassNode)
         {
             return Type.Swift;
         }

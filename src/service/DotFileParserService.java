@@ -1,8 +1,8 @@
 package service;
 
 import materials.ClassDependency;
-import materials.JavaClassNode;
-import materials.SwiftClassNode;
+import materials.ClassNode;
+import valueobjects.ClassNodeType;
 import valueobjects.RelationshipType;
 
 import java.io.BufferedReader;
@@ -47,8 +47,8 @@ public class DotFileParserService{
                 if (line.contains(delimiter))
                 {
                     String[] parts = line.split(delimiter);
-                    JavaClassNode dependentClass = new JavaClassNode(parts[0]);
-                    JavaClassNode independentClass = new JavaClassNode(parts[1]);
+                    ClassNode dependentClass = new ClassNode(parts[0], ClassNodeType.Java);
+                    ClassNode independentClass = new ClassNode(parts[1], ClassNodeType.Java);
                     ClassDependency classDependency = new ClassDependency(dependentClass,independentClass, RelationshipType.DirectedRelationship);
                     dependencies.add(classDependency);
                 }
@@ -94,8 +94,8 @@ public class DotFileParserService{
                 if (line.contains(delimiter))
                 {
                     String[] parts = line.split(delimiter);
-                    SwiftClassNode dependentClass = new SwiftClassNode(parts[0]);
-                    SwiftClassNode independentClass = new SwiftClassNode(parts[1]);
+                    ClassNode dependentClass = new ClassNode(parts[0], ClassNodeType.Swift);
+                    ClassNode independentClass = new ClassNode(parts[1], ClassNodeType.Swift);
                     ClassDependency classDependency = new ClassDependency(dependentClass,independentClass, RelationshipType.DirectedRelationship);
                     dependencies.add(classDependency);
                 }

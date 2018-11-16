@@ -13,9 +13,9 @@ import com.intellij.util.containers.ContainerUtil;
 import java.awt.geom.Point2D;
 
 import materials.ClassNode;
-import materials.JavaClassNode;
 import service.ChangePropagationProcess;
 import service.GraphChangeListener;
+import valueobjects.ClassNodeType;
 import werkzeuge.graphwerkzeug.model.*;
 import werkzeuge.graphwerkzeug.util.ClassGraphLogger;
 
@@ -88,7 +88,7 @@ public class ClassGraph implements Disposable, GraphChangeListener {
     }
     private void selectedNodes()
     {
-        final List<ClassGraphNode> toSelect = new ArrayList<>(Arrays.asList(new ClassGraphNode(new JavaClassNode("List"))));
+        final List<ClassGraphNode> toSelect = new ArrayList<>(Arrays.asList(new ClassGraphNode(new ClassNode("List", ClassNodeType.Java))));
         final Graph2D graph = _graphBuilder.getGraph();
         for(final ClassGraphNode node : toSelect)
         {

@@ -16,9 +16,9 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 import materials.ClassDependency;
 import materials.ClassNode;
-import materials.JavaClassNode;
 import org.jetbrains.annotations.NotNull;
 import service.ChangePropagationProcess;
+import valueobjects.ClassNodeType;
 import werkzeuge.ToolWindowWerkzeug;
 import werkzeuge.graphwerkzeug.model.ClassGraphEdge;
 import werkzeuge.graphwerkzeug.model.ClassGraphNode;
@@ -128,14 +128,14 @@ public class ClassGraphWindowWerkzeug implements ProjectComponent {
             public void valueChanged(ListSelectionEvent e) {
                e.getSource();
                ClassDependency link = _werkzeug.getTaceabilityWerkzeug().getTraceablilityList().getSelectedValue();
-               if(link.getIndependentClass() instanceof JavaClassNode)
+               if(link.getIndependentClass().getType() == ClassNodeType.Java)
                {
                    zoomToNode(_javaClassGraph, link.getIndependentClass());
                }
                else{
                    zoomToNode(_swiftClassGraph, link.getIndependentClass());
                }
-                if(link.getDependentClass() instanceof JavaClassNode)
+                if(link.getDependentClass().getType() == ClassNodeType.Java)
                 {
                     zoomToNode(_javaClassGraph, link.getDependentClass());
                 }

@@ -5,10 +5,8 @@ import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.components.JBPanel;
 import materials.ClassNode;
-import materials.JavaClassNode;
 import service.GraphChangeListener;
 import valueobjects.Marking;
-import materials.SwiftClassNode;
 import javafx.collections.SetChangeListener;
 import werkzeuge.tracebilitychooserwerkzeug.CorrespondingTraceabilityChooserWerkzeug;
 import werkzeuge.tracebilitychooserwerkzeug.TracebilityChooserWerkzeug;
@@ -54,15 +52,7 @@ public class FinalContextWerkzeug implements GraphChangeListener {
     }
     private void addEntry(final ClassNode classnode)
     {
-        if(_forSwift && (classnode instanceof SwiftClassNode))
-        {
-            _ui.getModel().addEntry(classnode);
-        }
-        if(!_forSwift && (classnode instanceof JavaClassNode))
-        {
-            _ui.getModel().addEntry(classnode);
-        }
-
+        _ui.getModel().addEntry(classnode);
     }
     private void removeEntry(final ClassNode classnode)
     {

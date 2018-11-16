@@ -2,7 +2,7 @@ package werkzeuge.traceabilitywerkzeug;
 
 import materials.ClassDependency;
 import materials.ClassNode;
-import materials.JavaClassNode;
+import valueobjects.ClassNodeType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +30,7 @@ public class TraceabilityListCellRenderer extends DefaultListCellRenderer {
     private String createString(final ClassNode classNode , final ClassNode otherclassNode, double tracelinkValue)
     {
         String text = "";
-        if(classNode instanceof JavaClassNode)
+        if(classNode.getType() == ClassNodeType.Java)
         {
             text = "<html><center>" + classNode.getSimpleClassName() + " <"   +  String.format("%.2f", tracelinkValue) + "> " +otherclassNode.getSimpleClassName() + "</center></html>" ;
         }

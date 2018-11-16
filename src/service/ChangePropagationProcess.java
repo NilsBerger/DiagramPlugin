@@ -7,6 +7,7 @@ import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import materials.*;
+import valueobjects.ClassNodeType;
 import valueobjects.Marking;
 import valueobjects.RelationshipType;
 
@@ -223,11 +224,11 @@ public class ChangePropagationProcess{
         }
         return null;
     }
-    public void addTraceabilityLinkJavaSource(final JavaClassNode classNodeMaterial, final TraceabilityLink traceabilityLink)
+    public void addTraceabilityLinkJavaSource(final ClassNode classNodeMaterial, final TraceabilityLink traceabilityLink)
     {
 
         TypePointer pointer = (TypePointer) traceabilityLink.getTarget();
-        ClassNode swiftClassNode = getClassNodeMaterial(new SwiftClassNode(pointer.getFullyQualifiedName()));
+        ClassNode swiftClassNode = getClassNodeMaterial(new ClassNode(pointer.getFullyQualifiedName(), ClassNodeType.Swift));
         updateNeigbbourhood(swiftClassNode, Marking.CHANGED);
 
         //Add Dependency
@@ -235,15 +236,15 @@ public class ChangePropagationProcess{
         _traceabilityLinks.add(traceDependency);
         _model.addEdge(traceDependency);
     }
-    public void addTraceabilityLinkSwiftSource(final SwiftClassNode swiftClassNodeMaterial, final TraceabilityLink traceabilityLink)
+    public void addTraceabilityLinkSwiftSource(final ClassNode swiftClassNodeMaterial, final TraceabilityLink traceabilityLink)
     {
 
         TypePointer pointer = (TypePointer) traceabilityLink.getTarget();
-        ClassNode javaClassNode = getClassNodeMaterial(new JavaClassNode(pointer.getFullyQualifiedName()));
+        ClassNode javaClassNode = getClassNodeMaterial(new ClassNode(pointer.getFullyQualifiedName(), ClassNodeType.Java));
         updateNeigbbourhood(javaClassNode, Marking.CHANGED);
 
         //Add Dependency
-        ClassDependency traceDependency = new ClassDependency(javaClassNode, swiftClassNodeMaterial,RelationshipType.TraceabilityRelationship, traceabilityLink.getProbability());
+        ClassDependency traceDependency = new ClassDependency(javaClassNode, swiftClassNodeMaterial, RelationshipType.TraceabilityRelationship, traceabilityLink.getProbability());
         _traceabilityLinks.add(traceDependency);
         _model.addEdge(traceDependency);
     }

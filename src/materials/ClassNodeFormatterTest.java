@@ -1,6 +1,7 @@
 package materials;
 
 import org.junit.Test;
+import valueobjects.ClassNodeType;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -44,6 +45,6 @@ public class ClassNodeFormatterTest {
 
     public static String getFormattetString(final String classname)
     {
-        return new ClassNodeFormatter(new ClassNode(classname)).toString();
+        return new ClassNodeFormatter(new ClassNode(classname, ClassNodeType.Default)).toString();
     }
 }

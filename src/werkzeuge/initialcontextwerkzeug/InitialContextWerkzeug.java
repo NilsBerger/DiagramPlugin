@@ -2,10 +2,7 @@ package werkzeuge.initialcontextwerkzeug;
 
 import service.ChangePropagationProcess;
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.AnActionButton;
-import com.intellij.ui.AnActionButtonRunnable;
 import materials.ClassNode;
-import materials.SwiftClassNode;
 import javafx.collections.SetChangeListener;
 
 import javax.swing.*;
