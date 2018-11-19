@@ -7,7 +7,7 @@ import java.awt.*;
 public class NormalSechsColorCalculator implements ColorCalculator {
     @Override
     public Color calculateColor(int prozent) {
-        return ColorUtils.interpolate1(Color.RED, Color.GREEN, ColorUtils.convert6(prozent));
+        return ColorUtils.interpolate1(Color.RED, Color.GREEN, ColorUtils.convertNORMAL(prozent));
     }
 
     @Override

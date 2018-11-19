@@ -28,7 +28,7 @@ public class DotFileParserServiceTest
         for(ClassDependency dependency : dependencies)
         {
             assertThat(dependency.getDependentClass().getType(), is(ClassNodeType.Java));
-            assertThat(dependency.getIndependentClass().getType(), is(ClassNodeType.Java));
+            assertThat(dependency.get_independentClass().getType(), is(ClassNodeType.Java));
         }
     }
 
@@ -44,7 +44,7 @@ public class DotFileParserServiceTest
         for(ClassDependency dependency : dependencies)
         {
             assertThat(dependency.getDependentClass().getType(), is(ClassNodeType.Swift));
-            assertThat(dependency.getIndependentClass().getType(), is(ClassNodeType.Swift));
+            assertThat(dependency.get_independentClass().getType(), is(ClassNodeType.Swift));
         }
     }
 }

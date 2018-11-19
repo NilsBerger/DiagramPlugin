@@ -16,6 +16,7 @@
 
 package werkzeuge.graphwerkzeug.model;
 
+import materials.ClassDependency;
 import materials.ClassNode;
 import valueobjects.ClassNodeType;
 
@@ -29,12 +30,14 @@ public class SwiftClassGraphDataModel extends GerneralClassGraphDataModel {
         if(changedClassNode.getType() == ClassNodeType.Swift)
         {
             addNode(changedClassNode);
+            Set<ClassDependency> affectedDependencies = _changePropagationProcess.getAffectedDependencies(changedClassNode);
+            addAll(affectedDependencies);
 
-            Set<ClassNode> topDependencies = _changePropagationProcess.getModel().getTopDependencies(changedClassNode).stream().filter(node -> node.getType() == ClassNodeType.Swift).collect(Collectors.toSet());
-            Set<ClassNode> bottompDependencies = _changePropagationProcess.getModel().getBottomDependencies(changedClassNode).stream().filter(node -> node.getType() == ClassNodeType.Swift).collect(Collectors.toSet());
-
-            addNeighbourhoodForClass(changedClassNode, topDependencies);
-            addNeighbourhoodForClass(changedClassNode, bottompDependencies);
+//            Set<ClassNode> topDependencies = _changePropagationProcess.getModel().getTopDependencies(changedClassNode).stream().filter(node -> node.getType() == ClassNodeType.Swift).collect(Collectors.toSet());
+//            Set<ClassNode> bottompDependencies = _changePropagationProcess.getModel().getBottomDependencies(changedClassNode).stream().filter(node -> node.getType() == ClassNodeType.Swift).collect(Collectors.toSet());
+//
+//            addNeighbourhoodForClass(changedClassNode, topDependencies);
+//            addNeighbourhoodForClass(changedClassNode, bottompDependencies);
         }
    }
 }

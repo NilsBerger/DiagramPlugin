@@ -126,12 +126,12 @@ public class ClassGraphWindowWerkzeug implements ProjectComponent {
             public void valueChanged(ListSelectionEvent e) {
                e.getSource();
                ClassDependency link = _werkzeug.getTaceabilityWerkzeug().getTraceablilityList().getSelectedValue();
-               if(link.getIndependentClass().getType() == ClassNodeType.Java)
+               if(link.get_independentClass().getType() == ClassNodeType.Java)
                {
-                   zoomToNode(_javaClassGraph, link.getIndependentClass());
+                   zoomToNode(_javaClassGraph, link.get_independentClass());
                }
                else{
-                   zoomToNode(_swiftClassGraph, link.getIndependentClass());
+                   zoomToNode(_swiftClassGraph, link.get_independentClass());
                }
                 if(link.getDependentClass().getType() == ClassNodeType.Java)
                 {

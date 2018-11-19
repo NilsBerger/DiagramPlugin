@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class FinalContextWerkzeugUI {
 
-    private  JBPanel _mainPanel;
+    private JBPanel _mainPanel;
     private JBList _finalContextList;
     private DynamicListModel<ClassNode> _model;
     private ClassNodeCellRenderer _renderer;

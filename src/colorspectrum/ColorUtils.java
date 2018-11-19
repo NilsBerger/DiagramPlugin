@@ -6,12 +6,12 @@ import java.awt.Color;
 
 public class ColorUtils {
 
-    public static Color interpolate(Color start, Color end, float p) {
-        float minVal = 0.0f;
-        float maxVal = 1.f;
+    public static Color interpolate(Color start, Color end, double p) {
+        double minVal = 0.0d;
+        double maxVal = 1.d;
         if(RangeCheckUtils.isValueInRange(p,minVal,maxVal))
         {
-            throw new IllegalArgumentException("Value not between 0.0f and 1.0f");
+            //throw new IllegalArgumentException("Value: "+ p +"  not between 0.0d and 1.0d");
         }
         float[] startHSB = Color.RGBtoHSB(start.getRed(), start.getGreen(), start.getBlue(), null);
         float[] endHSB = Color.RGBtoHSB(end.getRed(), end.getGreen(), end.getBlue(), null);
@@ -29,13 +29,15 @@ public class ColorUtils {
             hueMax = endHSB[0];
         }
 
-        float hue = ((hueMax - hueMin) * p) + hueMin;
+        double hueDouble = ((hueMax - hueMin) * p) + hueMin;
+
+        float hue = (float) hueDouble;
 
         return Color.getHSBColor(hue, saturation, brightness);
     }
 
-    public static Color interpolate1(Color start, Color end, float p) {
-        float a = 1.0f -p;
+    public static Color interpolate1(Color start, Color end, double p) {
+        double a = 1.0d -p;
         return interpolate(start,end,a);
     }
     public static float convert4(float p )
@@ -63,12 +65,32 @@ public class ColorUtils {
         double b = 1;
         return (float) (-a * x) +1;
     }
-    public static float convert(float p )
+
+    public static float convert8(float p )
     {
-        float a = p;
-        float b = p/100.0f;
-        float c = 1.0f - b;
+        double a = 1/Math.pow(50,2);
+        double x = Math.pow(p,2);
+        double b = 1;
+        return (float) (-a * x) + 1;
+    }
+    public static double convert(double p )
+    {
+        double a = p;
+        double b = p/100.0f;
+        double c = 1.0d - b;
 
         return c;
+    }
+    public static double convertNORMAL(double p )
+    {
+        double a = p;
+        double b = p/50.0f;
+        double c = 1.0d - b;
+
+        return c;
+    }
+    public static Color test(double p)
+    {
+        return interpolate1(Color.RED, Color.GREEN, convertNORMAL(p));
     }
 }

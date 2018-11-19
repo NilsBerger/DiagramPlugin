@@ -6,6 +6,7 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.components.JBPanel;
 import materials.ClassNode;
 import service.GraphChangeListener;
+import valueobjects.ClassNodeType;
 import valueobjects.Marking;
 import javafx.collections.SetChangeListener;
 import werkzeuge.tracebilitychooserwerkzeug.CorrespondingTraceabilityChooserWerkzeug;
@@ -27,16 +28,15 @@ public class FinalContextWerkzeug implements GraphChangeListener {
     private final JBMenuItem _changedMenuItem = new JBMenuItem("Changed");
     private final JBMenuItem _showSourcecodeItem = new JBMenuItem("Show sourcecode");
     private final JBMenuItem _showCorrespondingClassItem = new JBMenuItem("Show corresponding class in other platform");
-    private final boolean _forSwift;
 
+    private final ClassNodeType _type;
     private ClassNode _selectedClass;
 
-    public FinalContextWerkzeug(final String text,final boolean isSwift)
+    public FinalContextWerkzeug(final String text, ClassNodeType type)
     {
         _ui = new FinalContextWerkzeugUI();
         _ui.setLabelText(text);
-
-       _forSwift =isSwift;
+        _type = type;
 
         _popup = new JBPopupMenu();
         _popup.add(_inspectedMenuItem);
@@ -52,7 +52,10 @@ public class FinalContextWerkzeug implements GraphChangeListener {
     }
     private void addEntry(final ClassNode classnode)
     {
-        _ui.getModel().addEntry(classnode);
+        if(classnode.getType() == _type)
+        {
+            _ui.getModel().addEntry(classnode);
+        }
     }
     private void removeEntry(final ClassNode classnode)
     {
@@ -118,7 +121,7 @@ public class FinalContextWerkzeug implements GraphChangeListener {
         _showCorrespondingClassItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new CorrespondingTraceabilityChooserWerkzeug(_selectedClass);
+                new TracebilityChooserWerkzeug(_selectedClass);
             }
         });
     }
@@ -136,5 +139,6 @@ public class FinalContextWerkzeug implements GraphChangeListener {
     {
         return _ui.getPanel();
     }
+
 
 }

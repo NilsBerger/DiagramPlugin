@@ -3,12 +3,10 @@ package werkzeuge;
 
 import com.intellij.ui.components.JBPanel;
 import com.intellij.util.ui.UIUtil;
-import com.siyeh.ig.ui.UiUtils;
 import materials.ClassNode;
 import valueobjects.Marking;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
 

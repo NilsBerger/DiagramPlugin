@@ -1,5 +1,5 @@
 package valueobjects;
 
 public enum RelationshipType {
-   DirectedRelationship, TraceabilityRelationship, InconsistentRealtionship
+   Directed_Association, Traceability_Association, InconsistentRelationship, Association, Aggregation, Composition, Inheritance, Realization
 }

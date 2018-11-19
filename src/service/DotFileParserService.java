@@ -49,7 +49,7 @@ public class DotFileParserService{
                     String[] parts = line.split(delimiter);
                     ClassNode dependentClass = new ClassNode(parts[0], ClassNodeType.Java);
                     ClassNode independentClass = new ClassNode(parts[1], ClassNodeType.Java);
-                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass, RelationshipType.DirectedRelationship);
+                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass, RelationshipType.Directed_Association);
                     dependencies.add(classDependency);
                 }
             }
@@ -66,7 +66,7 @@ public class DotFileParserService{
            {
                it.remove();
            }
-           if(dependency.getIndependentClass().getFullClassName().contains(lang))
+           if(dependency.get_independentClass().getFullClassName().contains(lang))
            {
                it.remove();
            }
@@ -96,7 +96,7 @@ public class DotFileParserService{
                     String[] parts = line.split(delimiter);
                     ClassNode dependentClass = new ClassNode(parts[0], ClassNodeType.Swift);
                     ClassNode independentClass = new ClassNode(parts[1], ClassNodeType.Swift);
-                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass, RelationshipType.DirectedRelationship);
+                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass, RelationshipType.Directed_Association);
                     dependencies.add(classDependency);
                 }
             }

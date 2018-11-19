@@ -430,13 +430,13 @@ public class ChangePropagationProcessTest {
 
         Set<ClassDependency> dependencyFachwertList = new HashSet<>();
         //conistent
-        dependencyFachwertList.add(new ClassDependency(input,main, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(search,main, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(init,main, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(input,search, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(c,search, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(data,search, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(data,init, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(input,main, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(search,main, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(init,main, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(input,search, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(c,search, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(data,search, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(data,init, RelationshipType.Directed_Association));
 
         return dependencyFachwertList;
     }
@@ -454,21 +454,21 @@ public class ChangePropagationProcessTest {
         Set<ClassDependency> dependencyList = new HashSet<>();
         //conistent
 
-        dependencyList.add(new ClassDependency(main, input, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(main, search, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(main, init, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(search, input, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(search, c, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(search, data, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(init, data, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(main, input, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(main, search, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(main, init, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(search, input, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(search, c, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(search, data, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(init, data, RelationshipType.Directed_Association));
 
-        dependencyList.add(new ClassDependency(main, input, RelationshipType.InconsistentRealtionship));
-        dependencyList.add(new ClassDependency(main, search, RelationshipType.InconsistentRealtionship));
-        dependencyList.add(new ClassDependency(main, init, RelationshipType.InconsistentRealtionship));
-        dependencyList.add(new ClassDependency(search, input, RelationshipType.InconsistentRealtionship));
-        dependencyList.add(new ClassDependency(search, c, RelationshipType.InconsistentRealtionship));
-        dependencyList.add(new ClassDependency(search, data, RelationshipType.InconsistentRealtionship));
-        dependencyList.add(new ClassDependency(init, data, RelationshipType.InconsistentRealtionship));
+        dependencyList.add(new ClassDependency(main, input, RelationshipType.InconsistentRelationship));
+        dependencyList.add(new ClassDependency(main, search, RelationshipType.InconsistentRelationship));
+        dependencyList.add(new ClassDependency(main, init, RelationshipType.InconsistentRelationship));
+        dependencyList.add(new ClassDependency(search, input, RelationshipType.InconsistentRelationship));
+        dependencyList.add(new ClassDependency(search, c, RelationshipType.InconsistentRelationship));
+        dependencyList.add(new ClassDependency(search, data, RelationshipType.InconsistentRelationship));
+        dependencyList.add(new ClassDependency(init, data, RelationshipType.InconsistentRelationship));
 
         return dependencyList;
     }
@@ -486,13 +486,13 @@ public class ChangePropagationProcessTest {
         //conistent
 
 
-        dependencyList.add(new ClassDependency(main,input, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(main, search, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(main, init, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(search, input, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(search, c, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(search, data, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(init, data, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(main,input, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(main, search, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(main, init, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(search, input, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(search, c, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(search, data, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(init, data, RelationshipType.Directed_Association));
 
         return dependencyList;
     }
@@ -511,14 +511,14 @@ public class ChangePropagationProcessTest {
         //conistent
 
 
-        dependencyList.add(new ClassDependency(main,input, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(main, search, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(main, init, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(search, input, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(search, c, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(search, data, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(search, searchswift, RelationshipType.DirectedRelationship));
-        dependencyList.add(new ClassDependency(init, data, RelationshipType.DirectedRelationship));
+        dependencyList.add(new ClassDependency(main,input, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(main, search, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(main, init, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(search, input, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(search, c, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(search, data, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(search, searchswift, RelationshipType.Directed_Association));
+        dependencyList.add(new ClassDependency(init, data, RelationshipType.Directed_Association));
 
         return dependencyList;
     }
@@ -531,8 +531,8 @@ public class ChangePropagationProcessTest {
 
         Set<ClassDependency> dependencyFachwertList = new HashSet<>();
         //conistent
-        dependencyFachwertList.add(new ClassDependency(a,b, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(b,c, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(a,b, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(b,c, RelationshipType.Directed_Association));
         return dependencyFachwertList;
     }
 
@@ -547,13 +547,13 @@ public class ChangePropagationProcessTest {
 
         Set<ClassDependency> dependencyFachwertList = new HashSet<>();
         //conistent
-        dependencyFachwertList.add(new ClassDependency(javaInput,javaMain, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(javaSearch,javaMain, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(javaInit,javaMain, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(javaInput,javaSearch, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(javaC,javaSearch, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(javaData,javaSearch, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(javaData,javaInit, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(javaInput,javaMain, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(javaSearch,javaMain, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(javaInit,javaMain, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(javaInput,javaSearch, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(javaC,javaSearch, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(javaData,javaSearch, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(javaData,javaInit, RelationshipType.Directed_Association));
 
         ClassNode swiftMain = new ClassNode("swift.Main", ClassNodeType.Swift);
         ClassNode swiftSearch = new ClassNode("swift.Search", ClassNodeType.Swift);
@@ -563,13 +563,13 @@ public class ChangePropagationProcessTest {
         ClassNode swiftInit = new ClassNode("swift.Init", ClassNodeType.Swift);
 
         //conistent
-        dependencyFachwertList.add(new ClassDependency(swiftInput,swiftMain, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(swiftSearch,swiftMain, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(swiftInit,swiftMain, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(swiftInput,swiftSearch, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(swiftC,swiftSearch, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(swiftData,swiftSearch, RelationshipType.DirectedRelationship));
-        dependencyFachwertList.add(new ClassDependency(swiftData,swiftInit, RelationshipType.DirectedRelationship));
+        dependencyFachwertList.add(new ClassDependency(swiftInput,swiftMain, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(swiftSearch,swiftMain, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(swiftInit,swiftMain, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(swiftInput,swiftSearch, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(swiftC,swiftSearch, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(swiftData,swiftSearch, RelationshipType.Directed_Association));
+        dependencyFachwertList.add(new ClassDependency(swiftData,swiftInit, RelationshipType.Directed_Association));
 
         //TraceLinks
 

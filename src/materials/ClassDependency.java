@@ -7,29 +7,29 @@ import valueobjects.RelationshipType;
  * Created by Nils-Pc on 06.08.2018.
  */
 public class ClassDependency{
-    private final ClassNode dependentClass;
-    private final ClassNode independentClass;
+    private final ClassNode _dependentClass;
+    private final ClassNode _independentClass;
     private RelationshipType _relationshipType;
     private double _tracelinkvalue = 0;
 
 
     public ClassDependency(ClassNode dependentClass, ClassNode independentClass, RelationshipType relationshipType)
     {
-        this.dependentClass = dependentClass;
-        this.independentClass = independentClass;
+        this._dependentClass = dependentClass;
+        this._independentClass = independentClass;
         this._relationshipType = relationshipType;
     }
 
     public ClassDependency(ClassNode dependentClass, ClassNode independentClass, RelationshipType relationshipType, double tracelinkValue)
     {
-        this.dependentClass = dependentClass;
-        this.independentClass = independentClass;
+        this._dependentClass = dependentClass;
+        this._independentClass = independentClass;
         this._relationshipType = relationshipType;
         this._tracelinkvalue = tracelinkValue;
     }
     public ClassDependency switchDependencies()
     {
-        return new ClassDependency(this.independentClass, this.dependentClass, this._relationshipType, this._tracelinkvalue);
+        return new ClassDependency(this._independentClass, this._dependentClass, this._relationshipType, this._tracelinkvalue);
     }
 
     /**
@@ -38,15 +38,15 @@ public class ClassDependency{
      */
 
     public ClassNode getDependentClass() {
-        return dependentClass;
+        return _dependentClass;
     }
 
     /**
      * Returns a ClassNode that the depeendent ClassNode depends on.
      * @return
      */
-    public ClassNode getIndependentClass() {
-        return independentClass;
+    public ClassNode get_independentClass() {
+        return _independentClass;
     }
 
     public RelationshipType getRelationshipType() {
@@ -75,15 +75,26 @@ public class ClassDependency{
 
     @Override
     public String toString() {
-        return "Class '" + dependentClass.getSimpleClassName() +"' is dependent on Class '" + independentClass.getSimpleClassName()+ "'.";
+        return "Class '" + _dependentClass.getSimpleClassName() +"' is dependent on Class '" + _independentClass.getSimpleClassName()+ "'.";
     }
 
     @Override
     public int hashCode() {
         int hash = 17;
-        hash = HashUtils.calcHashCode(hash, independentClass);
-        hash = HashUtils.calcHashCode(hash, dependentClass);
+        hash = HashUtils.calcHashCode(hash, _independentClass);
+        hash = HashUtils.calcHashCode(hash, _dependentClass);
         return hash;
+    }
+
+    public boolean containsNodes(ClassNode oneNode, ClassNode otherNode)
+    {
+        boolean independent = _independentClass.equals(oneNode) || _independentClass.equals(otherNode);
+        boolean dependent = _dependentClass.equals(oneNode) || _dependentClass.equals(otherNode);
+        if(independent && dependent)
+        {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -96,7 +107,7 @@ public class ClassDependency{
             return false;
         final ClassDependency otherClassNodeFachwert = (ClassDependency) obj;
         return  this.getDependentClass().equals(otherClassNodeFachwert.getDependentClass()) &&
-                this.getIndependentClass().equals(otherClassNodeFachwert.getIndependentClass()) &&
+                this.get_independentClass().equals(otherClassNodeFachwert.get_independentClass()) &&
                 this.getRelationshipType() == otherClassNodeFachwert.getRelationshipType() &&
                 this._tracelinkvalue == otherClassNodeFachwert.getTracelinkValue();
     }

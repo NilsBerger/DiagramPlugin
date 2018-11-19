@@ -43,6 +43,8 @@ public class ClassNode {
     @XmlTransient
     private Marking _oldMarking;
 
+    private boolean _hide = false;
+
     private final ClassNodeType _type;
 
     private String _sourceFilePath = "";
@@ -107,6 +109,16 @@ public class ClassNode {
             this._marking = marking;
         }
     }
+
+    public void setHide(boolean hide)
+    {
+        _hide = hide;
+    }
+    public boolean isHidden()
+    {
+        return _hide;
+    }
+
     @Nonnull
     public void setSourceFilePath(final String sourceFilePath)
     {

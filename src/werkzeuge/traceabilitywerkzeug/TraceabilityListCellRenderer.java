@@ -13,7 +13,7 @@ public class TraceabilityListCellRenderer extends DefaultListCellRenderer {
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
         final ClassDependency traceLinkDependencyMaterial = (ClassDependency) value;
-        ClassNode classNode = traceLinkDependencyMaterial.getIndependentClass();
+        ClassNode classNode = traceLinkDependencyMaterial.get_independentClass();
         ClassNode otherClassNode = traceLinkDependencyMaterial.getDependentClass();
         double traceLinkValue = traceLinkDependencyMaterial.getTracelinkValue();
         setText(createString(classNode, otherClassNode, traceLinkValue));

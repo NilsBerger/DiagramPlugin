@@ -6,50 +6,104 @@ import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBPanel;
+import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.table.JBTable;
 import de.unihamburg.masterprojekt2016.traceability.TraceabilityLink;
-import werkzeuge.DynamicListModel;
 
-import java.util.ArrayList;
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
 import java.util.List;
 
 public class TracebilityChooserWerkzeugUI {
 
     private JBPopup _popup;
     private JBPanel _panel;
-    private JBList<TraceabilityLink> _tracebilitylist;
-    private DynamicListModel<TraceabilityLink> _model;
+    private JBTable _tracebilityTable;
+    private TraceabilityTableModel _tableModel;
 
-    public TracebilityChooserWerkzeugUI()
-    {
-        _model = new DynamicListModel<>(new ArrayList<>());
+    private JButton _selectButton;
+    private JButton _showCorrespondingButton;
+
+    public TracebilityChooserWerkzeugUI() {
         _panel = new JBPanel();
-        _tracebilitylist = new JBList();
-        _tracebilitylist.setCellRenderer(new TraceablityChooserListCellRenderer());
-        _tracebilitylist.setModel(_model);
-        _panel.add(_tracebilitylist);
+        _panel.setLayout(new BorderLayout());
+        _tableModel = new TraceabilityTableModel();
+        _tracebilityTable = new JBTable(_tableModel);
+        _tracebilityTable.setDefaultRenderer(Double.class, new TraceabilityListCellRenderer());
+        _tracebilityTable.setDefaultRenderer(String.class, new TraceabilityListCellRenderer());
+        _tracebilityTable.setAutoCreateRowSorter(true);
+        _tracebilityTable.getTableHeader().setReorderingAllowed(false);
+        initColumnWidths(_tracebilityTable);
+        _panel.add(new JBScrollPane(_tracebilityTable), BorderLayout.CENTER);
+
+        _selectButton = new JButton();
+        _showCorrespondingButton = new JButton();
+        _panel.add(erstelleBottomPanel(), BorderLayout.SOUTH);
+        _panel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+
         JBPopupFactory factory = ServiceManager.getService(JBPopupFactory.class);
-        ComponentPopupBuilder popupBuilder = factory.createComponentPopupBuilder(_panel,_tracebilitylist);
+        ComponentPopupBuilder popupBuilder = factory.createComponentPopupBuilder(_panel, _tracebilityTable);
         _popup = popupBuilder.createPopup();
+        _popup.pack(true, true);
     }
 
-    public void show()
-    {
+    public void show() {
         _popup.showInFocusCenter();
         _panel.grabFocus();
     }
 
-    public void setContent(final List<TraceabilityLink> traceabilityLinkList)
-    {
-        _model.setNewContent(traceabilityLinkList);
+    public void setContent(final List<TraceabilityLink> traceabilityLinkList) {
+        _tableModel.setContent(traceabilityLinkList);
     }
 
-    public JBPopup getPopup()
-    {
+    private static void initColumnWidths(final JTable table) {
+        final TableColumnModel tableColumnModel = table.getColumnModel();
+
+        tableColumnModel.getColumn(0).setPreferredWidth(75);
+        tableColumnModel.getColumn(1).setPreferredWidth(150);
+        tableColumnModel.getColumn(2).setPreferredWidth(150);
+    }
+
+    private JPanel erstelleBottomPanel() {
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        bottomPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        _selectButton = new JButton("Select");
+        _showCorrespondingButton = new JButton("Show sourcecode");
+        bottomPanel.add(_showCorrespondingButton);
+        bottomPanel.add(_selectButton);
+
+        return bottomPanel;
+    }
+
+    public JButton getSelectButton() {
+        return _selectButton;
+    }
+
+    public JBPopup getPopup() {
         return _popup;
     }
 
-    public JBList<TraceabilityLink> getJBList()
+    public JButton getShowCorrespondingButton() {
+        return _showCorrespondingButton;
+    }
+
+    public JBTable getJBTable() {
+        return _tracebilityTable;
+    }
+
+    public TraceabilityTableModel getTracebilityTableModel()
     {
-        return _tracebilitylist;
+        return _tableModel;
+    }
+
+    private static DefaultTableCellRenderer getDefaultTableCellRenderer()
+    {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+        return centerRenderer;
     }
 }

@@ -8,7 +8,6 @@ import materials.ClassNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import service.ChangePropagationProcess;
-import valueobjects.ClassNodeType;
 import werkzeuge.graphwerkzeug.util.ClassGraphLogger;
 import valueobjects.RelationshipType;
 
@@ -50,7 +49,7 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassNode, Class
     @NotNull
     @Override
     public ClassNode getSourceNode(final ClassDependency classDependency) {
-        return classDependency.getIndependentClass();
+        return classDependency.get_independentClass();
     }
 
     @NotNull
@@ -91,13 +90,16 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassNode, Class
 
     public void refreshDataModel(final ClassNode changedClassNode) {
             addNode(changedClassNode);
+            Set<ClassDependency> affectedDependencies = _changePropagationProcess.getAffectedDependencies(changedClassNode);
+            addAll(affectedDependencies);
 
-
-            Set<ClassNode> topDependencies = _changePropagationProcess.getModel().getTopDependencies(changedClassNode);
-            Set<ClassNode> bottomDependencies = _changePropagationProcess.getModel().getBottomDependencies(changedClassNode);
-
-            addNeighbourhoodForClass(changedClassNode, topDependencies);
-            addNeighbourhoodForClass(changedClassNode, bottomDependencies);
+//        Set<ClassNode> topDependencies = _changePropagationProcess.getModel().getTopDependencies(changedClassNode);
+//            Set<ClassNode> bottomDependencies = _changePropagationProcess.getModel().getBottomDependencies(changedClassNode);
+//
+//
+//
+//            addNeighbourhoodForClass(changedClassNode, topDependencies);
+//            addNeighbourhoodForClass(changedClassNode, bottomDependencies);
 
     }
 
@@ -106,7 +108,7 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassNode, Class
         for (ClassNode topdependency : dependencies) {
            if (_changePropagationProcess.getAffectedClassesByChange().contains(topdependency)) {
 
-                ClassDependency edge = new ClassDependency(classNode, topdependency, RelationshipType.DirectedRelationship);
+                ClassDependency edge = new ClassDependency(classNode, topdependency, RelationshipType.Directed_Association);
                 addEdge(edge);
            }
         }
@@ -135,9 +137,9 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassNode, Class
         } else {
             ClassGraphLogger.debug("addEdge - Edge already in model : " + edge);
         }
-        addNode(edge.getIndependentClass());
+        addNode(edge.get_independentClass());
         addNode(edge.getDependentClass());
-        addNodeEdge(edge.getIndependentClass(), edge);
+        addNodeEdge(edge.get_independentClass(), edge);
         addNodeEdge(edge.getDependentClass(), edge);
     }
 

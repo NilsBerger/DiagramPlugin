@@ -1,6 +1,7 @@
 package werkzeuge.graphwerkzeug.model;
 
 import com.intellij.openapi.graph.GraphManager;
+import com.intellij.openapi.graph.base.Edge;
 import com.intellij.openapi.graph.base.Node;
 import com.intellij.openapi.graph.builder.CustomGraphUpdater;
 import com.intellij.openapi.graph.util.GraphHider;
@@ -19,12 +20,11 @@ public class ClassGraphFilterer extends CustomGraphUpdater {
 
     private GraphHider _graphHider;
     private ClassGraph _classGraph;
-    //private Map<String, Boolean> _edgeShouldHideMap;
     private Map<ClassNode, Boolean> _nodeShouldHideMap;
+    private boolean _filterOn = false;
 
     public ClassGraphFilterer(ClassGraph classGraph) {
         _classGraph = classGraph;
-        //_edgeShouldHideMap = new HashMap<>();
         _nodeShouldHideMap = new HashMap<>();
     }
 
@@ -33,29 +33,79 @@ public class ClassGraphFilterer extends CustomGraphUpdater {
     {
         _graphHider = GraphManager.getGraphManager().createGraphHider(graph2D);
         _graphHider.setFireGraphEventsEnabled(true);
-        _graphHider.unhideAll();
         Collection<ClassNode> nodes = _classGraph.getDataModel().getNodes();
-        for(ClassNode node : nodes)
+        unfilterAll();
+        if(_filterOn)
         {
-            if(shouldFilter(node))
+            for(ClassNode node : nodes)
             {
-                filter(node);
+                if(shouldFilter(node) ||node.isHidden())
+                {
+                    filter(node);
+                }
             }
+        }
+        else{
+           unfilterAll();
         }
 
         //Edge Filter?
     }
-
-    public void unfilterAll() {
-        _graphHider.unhideAll();
+    public void setFilterOn(boolean setOn)
+    {
+        _filterOn = setOn;
     }
 
-    public void filter(Node node)
+    public void unfilterAll() {
+        // unhideAll(); not working
+        //_graphHider.unhideAll();
+        Collection<ClassNode> nodes = _classGraph.getDataModel().getNodes();
+        for(ClassNode node : nodes)
+        {
+            unfilter(node);
+        }
+
+        Collection<ClassDependency> dependencies = _classGraph.getDataModel().getEdges();
+        for(ClassDependency dependency : dependencies)
+        {
+            unfilter(dependency);
+        }
+    }
+
+    public void filter(final Node node)
     {
         _graphHider.hide(node);
     }
 
-    public void filter(ClassNode classGraphNode)
+    public void unfilter(final ClassDependency dependency)
+    {
+        Edge edge = _classGraph.getEdge(dependency);
+        if(edge != null)
+        {
+            unfilter(edge);
+        }
+    }
+
+    public void unfilter(final Edge edge)
+    {
+        _graphHider.unhideEdge(edge);
+    }
+
+    public void unfilter(final ClassNode classGraphNode)
+    {
+        Node node = _classGraph.getNode(classGraphNode);
+        if(node != null)
+        {
+            unfilter(node);
+        }
+    }
+
+    public void unfilter(final Node node)
+    {
+        _graphHider.unhideNode(node, true);
+    }
+
+    public void filter(final ClassNode classGraphNode)
     {
         Node node = _classGraph.getNode(classGraphNode);
         if(node != null)

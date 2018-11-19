@@ -1,6 +1,7 @@
 package werkzeuge.graphwerkzeug.presentation;
 
 import com.intellij.openapi.graph.GraphManager;
+import com.intellij.openapi.graph.base.Graph;
 import com.intellij.openapi.graph.view.*;
 import materials.ClassNode;
 
@@ -63,6 +64,12 @@ public class ClassGraphRealizerFactory {
         nodeRealizer.addLabel(nameLabel);
         return nameLabel;
     }
+
+    private static void a ()
+    {
+
+    }
+
 
 //    private static void onSelectOpenPopupMenu(NodeRealizer nodeRealizer, ClassGraphNode classGraphNode)
 //    {

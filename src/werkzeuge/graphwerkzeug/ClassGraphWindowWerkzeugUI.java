@@ -29,6 +29,9 @@ import werkzeuge.StatusIcons;
 import werkzeuge.ToolWindowWerkzeug;
 import werkzeuge.graphwerkzeug.model.ClassGraphFilterer;
 import werkzeuge.graphwerkzeug.presentation.ClassGraph;
+import werkzeuge.graphwerkzeug.presentation.CustomLayouterAction;
+import werkzeuge.graphwerkzeug.presentation.NodeFilterAction;
+import werkzeuge.graphwerkzeug.presentation.NodeUnfilterAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -106,15 +109,17 @@ public class ClassGraphWindowWerkzeugUI {
         actions.addSeparator();
 
         actions.add(new ApplyCurrentLayoutAction(classgraph.getGraph()));
+        //actions.add(new CustomLayouterAction(classgraph.getGraphBuilder(), _generalClassGraph.getGraphBuilder().getS));
         actions.addSeparator();
 
         //actions.add(new DeleteSelectionAction());
         actions.addSeparator();
 
-        actions.add(new PrintGraphAction(_generalClassGraph.getGraph()));
-        actions.add(new PrintPreviewAction(_generalClassGraph.getGraph()));
+        actions.add(new PrintGraphAction(classgraph.getGraph()));
+        actions.add(new PrintPreviewAction(classgraph.getGraph()));
         actions.addSeparator();
-        //actions.add(new NodeHideAction(classgraph));
+        actions.add(new NodeFilterAction(classgraph));
+        actions.add(new NodeUnfilterAction(classgraph));
 
         return actions;
     }
@@ -142,21 +147,6 @@ public class ClassGraphWindowWerkzeugUI {
         return _swiftClassGraph;
     }
 
-    class NodeHideAction extends AbstractGraphAction {
-        private ClassGraph _classGraph;
-        private ClassGraphFilterer _filter;
-
-        public NodeHideAction(ClassGraph classGraph)
-        {
-            _classGraph = classGraph;
-            _filter = new ClassGraphFilterer(_classGraph);
-        }
-        @Override
-        protected void actionPerformed(AnActionEvent anActionEvent, Graph2D graph2D) {
-            _filter.update(graph2D, _classGraph.getView());
-        }
-
-    }
 }
 
 

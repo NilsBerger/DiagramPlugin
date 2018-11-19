@@ -2,6 +2,7 @@ package werkzeuge.graphwerkzeug.presentation;
 
 import com.intellij.openapi.graph.base.Graph;
 import com.intellij.openapi.graph.builder.components.BasicGraphPresentationModel;
+import com.intellij.openapi.graph.builder.util.GraphViewUtil;
 import com.intellij.openapi.graph.view.*;
 import materials.ClassDependency;
 import materials.ClassNode;
@@ -9,9 +10,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import werkzeuge.graphwerkzeug.ClassGraphPopupMenu;
 import werkzeuge.graphwerkzeug.model.GerneralClassGraphDataModel;
+import werkzeuge.graphwerkzeug.util.GraphUtils;
 
 public class ClassGraphPresentationModel extends BasicGraphPresentationModel<ClassNode, ClassDependency> {
     private ClassGraph _classGraph;
+    private ClassNodeRenderer _renderer;
+    private static final String RENDERER_NAME = "ClassGraph.NodeRenderer";
 
     public ClassGraphPresentationModel(final Graph graph)
     {
@@ -24,8 +28,6 @@ public class ClassGraphPresentationModel extends BasicGraphPresentationModel<Cla
         this._classGraph = graph;
         setGraph(graph.getGraph());
         setGraphBuilder(graph.getGraphBuilder());
-
-        new ClassNodeRenderer(_classGraph.getGraphBuilder());
     }
 
 //    @Override
@@ -93,6 +95,11 @@ public class ClassGraphPresentationModel extends BasicGraphPresentationModel<Cla
     @NotNull
     @Override
     public NodeRealizer getNodeRealizer(@Nullable ClassNode node) {
-        return ClassGraphRealizerFactory.createDefaultNodeRealizer(node);
+        if(_renderer == null)
+        {
+            _renderer = new ClassNodeRenderer(getGraphBuilder(), null);
+        }
+
+        return GraphViewUtil.createNodeRealizer(RENDERER_NAME, _renderer);
     }
 }

@@ -5,7 +5,6 @@ import de.unihamburg.masterprojekt2016.traceability.TypePointer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
-import javafx.collections.SetChangeListener;
 import materials.*;
 import valueobjects.ClassNodeType;
 import valueobjects.Marking;
@@ -187,9 +186,9 @@ public class ChangePropagationProcess{
             System.out.println("addEdge - AffectedEdge already in model : " +  edge);
         }
         addAffectedNode(edge.getDependentClass());
-        addAffectedNode(edge.getIndependentClass());
+        addAffectedNode(edge.get_independentClass());
         addNodeEdge(edge.getDependentClass(), edge);
-        addNodeEdge(edge.getIndependentClass(), edge);
+        addNodeEdge(edge.get_independentClass(), edge);
     }
 
     public void addNodeEdge(final ClassNode node, final ClassDependency edge)
@@ -232,7 +231,7 @@ public class ChangePropagationProcess{
         updateNeigbbourhood(swiftClassNode, Marking.CHANGED);
 
         //Add Dependency
-        ClassDependency traceDependency = new ClassDependency(classNodeMaterial,swiftClassNode, RelationshipType.TraceabilityRelationship, traceabilityLink.getProbability());
+        ClassDependency traceDependency = new ClassDependency(classNodeMaterial,swiftClassNode, RelationshipType.Traceability_Association, traceabilityLink.getProbability());
         _traceabilityLinks.add(traceDependency);
         _model.addEdge(traceDependency);
     }
@@ -244,7 +243,7 @@ public class ChangePropagationProcess{
         updateNeigbbourhood(javaClassNode, Marking.CHANGED);
 
         //Add Dependency
-        ClassDependency traceDependency = new ClassDependency(javaClassNode, swiftClassNodeMaterial, RelationshipType.TraceabilityRelationship, traceabilityLink.getProbability());
+        ClassDependency traceDependency = new ClassDependency(javaClassNode, swiftClassNodeMaterial, RelationshipType.Traceability_Association, traceabilityLink.getProbability());
         _traceabilityLinks.add(traceDependency);
         _model.addEdge(traceDependency);
     }
@@ -279,15 +278,22 @@ public class ChangePropagationProcess{
         return _affectedNodes.stream().filter(classes -> classes.getMarking() == Marking.NEXT).collect(Collectors.toSet());
     }
 
-    public Set<ClassDependency> getAffectedDependencies(ClassNode node )
+    public Set<ClassDependency> getAffectedDependencies(ClassNode node)
     {
-        Set<ClassDependency> dependencies = new HashSet<>();
-        Set<ClassNode> neighbourhood = _model.getNeighbourhood(node);
-        for(ClassNode neighbourhoodNode : neighbourhood)
+        Set<ClassDependency> dependencies = _model.getDependenciesForNode(node);
+        Set<ClassDependency> affectedDepenendcies = new HashSet<>();
+        for(ClassDependency dependency : dependencies)
         {
-            //
+            for(ClassNode affectedNode : _affectedNodes)
+            {
+                if(dependency.containsNodes(node, affectedNode))
+                {
+                    affectedDepenendcies.add(dependency);
+                }
+            }
+
         }
-        return dependencies;
+        return affectedDepenendcies;
     }
 
     public ObservableSet<ClassNode> getAffectedClassesByChange() {
