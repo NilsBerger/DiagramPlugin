@@ -108,7 +108,7 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassNode, Class
         for (ClassNode topdependency : dependencies) {
            if (_changePropagationProcess.getAffectedClassesByChange().contains(topdependency)) {
 
-                ClassDependency edge = new ClassDependency(classNode, topdependency, RelationshipType.Directed_Association);
+                ClassDependency edge = new ClassDependency(classNode, topdependency, RelationshipType.Dependency);
                 addEdge(edge);
            }
         }

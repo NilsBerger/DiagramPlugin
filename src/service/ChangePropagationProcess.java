@@ -6,7 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.collections.ObservableSet;
 import materials.*;
-import valueobjects.ClassNodeType;
+import valueobjects.ClassLanguageType;
 import valueobjects.Marking;
 import valueobjects.RelationshipType;
 
@@ -14,6 +14,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -47,7 +48,7 @@ public class ChangePropagationProcess{
         return _INSTANCE;
     }
 
-    public void initialize(final Set<? extends ClassDependency> classdependencies, ChangeAndFixStrategyIF strategy)
+    public void initialize(final Set<ClassDependency> classdependencies, ChangeAndFixStrategyIF strategy)
     {
          clear();
          _model = new ChangePropagationModel(classdependencies);
@@ -55,6 +56,7 @@ public class ChangePropagationProcess{
     }
     public void clear()
     {
+        //Model clear
         _affectedNodes.clear();
         _affectedEdges.clear();
         _initialChangedClasse.clear();
@@ -73,7 +75,7 @@ public class ChangePropagationProcess{
         }
         final ClassNode changedClass = getClassNodeMaterial(classNode);
         _initialChangedClasse.add(classNode);
-        updateNeigbbourhood(changedClass, Marking.CHANGED);
+        update(changedClass, Marking.CHANGED);
         return true;
     }
 
@@ -95,7 +97,7 @@ public class ChangePropagationProcess{
      * @param changedClass
      * @param marking
      */
-    public void updateNeigbbourhood(ClassNode changedClass, Marking marking) {
+    public void update(ClassNode changedClass, Marking marking) {
 
         assert changedClass != null : "Changed Class should not be null";
         assert marking != null : "Changed Class should not be null";
@@ -227,8 +229,8 @@ public class ChangePropagationProcess{
     {
 
         TypePointer pointer = (TypePointer) traceabilityLink.getTarget();
-        ClassNode swiftClassNode = getClassNodeMaterial(new ClassNode(pointer.getFullyQualifiedName(), ClassNodeType.Swift));
-        updateNeigbbourhood(swiftClassNode, Marking.CHANGED);
+        ClassNode swiftClassNode = getClassNodeMaterial(new ClassNode(pointer.getFullyQualifiedName(), ClassLanguageType.Swift));
+        update(swiftClassNode, Marking.CHANGED);
 
         //Add Dependency
         ClassDependency traceDependency = new ClassDependency(classNodeMaterial,swiftClassNode, RelationshipType.Traceability_Association, traceabilityLink.getProbability());
@@ -239,8 +241,8 @@ public class ChangePropagationProcess{
     {
 
         TypePointer pointer = (TypePointer) traceabilityLink.getTarget();
-        ClassNode javaClassNode = getClassNodeMaterial(new ClassNode(pointer.getFullyQualifiedName(), ClassNodeType.Java));
-        updateNeigbbourhood(javaClassNode, Marking.CHANGED);
+        ClassNode javaClassNode = getClassNodeMaterial(new ClassNode(pointer.getFullyQualifiedName(), ClassLanguageType.Java));
+        update(javaClassNode, Marking.CHANGED);
 
         //Add Dependency
         ClassDependency traceDependency = new ClassDependency(javaClassNode, swiftClassNodeMaterial, RelationshipType.Traceability_Association, traceabilityLink.getProbability());

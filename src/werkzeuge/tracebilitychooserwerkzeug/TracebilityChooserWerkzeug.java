@@ -11,12 +11,10 @@ import de.unihamburg.masterprojekt2016.traceability.TypePointer;
 import materials.ClassNode;
 import service.ChangePropagationProcess;
 import service.TraceabilityClassNodeService;
-import valueobjects.ClassNodeType;
+import valueobjects.ClassLanguageType;
 
-import javax.swing.event.MouseInputListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,13 +40,13 @@ public class TracebilityChooserWerkzeug {
 
     private List<TraceabilityLink> getTraceabilityLinks(final ClassNode classNode)
     {
-        if(classNode.getType() == ClassNodeType.Java)
+        if(classNode.getType() == ClassLanguageType.Java)
         {
-            return _service.getJavaTracebiliityLinksForJavaClassNode(classNode);
+            return _service.getJavaTraceabilityLinks(classNode);
         }
-        if(classNode.getType() ==  ClassNodeType.Swift)
+        if(classNode.getType() ==  ClassLanguageType.Swift)
         {
-            return _service.getSwiftTracebiliityLinksForSwiftClassNode(classNode);
+            return _service.getSwiftTraceabilityLinks(classNode);
         }
         return Collections.emptyList();
     }
@@ -74,11 +72,11 @@ public class TracebilityChooserWerkzeug {
             public void actionPerformed(ActionEvent e) {
                 TraceabilityLink link = _ui.getTracebilityTableModel().getTraceabilityLink(_ui.getJBTable().getSelectedRow());
                 link.setSource(new TypePointer());
-                if(_classNode.getType() == ClassNodeType.Java)
+                if(_classNode.getType() == ClassLanguageType.Java)
                 {
                     _propagationProcessService.addTraceabilityLinkJavaSource(_classNode, link);
                 }
-                if(_classNode.getType() == ClassNodeType.Swift)
+                if(_classNode.getType() == ClassLanguageType.Swift)
                 {
                     _propagationProcessService.addTraceabilityLinkSwiftSource(_classNode, link);
                 }

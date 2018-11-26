@@ -1,5 +1,5 @@
 package valueobjects;
 
 public enum ClassNodeType {
-    Default, Java, Swift
+    CLASS, ANONYMOUS_CLASS, INTERFACE,
 }

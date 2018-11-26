@@ -6,10 +6,9 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.components.JBPanel;
 import materials.ClassNode;
 import service.GraphChangeListener;
-import valueobjects.ClassNodeType;
+import valueobjects.ClassLanguageType;
 import valueobjects.Marking;
 import javafx.collections.SetChangeListener;
-import werkzeuge.tracebilitychooserwerkzeug.CorrespondingTraceabilityChooserWerkzeug;
 import werkzeuge.tracebilitychooserwerkzeug.TracebilityChooserWerkzeug;
 
 import javax.swing.*;
@@ -29,10 +28,10 @@ public class FinalContextWerkzeug implements GraphChangeListener {
     private final JBMenuItem _showSourcecodeItem = new JBMenuItem("Show sourcecode");
     private final JBMenuItem _showCorrespondingClassItem = new JBMenuItem("Show corresponding class in other platform");
 
-    private final ClassNodeType _type;
+    private final ClassLanguageType _type;
     private ClassNode _selectedClass;
 
-    public FinalContextWerkzeug(final String text, ClassNodeType type)
+    public FinalContextWerkzeug(final String text, ClassLanguageType type)
     {
         _ui = new FinalContextWerkzeugUI();
         _ui.setLabelText(text);
@@ -95,13 +94,13 @@ public class FinalContextWerkzeug implements GraphChangeListener {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                _cpProcess.updateNeigbbourhood(_selectedClass, Marking.PROPAGATES);
+                _cpProcess.update(_selectedClass, Marking.PROPAGATES);
             }
         });
         _changedMenuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                _cpProcess.updateNeigbbourhood(_selectedClass, Marking.CHANGED);
+                _cpProcess.update(_selectedClass, Marking.CHANGED);
                 _selectedClass.setMarking(Marking.CHANGED);
             }
         });
@@ -109,7 +108,7 @@ public class FinalContextWerkzeug implements GraphChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                _cpProcess.updateNeigbbourhood(_selectedClass, Marking.INSPECTED);
+                _cpProcess.update(_selectedClass, Marking.INSPECTED);
             }
         });
         _showSourcecodeItem.addActionListener(new ActionListener() {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package service;
+package materials;
 
 
 import materials.ClassDependency;

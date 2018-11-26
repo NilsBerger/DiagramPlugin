@@ -18,7 +18,7 @@ package materials;
 
 import Utils.HashUtils;
 import service.GraphChangeListener;
-import valueobjects.ClassNodeType;
+import valueobjects.ClassLanguageType;
 import valueobjects.Marking;
 
 import java.io.File;
@@ -45,13 +45,13 @@ public class ClassNode {
 
     private boolean _hide = false;
 
-    private final ClassNodeType _type;
+    private final ClassLanguageType _type;
 
     private String _sourceFilePath = "";
 
 
 
-    public ClassNode(final String className, ClassNodeType type)
+    public ClassNode(final String className, ClassLanguageType type)
     {
         if((className != null) && (className.trim().equals("")))
         {
@@ -63,7 +63,7 @@ public class ClassNode {
         this._type = type;
     }
 
-    public ClassNode(final String className, Marking marking, ClassNodeType type)
+    public ClassNode(final String className, Marking marking, ClassLanguageType type)
     {
         if((className != null) && (className.trim().equals("")))
         {
@@ -91,7 +91,7 @@ public class ClassNode {
         return _marking;
     }
 
-    public ClassNodeType getType()
+    public ClassLanguageType getType()
     {
         return _type;
     }

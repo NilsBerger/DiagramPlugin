@@ -2,7 +2,7 @@ package service;
 
 import materials.ClassDependency;
 import org.junit.Test;
-import valueobjects.ClassNodeType;
+import valueobjects.ClassLanguageType;
 
 import java.util.List;
 import java.util.Set;
@@ -10,7 +10,7 @@ import java.util.Set;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class DotFileParserServiceTest
+public class DotFileParserTest
 {
 
     public final String _filepath = "/Users/nilsberger/Documents/Masterarbeit/clean2/DiagramPlugin/src/test/resources/android_graph.dot";
@@ -20,15 +20,15 @@ public class DotFileParserServiceTest
     public void paserJavaDepenendicesFormDotFileTest()
     {
 
-        Set<ClassDependency> dependencies = DotFileParserService.parseJavaDependenciesFromDotFile(_filepath);
+        Set<ClassDependency> dependencies = DotFileParser.parseJavaDependenciesFromDotFile(_filepath);
 
         assertThat(dependencies.size(), greaterThan(0));
         assertThat(dependencies.size(), is(13));
 
         for(ClassDependency dependency : dependencies)
         {
-            assertThat(dependency.getDependentClass().getType(), is(ClassNodeType.Java));
-            assertThat(dependency.get_independentClass().getType(), is(ClassNodeType.Java));
+            assertThat(dependency.getDependentClass().getType(), is(ClassLanguageType.Java));
+            assertThat(dependency.get_independentClass().getType(), is(ClassLanguageType.Java));
         }
     }
 
@@ -36,15 +36,15 @@ public class DotFileParserServiceTest
     public void paserSwiftDepenendicesFormDotFileTest()
     {
 
-        List<ClassDependency> dependencies = DotFileParserService.parseSwiftDependenciesFromDotFile(_filepath);
+        List<ClassDependency> dependencies = DotFileParser.parseSwiftDependenciesFromDotFile(_filepath);
 
         assertThat(dependencies.size(), greaterThan(0));
         assertThat(dependencies.size(), is(21));
 
         for(ClassDependency dependency : dependencies)
         {
-            assertThat(dependency.getDependentClass().getType(), is(ClassNodeType.Swift));
-            assertThat(dependency.get_independentClass().getType(), is(ClassNodeType.Swift));
+            assertThat(dependency.getDependentClass().getType(), is(ClassLanguageType.Swift));
+            assertThat(dependency.get_independentClass().getType(), is(ClassLanguageType.Swift));
         }
     }
 }

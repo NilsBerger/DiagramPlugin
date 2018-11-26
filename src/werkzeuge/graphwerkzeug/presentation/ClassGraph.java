@@ -16,7 +16,7 @@ import materials.ClassDependency;
 import materials.ClassNode;
 import service.ChangePropagationProcess;
 import service.GraphChangeListener;
-import valueobjects.ClassNodeType;
+import valueobjects.ClassLanguageType;
 import werkzeuge.graphwerkzeug.model.*;
 import werkzeuge.graphwerkzeug.util.ClassGraphLogger;
 
@@ -88,7 +88,7 @@ public class ClassGraph implements Disposable, GraphChangeListener {
     }
     private void selectedNodes()
     {
-        final List<ClassNode> toSelect = new ArrayList<>(Arrays.asList(new ClassNode("List", ClassNodeType.Java)));
+        final List<ClassNode> toSelect = new ArrayList<>(Arrays.asList(new ClassNode("List", ClassLanguageType.Java)));
         final Graph2D graph = _graphBuilder.getGraph();
         for(final ClassNode node : toSelect)
         {

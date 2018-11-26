@@ -7,9 +7,9 @@ import com.intellij.psi.PsiNamedElement;
 import materials.ClassDependency;
 import materials.ClassNode;
 import service.ChangePropagationProcess;
-import service.DotFileParserService;
+import service.DotFileParser;
 import service.RandomChangeAndFixStrategy;
-import valueobjects.ClassNodeType;
+import valueobjects.ClassLanguageType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -25,14 +25,14 @@ public class AddInitialContextClassAction extends AnAction {
         ChangePropagationProcess propagationProcessService = ChangePropagationProcess.getInstance();
 
         Set<ClassDependency> dependencyList = new HashSet<>();
-        dependencyList.addAll(DotFileParserService.parseJavaDependenciesFromDotFile(DotFileParserService.JAVA_DOT_FILENAME));
-        dependencyList.addAll(DotFileParserService.parseSwiftDependenciesFromDotFile(DotFileParserService.DEPCHECK_FILENAME));
+        dependencyList.addAll(DotFileParser.parseJavaDependenciesFromDotFile(DotFileParser.JAVA_DOT_FILENAME));
+        dependencyList.addAll(DotFileParser.parseSwiftDependenciesFromDotFile(DotFileParser.DEPCHECK_FILENAME));
         propagationProcessService.initialize(dependencyList, new RandomChangeAndFixStrategy());
 
 
         if (psiElementLanguage.equals(javaLanguage)) {
             PsiNamedElement namedElement = (PsiNamedElement) element;
-            propagationProcessService.change(new ClassNode(namedElement.getName(), ClassNodeType.Java));
+            propagationProcessService.change(new ClassNode(namedElement.getName(), ClassLanguageType.Java));
 
         }
     }

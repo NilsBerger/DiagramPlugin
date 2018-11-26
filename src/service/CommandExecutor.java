@@ -3,7 +3,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 
-public class CommandExecutorService {
+public class CommandExecutor {
 
     public static final String DEPCHECK_COMMAND = "depcheck graph --dot  --workspace PATH --scheme SCHEME";
     public static final String JDEPS_COMMAND = "jdeps -v -dotoutput dot ";

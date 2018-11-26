@@ -55,7 +55,7 @@ public class ClassGraphPopupMenu extends PopupMode {
         @Override
         public void actionPerformed(ActionEvent e) {
             ClassNode classNode = _classGraph.getGraphBuilder().getNodeObject(_node);
-            _process.updateNeigbbourhood(classNode, Marking.CHANGED);
+            _process.update(classNode, Marking.CHANGED);
         }
     }
     class NodePropagatesAction extends AbstractAction {
@@ -69,7 +69,7 @@ public class ClassGraphPopupMenu extends PopupMode {
         @Override
         public void actionPerformed(ActionEvent e) {
             ClassNode classNode = _classGraph.getGraphBuilder().getNodeObject(_node);
-            _process.updateNeigbbourhood(classNode, Marking.PROPAGATES);
+            _process.update(classNode, Marking.PROPAGATES);
         }
     }
     class NodeInspectedAction extends AbstractAction {
@@ -83,7 +83,7 @@ public class ClassGraphPopupMenu extends PopupMode {
         @Override
         public void actionPerformed(ActionEvent e) {
             ClassNode classNode = _classGraph.getGraphBuilder().getNodeObject(_node);
-            _process.updateNeigbbourhood(classNode, Marking.INSPECTED);
+            _process.update(classNode, Marking.INSPECTED);
         }
     }
 

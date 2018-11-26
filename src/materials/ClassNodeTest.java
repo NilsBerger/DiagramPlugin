@@ -4,7 +4,7 @@ package materials;
 
 import com.google.common.io.Files;
 import org.junit.Test;
-import valueobjects.ClassNodeType;
+import valueobjects.ClassLanguageType;
 import valueobjects.Marking;
 
 import java.io.File;
@@ -19,8 +19,8 @@ public class ClassNodeTest {
     @Test
     public void EqualsAndHashCodeTest()
     {
-        ClassNode classNode = new ClassNode("a", ClassNodeType.Default);
-        ClassNode classNode2 = new ClassNode("b", ClassNodeType.Default);
+        ClassNode classNode = new ClassNode("a", ClassLanguageType.Default);
+        ClassNode classNode2 = new ClassNode("b", ClassLanguageType.Default);
 
         assertThat(classNode, is(classNode));
         assertThat(classNode.hashCode(), is(classNode.hashCode()));
@@ -31,7 +31,7 @@ public class ClassNodeTest {
     @Test
     public void setSourceFilepathTest() throws IOException {
         File tempFile = File.createTempFile("Temp", ".java");
-        ClassNode classNode = new ClassNode("a", ClassNodeType.Default);
+        ClassNode classNode = new ClassNode("a", ClassLanguageType.Default);
 
         String temppath = tempFile.getCanonicalPath();
         classNode.setSourceFilePath(temppath);
@@ -41,7 +41,7 @@ public class ClassNodeTest {
     @Test (expected = IllegalArgumentException.class)
     public void setWrongSourceFilepathTest() throws IOException {
         File tempDir = Files.createTempDir();
-        ClassNode classNode = new ClassNode("a", ClassNodeType.Default);
+        ClassNode classNode = new ClassNode("a", ClassLanguageType.Default);
 
         String temppath = tempDir.getCanonicalPath();
         classNode.setSourceFilePath(temppath);
@@ -51,7 +51,7 @@ public class ClassNodeTest {
     @Test
     public void oldMarking()
     {
-        ClassNode classNode = new ClassNode("C", ClassNodeType.Default);
+        ClassNode classNode = new ClassNode("C", ClassLanguageType.Default);
         classNode.setMarking(Marking.BLANK);
 
         Marking oldMarking = classNode.getMarking();

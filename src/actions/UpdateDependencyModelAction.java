@@ -20,7 +20,7 @@ import Utils.PluginProperties;
 import Utils.PropertyName;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import service.DependenyProjectExtratorService;
+import service.ProjectDependencyExtrator;
 
 import java.io.IOException;
 
@@ -37,8 +37,8 @@ public class UpdateDependencyModelAction extends AnAction {
             final String swift_scheme_folder = properties.getProperty(PropertyName.Swift_SCHEME_FOLDER);
             final String android_filepath = properties.getProperty(PropertyName.ANDROID_WORKSPACE);
 
-            DependenyProjectExtratorService.extractDependenciesFromSwiftProject(swift_filepath, swift_scheme_folder);
-            DependenyProjectExtratorService.extractDependenciesFromJavaProject(android_filepath);
+            ProjectDependencyExtrator.extractDependenciesFromSwiftProject(swift_filepath, swift_scheme_folder);
+            ProjectDependencyExtrator.extractDependenciesFromJavaProject(android_filepath);
 
         } catch (IOException e1) {
             e1.printStackTrace();

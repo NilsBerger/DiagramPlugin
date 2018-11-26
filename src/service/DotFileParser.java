@@ -2,7 +2,7 @@ package service;
 
 import materials.ClassDependency;
 import materials.ClassNode;
-import valueobjects.ClassNodeType;
+import valueobjects.ClassLanguageType;
 import valueobjects.RelationshipType;
 
 import java.io.BufferedReader;
@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-public class DotFileParserService{
+public class DotFileParser {
 
     public final static Charset ENCODING = StandardCharsets.UTF_8;
     public final static String delimiter = "->";
@@ -23,7 +23,7 @@ public class DotFileParserService{
     public static final String ANDROID_JAR_NAME = "android_workspace.jar";
     public static final String JAVA_DOT_FILENAME = new File(".").getAbsolutePath() + "/dot/" + ANDROID_JAR_NAME + ".dot";
 
-    private DotFileParserService()
+    private DotFileParser()
     {
     }
 
@@ -47,9 +47,9 @@ public class DotFileParserService{
                 if (line.contains(delimiter))
                 {
                     String[] parts = line.split(delimiter);
-                    ClassNode dependentClass = new ClassNode(parts[0], ClassNodeType.Java);
-                    ClassNode independentClass = new ClassNode(parts[1], ClassNodeType.Java);
-                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass, RelationshipType.Directed_Association);
+                    ClassNode dependentClass = new ClassNode(parts[0], ClassLanguageType.Java);
+                    ClassNode independentClass = new ClassNode(parts[1], ClassLanguageType.Java);
+                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass, RelationshipType.Dependency);
                     dependencies.add(classDependency);
                 }
             }
@@ -94,9 +94,9 @@ public class DotFileParserService{
                 if (line.contains(delimiter))
                 {
                     String[] parts = line.split(delimiter);
-                    ClassNode dependentClass = new ClassNode(parts[0], ClassNodeType.Swift);
-                    ClassNode independentClass = new ClassNode(parts[1], ClassNodeType.Swift);
-                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass, RelationshipType.Directed_Association);
+                    ClassNode dependentClass = new ClassNode(parts[0], ClassLanguageType.Swift);
+                    ClassNode independentClass = new ClassNode(parts[1], ClassLanguageType.Swift);
+                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass, RelationshipType.Dependency);
                     dependencies.add(classDependency);
                 }
             }

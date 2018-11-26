@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class DependenyProjectExtratorService {
+public class ProjectDependencyExtrator {
 
-    private DependenyProjectExtratorService(){}
+    private ProjectDependencyExtrator(){}
 
     public static void extractDependenciesFromJavaProject(final String android_workspace_filepath) {
         if (android_workspace_filepath == null || android_workspace_filepath.length() == 0) {
@@ -25,13 +25,13 @@ public class DependenyProjectExtratorService {
         long startTime = System.currentTimeMillis();
 
         try {
-            JarUtils.createJar(android_workspace_filepath, DotFileParserService.ANDROID_JAR_NAME);
+            JarUtils.createJar(android_workspace_filepath, DotFileParser.ANDROID_JAR_NAME);
         } catch (IOException e) {
             System.out.println("Could not crate jar");
             e.printStackTrace();
         }
-        CommandExecutorService executor = new CommandExecutorService();
-        executor.executeCommand(CommandExecutorService.JDEPS_COMMAND + DotFileParserService.ANDROID_JAR_NAME);
+        CommandExecutor executor = new CommandExecutor();
+        executor.executeCommand(CommandExecutor.JDEPS_COMMAND + DotFileParser.ANDROID_JAR_NAME);
 
         long endTime = System.currentTimeMillis();
         long timeInSeconds = (((endTime - startTime) / 1000) % 60);
@@ -63,8 +63,8 @@ public class DependenyProjectExtratorService {
 
         long startTime = System.currentTimeMillis();
 
-        CommandExecutorService executor = new CommandExecutorService();
-        executor.executeCommand(CommandExecutorService.DEPCHECK_COMMAND.replace("PATH", swift_workspace_path).replace("SCHEME", new File(scheme_path).getName()));
+        CommandExecutor executor = new CommandExecutor();
+        executor.executeCommand(CommandExecutor.DEPCHECK_COMMAND.replace("PATH", swift_workspace_path).replace("SCHEME", new File(scheme_path).getName()));
 
         long endTime = System.currentTimeMillis();
         long timeInSeconds = (((endTime - startTime) / 1000) % 60);

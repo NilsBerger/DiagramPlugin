@@ -18,23 +18,22 @@ package werkzeuge.graphwerkzeug.model;
 
 import materials.ClassDependency;
 import materials.ClassNode;
-import valueobjects.ClassNodeType;
+import valueobjects.ClassLanguageType;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class SwiftClassGraphDataModel extends GerneralClassGraphDataModel {
 
     @Override
    public void refreshDataModel(final ClassNode changedClassNode) {
-        if(changedClassNode.getType() == ClassNodeType.Swift)
+        if(changedClassNode.getType() == ClassLanguageType.Swift)
         {
             addNode(changedClassNode);
             Set<ClassDependency> affectedDependencies = _changePropagationProcess.getAffectedDependencies(changedClassNode);
             addAll(affectedDependencies);
 
-//            Set<ClassNode> topDependencies = _changePropagationProcess.getModel().getTopDependencies(changedClassNode).stream().filter(node -> node.getType() == ClassNodeType.Swift).collect(Collectors.toSet());
-//            Set<ClassNode> bottompDependencies = _changePropagationProcess.getModel().getBottomDependencies(changedClassNode).stream().filter(node -> node.getType() == ClassNodeType.Swift).collect(Collectors.toSet());
+//            Set<ClassNode> topDependencies = _changePropagationProcess.getModel().getTopDependencies(changedClassNode).stream().filter(node -> node.getType() == ClassLanguageType.Swift).collect(Collectors.toSet());
+//            Set<ClassNode> bottompDependencies = _changePropagationProcess.getModel().getBottomDependencies(changedClassNode).stream().filter(node -> node.getType() == ClassLanguageType.Swift).collect(Collectors.toSet());
 //
 //            addNeighbourhoodForClass(changedClassNode, topDependencies);
 //            addNeighbourhoodForClass(changedClassNode, bottompDependencies);

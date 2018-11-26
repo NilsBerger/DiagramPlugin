@@ -7,7 +7,7 @@ import de.unihamburg.masterprojekt2016.traceability.TypePointer;
 import materials.ClassNode;
 import service.ChangePropagationProcess;
 import service.TraceabilityClassNodeService;
-import valueobjects.ClassNodeType;
+import valueobjects.ClassLanguageType;
 
 import javax.swing.event.MouseInputListener;
 import java.awt.event.MouseEvent;
@@ -37,13 +37,13 @@ public class CorrespondingTraceabilityChooserWerkzeug{
 
     private List<TraceabilityLink> getTraceabilityLinks(final ClassNode classNode)
     {
-        if(classNode.getType() == ClassNodeType.Java)
+        if(classNode.getType() == ClassLanguageType.Java)
         {
-            return traceabilityClassNodeService.getSwiftTracebiliityLinksForJavaClassNode(_classNode);
+            return traceabilityClassNodeService.getSwiftTraceabilityLinks(_classNode);
         }
-        if(classNode.getType() == ClassNodeType.Swift)
+        if(classNode.getType() == ClassLanguageType.Swift)
         {
-            return traceabilityClassNodeService.getJavaTracebiliityLinksForSwiftClassNode(classNode);
+            return traceabilityClassNodeService.getJavaTraceabilityLinks(classNode);
         }
         return Collections.emptyList();
     }
@@ -59,11 +59,11 @@ public class CorrespondingTraceabilityChooserWerkzeug{
             public void mouseClicked(MouseEvent e) {
                 TraceabilityLink link = _ui.getTracebilityTableModel().getTraceabilityLink(_ui.getJBTable().getSelectedRow());
                 link.setSource(new TypePointer());
-                if(_classNode.getType() == ClassNodeType.Java)
+                if(_classNode.getType() == ClassLanguageType.Java)
                 {
                     _propagationProcessService.addTraceabilityLinkJavaSource(_classNode, link);
                 }
-                if(_classNode.getType() == ClassNodeType.Swift)
+                if(_classNode.getType() == ClassLanguageType.Swift)
                 {
                     _propagationProcessService.addTraceabilityLinkSwiftSource(_classNode, link);
                 }

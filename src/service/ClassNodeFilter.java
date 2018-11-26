@@ -1,14 +1,14 @@
 package service;
 
 import materials.ClassNode;
-import valueobjects.ClassNodeType;
+import valueobjects.ClassLanguageType;
 
 public class ClassNodeFilter {
     private ClassNodeFilter(){}
 
     public static boolean isClassNodeFromAPI(ClassNode classNode)
     {
-        if(classNode.getType() == ClassNodeType.Swift)
+        if(classNode.getType() == ClassLanguageType.Swift)
         {
             return false;
         }

@@ -2,7 +2,7 @@ package werkzeuge;
 
 import com.intellij.ui.components.JBPanel;
 import service.ChangePropagationProcess;
-import valueobjects.ClassNodeType;
+import valueobjects.ClassLanguageType;
 import werkzeuge.finalcontextwerkzeug.FinalContextWerkzeug;
 import werkzeuge.graphselectionwerkzeug.GraphSelectionWerkzeug;
 import werkzeuge.initialcontextwerkzeug.InitialContextWerkzeug;
@@ -37,8 +37,8 @@ public class ToolWindowWerkzeug{
 
         //_graphSelection = new GraphSelectionWerkzeug(_dependencyPersistenceAutomaton);
         _initialContext = new InitialContextWerkzeug();
-        _javaFinalContext = new FinalContextWerkzeug("Final Context Java", ClassNodeType.Java);
-        _swiftFinalContext = new FinalContextWerkzeug("Final Context Swift", ClassNodeType.Swift);
+        _javaFinalContext = new FinalContextWerkzeug("Final Context Java", ClassLanguageType.Java);
+        _swiftFinalContext = new FinalContextWerkzeug("Final Context Swift", ClassLanguageType.Swift);
         _traceabilityWerkzeug = new TraceabilityWerkzeug();
         _traceabilityWerkzeug.setChangePropagationProcessService(service);
 

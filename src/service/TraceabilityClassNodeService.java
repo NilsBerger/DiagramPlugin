@@ -20,28 +20,17 @@ public class TraceabilityClassNodeService {
         _project = currentProject;
     }
 
-    public List<TraceabilityLink> getJavaTracebiliityLinksForJavaClassNode(final ClassNode javaNode)
+    public List<TraceabilityLink> getJavaTraceabilityLinks(final ClassNode classNode)
     {
         ITraceabilityRecoveryService service = ServiceManager.getService(_project, ITraceabilityRecoveryService.class);
-        return filterListForTypPointer(service.getSortedTraceabilityLinksForQuery(Language.JAVA, javaNode.getSimpleClassName()));
+        return filterListForTypPointer(service.getSortedTraceabilityLinksForQuery(Language.JAVA, classNode.getSimpleClassName()));
     }
 
-    public List<TraceabilityLink> getJavaTracebiliityLinksForSwiftClassNode(final ClassNode swiftNode)
+    public List<TraceabilityLink> getSwiftTraceabilityLinks(final ClassNode classNode)
     {
         ITraceabilityRecoveryService service = ServiceManager.getService(_project, ITraceabilityRecoveryService.class);
-        return filterListForTypPointer(service.getSortedTraceabilityLinksForQuery(Language.JAVA, swiftNode.getSimpleClassName()));
-    }
-
-    public List<TraceabilityLink> getSwiftTracebiliityLinksForJavaClassNode(final ClassNode javaNode)
-    {
-        ITraceabilityRecoveryService service = ServiceManager.getService(_project, ITraceabilityRecoveryService.class);
-        return filterListForTypPointer(service.getSortedTraceabilityLinksForQuery(Language.SWIFT, javaNode.getSimpleClassName()));
-    }
-    public List<TraceabilityLink> getSwiftTracebiliityLinksForSwiftClassNode(final ClassNode swiftNode)
-    {
-        ITraceabilityRecoveryService service = ServiceManager.getService(_project, ITraceabilityRecoveryService.class);
-        return filterListForTypPointer(service.getSortedTraceabilityLinksForQuery(Language.SWIFT, swiftNode.getSimpleClassName()));
-
+        List<TraceabilityLink> sortedTraceabilityLinks = service.getSortedTraceabilityLinksForQuery(Language.SWIFT, classNode.getSimpleClassName());
+        return filterListForTypPointer(sortedTraceabilityLinks);
     }
     private List<TraceabilityLink> filterListForTypPointer(List<TraceabilityLink> traceabilityLinkList)
     {
