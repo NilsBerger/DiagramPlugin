@@ -1,7 +1,7 @@
 package valueobjects;
 
 /**
- * The markings a specific ClassNodeMaterial can have during its life time
+ * Defines the markings a ClassNode can have during a Change Propagation
  */
 public enum Marking
 {

@@ -75,7 +75,7 @@ public class ClassDependency{
 
     @Override
     public String toString() {
-        return "Class '" + _dependentClass.getSimpleClassName() +"' is dependent on Class '" + _independentClass.getSimpleClassName()+ "'.";
+        return "Class '" + _dependentClass.getSimpleName() +"' is dependent on Class '" + _independentClass.getSimpleName()+ "'.";
     }
 
     @Override

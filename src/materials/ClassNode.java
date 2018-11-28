@@ -1,52 +1,21 @@
-/*
- * Copyright 1998-2018 Konstantin Bulenkov
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package materials;
 
 import Utils.HashUtils;
-import service.GraphChangeListener;
 import valueobjects.ClassLanguageType;
+import valueobjects.ClassNodeType;
 import valueobjects.Marking;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
-import javax.annotation.Nonnull;
-import javax.xml.bind.annotation.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by Nils-Pc on 06.08.2018.
+ * A ClassNode represents a class entity, that was identified at the dependency analysis.
  */
-
-@XmlRootElement(name = "Class")
 public class ClassNode {
-    @XmlTransient
     private String _className;
-    @XmlTransient
-    private Set<GraphChangeListener> _listeners;
-    @XmlTransient
     private Marking _marking = Marking.BLANK;
-    @XmlTransient
-    private Marking _oldMarking;
-
     private boolean _hide = false;
-
-    private final ClassLanguageType _type;
-
+    private final ClassLanguageType _classLanguageType;
+    private ClassNodeType _classNodeType = ClassNodeType.CLASS;
     private String _sourceFilePath = "";
 
 
@@ -58,9 +27,7 @@ public class ClassNode {
             throw new IllegalArgumentException("Name of Class not valid");
         }
         this._className = className;
-        this._listeners = ConcurrentHashMap.newKeySet();
-        this._oldMarking = this._marking;
-        this._type = type;
+        this._classLanguageType = type;
     }
 
     public ClassNode(final String className, Marking marking, ClassLanguageType type)
@@ -70,56 +37,14 @@ public class ClassNode {
             throw new IllegalArgumentException("Name of Class not valid");
         }
         this._className = className;
-        this._listeners = new HashSet<>();
         this._marking = marking;
-        this._type = type;
-    }
-    @XmlAttribute(name = "FQN")
-    public String getFullClassName()
-    {
-        return _className;
-    }
-
-    @XmlAttribute(name = "Class")
-    public String getSimpleClassName()
-    {
-        return new ClassNodeFormatter(this).toString();
-    }
-
-    @XmlAttribute(name = "Marking")
-    public synchronized Marking getMarking() {
-        return _marking;
-    }
-
-    public ClassLanguageType getType()
-    {
-        return _type;
+        this._classLanguageType = type;
     }
 
     /**
-     * Sets a new marking if it differs form the old one.
-     * Note: Changing the marking does not change the "ChangePropagationGraph".
-     * @param marking
+     * Sets the filepath to the Java-Class that the ClassNode is representing
+     * @param sourceFilePath path to the file representing the ClassNode
      */
-    public void setMarking(final Marking marking)
-    {
-        if(this._marking != marking)
-        {
-            _oldMarking = _marking;
-            this._marking = marking;
-        }
-    }
-
-    public void setHide(boolean hide)
-    {
-        _hide = hide;
-    }
-    public boolean isHidden()
-    {
-        return _hide;
-    }
-
-    @Nonnull
     public void setSourceFilePath(final String sourceFilePath)
     {
         if(sourceFilePath == null)
@@ -133,6 +58,82 @@ public class ClassNode {
         _sourceFilePath = sourceFilePath;
     }
 
+    /**
+     * Sets a new marking if it differs form the old one.
+     */
+    public void setMarking(final Marking marking)
+    {
+        this._marking = marking;
+    }
+
+    /**
+     * Sets the ClassNodeType of the ClassNode.
+     */
+    public void setClassNodeType(final ClassNodeType classNodeType)
+    {
+        _classNodeType = classNodeType;
+    }
+
+    /**
+     * Defines if a ClassNode should be hidden in the diagram.
+     * @param hide set true to hide.
+     */
+    public void setHide(boolean hide)
+    {
+        _hide = hide;
+    }
+
+    /**
+     * Returns the Name of the ClassNode, that
+     * Note: The name can
+     */
+    public String getFullClassName()
+    {
+        return _className;
+    }
+
+    /**
+     * Returns the simple name of a Java-Class. Not the FQN.
+     */
+    public String getSimpleName()
+    {
+        return new ClassNodeFormatter(this).toString();
+    }
+
+    /**
+     * Return the current Marking of the ClassNode
+     */
+    public Marking getMarking() {
+        return _marking;
+    }
+    /*+
+     * Returns the ClassNodeTyp. The default value is "Class".
+     */
+    public ClassNodeType getClassNodeType()
+    {
+        return _classNodeType;
+    }
+
+    /**
+     * Returns the ClassLanguageType of the ClassNode. The ClassLanguageType is final.
+     */
+    public ClassLanguageType getType()
+    {
+        return _classLanguageType;
+    }
+
+    /**
+     * Returns if the node is currently hidden in the diagram.
+     */
+    public boolean isHidden()
+    {
+        return _hide;
+    }
+
+    /**
+     * Returns the filepath to the Java-Class that the ClassNode represents
+     * Note: The String can be empty
+     */
     public String getSourceFilePath()
     {
         return _sourceFilePath;
@@ -143,13 +144,11 @@ public class ClassNode {
         return new ClassNodeFormatter(this).toString();
     }
 
-    public Marking getOldMarking() {
-        return _oldMarking;
-    }
     @Override
     public int hashCode() {
         int hash = 17;
-        hash = HashUtils.calcHashCode(hash, getSimpleClassName());
+        hash = HashUtils.calcHashCode(hash, getSimpleName());
+        hash = HashUtils.calcHashCode(hash, _classLanguageType);
         return hash;
     }
     @Override
@@ -162,8 +161,8 @@ public class ClassNode {
         if(this.getClass() != obj.getClass())
             return false;
         final ClassNode otherClassNodeFachwert = (ClassNode) obj;
-        return this.getSimpleClassName().equals(otherClassNodeFachwert.getSimpleClassName()) &&
-                this._type == otherClassNodeFachwert.getType();
+        return this.getSimpleName().equals(otherClassNodeFachwert.getSimpleName()) &&
+                this._classLanguageType == otherClassNodeFachwert.getType();
     }
 }
 
