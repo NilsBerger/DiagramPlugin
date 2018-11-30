@@ -3,8 +3,11 @@ package werkzeuge.graphwerkzeug.presentation;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.graph.GraphManager;
+import com.intellij.openapi.graph.base.EdgeMap;
+import com.intellij.openapi.graph.base.NodeMap;
 import com.intellij.openapi.graph.builder.GraphBuilder;
 import com.intellij.openapi.graph.builder.GraphBuilderFactory;
+import com.intellij.openapi.graph.builder.GraphDataModel;
 import com.intellij.openapi.graph.view.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.graph.base.Edge;
@@ -12,6 +15,7 @@ import com.intellij.openapi.graph.base.Node;
 import com.intellij.util.containers.ContainerUtil;
 import java.awt.geom.Point2D;
 
+import javafx.collections.SetChangeListener;
 import materials.ClassDependency;
 import materials.ClassNode;
 import service.ChangePropagationProcess;
@@ -24,6 +28,7 @@ import werkzeuge.graphwerkzeug.util.ClassGraphLogger;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class ClassGraph implements Disposable, GraphChangeListener {
@@ -31,30 +36,24 @@ public class ClassGraph implements Disposable, GraphChangeListener {
     private GraphBuilder<ClassNode, ClassDependency> _graphBuilder;
     private static final ChangePropagationProcess _propagationProcessService = ChangePropagationProcess.getInstance();
 
+    private GeneralClassGraphDataModel _dataModel;
 
-    public ClassGraph(Project project, Graph2D graph, Graph2DView view, GerneralClassGraphDataModel dataModel, ClassGraphPresentationModel presentationModel)
-    {
+
+    public ClassGraph(Project project, Graph2D graph, Graph2DView view, GeneralClassGraphDataModel dataModel, ClassGraphPresentationModel presentationModel) {
         _graphBuilder = GraphBuilderFactory.getInstance(project).createGraphBuilder(graph, view, dataModel, presentationModel);
+        _dataModel = dataModel;
         presentationModel.setClassGraph(this);
         _propagationProcessService.addGraphChangeListener(this);
-        graph.addGraph2DSelectionListener(new Graph2DSelectionListener() {
-            @Override
-            public void onGraph2DSelectionEvent(Graph2DSelectionEvent graph2DSelectionEvent) {
-                if(graph2DSelectionEvent.isNodeSelection())
-                {
-                    Node node = (Node) graph2DSelectionEvent.getSubject();
-                    ClassNode classNode = _graphBuilder.getNodeObject(node);
-                }
+        view.setGraph2D(graph);
+        reactOnChange();
 
-            }
-        });
     }
 
     public static ClassGraph createGeneralGraph(Project project)
     {
         Graph2D graph = GraphManager.getGraphManager().createGraph2D();
         Graph2DView view = GraphManager.getGraphManager().createGraph2DView();
-        GerneralClassGraphDataModel dataModel = new GerneralClassGraphDataModel();
+        GeneralClassGraphDataModel dataModel = new GeneralClassGraphDataModel();
         ClassGraphPresentationModel presentationModel = new ClassGraphPresentationModel(graph);
 
         return new ClassGraph(project, graph, view,  dataModel, presentationModel);
@@ -63,7 +62,7 @@ public class ClassGraph implements Disposable, GraphChangeListener {
     {
         Graph2D graph = GraphManager.getGraphManager().createGraph2D();
         Graph2DView view = GraphManager.getGraphManager().createGraph2DView();
-        GerneralClassGraphDataModel dataModel = new SwiftClassGraphDataModel();
+        GeneralClassGraphDataModel dataModel = new SwiftClassGraphDataModel();
         ClassGraphPresentationModel presentationModel = new ClassGraphPresentationModel(graph);
 
         return new ClassGraph(project, graph, view,  dataModel, presentationModel);
@@ -72,10 +71,23 @@ public class ClassGraph implements Disposable, GraphChangeListener {
     {
         Graph2D graph = GraphManager.getGraphManager().createGraph2D();
         Graph2DView view = GraphManager.getGraphManager().createGraph2DView();
-        GerneralClassGraphDataModel dataModel = new JavaClassGraphDataModel();
+        GeneralClassGraphDataModel dataModel = new JavaClassGraphDataModel();
         ClassGraphPresentationModel presentationModel = new ClassGraphPresentationModel(graph);
 
         return new ClassGraph(project, graph, view,  dataModel, presentationModel);
+    }
+
+    private void reactOnChange()
+    {
+        _propagationProcessService.getAffectedClassesByChange().addListener(new SetChangeListener<ClassNode>() {
+            @Override
+            public void onChanged(Change<? extends ClassNode> change) {
+
+                Collection<ClassDependency> edges = _dataModel.getEdges();
+                for(ClassDependency dependency: edges) {
+                }
+            }
+        });
     }
 
 
@@ -129,9 +141,9 @@ public class ClassGraph implements Disposable, GraphChangeListener {
         return _graphBuilder.getView();
     }
 
-    public GerneralClassGraphDataModel getDataModel()
+    public GeneralClassGraphDataModel getDataModel()
     {
-        return (GerneralClassGraphDataModel) _graphBuilder.getGraphDataModel();
+        return (GeneralClassGraphDataModel) _graphBuilder.getGraphDataModel();
     }
 
     public  ClassGraphPresentationModel getPresentationMode()

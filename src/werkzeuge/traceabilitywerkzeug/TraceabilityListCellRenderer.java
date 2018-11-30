@@ -6,6 +6,7 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.util.ui.UIUtil;
 import materials.ClassDependency;
 import materials.ClassNode;
+import materials.TraceLinkClassDependency;
 import valueobjects.ClassLanguageType;
 
 import javax.swing.*;
@@ -22,8 +23,8 @@ public class TraceabilityListCellRenderer extends DefaultListCellRenderer {
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-        final ClassDependency traceLinkDependencyMaterial = (ClassDependency) value;
-        ClassNode classNode = traceLinkDependencyMaterial.get_independentClass();
+        final TraceLinkClassDependency traceLinkDependencyMaterial = (TraceLinkClassDependency) value;
+        ClassNode classNode = traceLinkDependencyMaterial.getIndependentClass();
         ClassNode otherClassNode = traceLinkDependencyMaterial.getDependentClass();
         double traceLinkValue = traceLinkDependencyMaterial.getTracelinkValue();
 
@@ -51,17 +52,17 @@ public class TraceabilityListCellRenderer extends DefaultListCellRenderer {
         String text = "";
         if(classNode.getType() == ClassLanguageType.Java)
         {
-            panel.add(new JBLabel(classNode.getSimpleClassName()), BorderLayout.WEST);
-            panel.add(new JBLabel(otherclassNode.getSimpleClassName()), BorderLayout.EAST);
+            panel.add(new JBLabel(classNode.getSimpleName()), BorderLayout.WEST);
+            panel.add(new JBLabel(otherclassNode.getSimpleName()), BorderLayout.EAST);
             panel.add(_traceLinkJLabel, BorderLayout.CENTER);
             //panel.add(new Jb)
         }
-            //text = "<html><center>" + classNode.getSimpleClassName() + " <"   +  String.format("%.2f", tracelinkValue) + "> " +otherclassNode.getSimpleClassName() + "</center></html>" ;
+            //text = "<html><center>" + classNode.getSimpleName() + " <"   +  String.format("%.2f", tracelinkValue) + "> " +otherclassNode.getSimpleName() + "</center></html>" ;
 
         else
         {
-            panel.add(new JBLabel(otherclassNode.getSimpleClassName()), BorderLayout.WEST);
-            panel.add(new JBLabel(classNode.getSimpleClassName()), BorderLayout.EAST);
+            panel.add(new JBLabel(otherclassNode.getSimpleName()), BorderLayout.WEST);
+            panel.add(new JBLabel(classNode.getSimpleName()), BorderLayout.EAST);
             panel.add(_traceLinkJLabel, BorderLayout.CENTER);
         }
     }

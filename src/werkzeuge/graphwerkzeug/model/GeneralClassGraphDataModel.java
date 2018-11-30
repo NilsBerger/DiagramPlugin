@@ -13,14 +13,14 @@ import valueobjects.RelationshipType;
 
 import java.util.*;
 
-public class GerneralClassGraphDataModel extends GraphDataModel<ClassNode, ClassDependency>{
+public class GeneralClassGraphDataModel extends GraphDataModel<ClassNode, ClassDependency>{
 
     private Set<ClassNode> _nodes;
     private Map<ClassNode, Set<ClassDependency>> _nodesEdges;
     private Set<ClassDependency> _edges;
     protected ChangePropagationProcess _changePropagationProcess = ChangePropagationProcess.getInstance();
 
-    public GerneralClassGraphDataModel() {
+    public GeneralClassGraphDataModel() {
         _nodes = new HashSet<>();
         _nodesEdges = new HashMap<>();
         _edges = new HashSet<>();
@@ -49,7 +49,7 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassNode, Class
     @NotNull
     @Override
     public ClassNode getSourceNode(final ClassDependency classDependency) {
-        return classDependency.get_independentClass();
+        return classDependency.getIndependentClass();
     }
 
     @NotNull
@@ -61,7 +61,7 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassNode, Class
     @NotNull
     @Override
     public String getNodeName(final ClassNode classNode) {
-        return classNode.getSimpleClassName();
+        return classNode.getSimpleName();
     }
 
     @NotNull
@@ -131,15 +131,20 @@ public class GerneralClassGraphDataModel extends GraphDataModel<ClassNode, Class
     }
 
     public void addEdge(final ClassDependency edge) {
+        if(edge.getRelationshipType() == RelationshipType.InconsistentRelationship)
+        {
+            return;
+        }
+
         boolean added = _edges.add(edge);
         if (added) {
             ClassGraphLogger.debug("addEdge - Added Edge : " + edge);
         } else {
             ClassGraphLogger.debug("addEdge - Edge already in model : " + edge);
         }
-        addNode(edge.get_independentClass());
+        addNode(edge.getIndependentClass());
         addNode(edge.getDependentClass());
-        addNodeEdge(edge.get_independentClass(), edge);
+        addNodeEdge(edge.getIndependentClass(), edge);
         addNodeEdge(edge.getDependentClass(), edge);
     }
 

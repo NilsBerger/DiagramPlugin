@@ -14,11 +14,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@XmlRootElement(namespace = "CPGraph")
+
 /**
  * ChangePropagation is a SINGLETON
  */
@@ -27,19 +26,12 @@ public class ChangePropagationProcess{
     private static final ChangePropagationProcess _INSTANCE = new ChangePropagationProcess();
 
     private ChangeAndFixStrategyIF _strategy;
-    @XmlElement (name = "Graph")
     private ChangePropagationModel _model;
-
     private final ObservableSet<ClassDependency> _affectedEdges  = FXCollections.observableSet(new HashSet<>());
-    @XmlElement (name = "InitClasses")
     private final ObservableSet<ClassNode> _initialChangedClasse = FXCollections.observableSet(new HashSet<>());
-
-    @XmlElement (name = "AffectedClasses")
     private final ObservableSet<ClassNode> _affectedNodes = FXCollections.observableSet(new HashSet<>());
-
     private final ObservableMap<ClassNode, Set<ClassDependency>> _affectedNodeEdges = FXCollections.observableHashMap();
-
-    private final ObservableSet<ClassDependency> _traceabilityLinks = FXCollections.observableSet(new HashSet<>());
+    private final ObservableSet<TraceLinkClassDependency> _traceabilityLinks = FXCollections.observableSet(new HashSet<>());
 
     private static Set<GraphChangeListener> _listeners = new HashSet<>();
 
@@ -82,7 +74,7 @@ public class ChangePropagationProcess{
     public ClassNode select(final ClassNode classNode) {
 
         assert classNode != null : "ClassNode should not be null";
-        assert getNextMarkedClasses().contains(classNode) : "ClassNode : " + classNode.getSimpleClassName() + " should be in set of marked classes";
+        assert getNextMarkedClasses().contains(classNode) : "ClassNode : " + classNode.getSimpleName() + " should be in set of marked classes";
 
         if (!getNextMarkedClasses().contains(classNode))
             System.err.println("Class '" + classNode.getFullClassName()+ "' not found in affected Classes that need to be visited");
@@ -104,6 +96,7 @@ public class ChangePropagationProcess{
 
         ClassNode changedNode = getClassNodeMaterial(changedClass);
         changedNode.setMarking(marking);
+        addAffectedNode(changedNode);
         if (marking == Marking.CHANGED || marking == Marking.PROPAGATES) {
             _model.createInconsistencies(changedNode);
             propagateChange(changedNode);
@@ -131,21 +124,6 @@ public class ChangePropagationProcess{
        // addAffectedEdgesBetweenAffectedNodes();
     }
 
-//    private void addAffectedEdgesBetweenAffectedNodes() {
-//        _affectedNodes.addListener(new SetChangeListener<ClassNode>() {
-//            @Override
-//            public void onChanged(Change<? extends ClassNode> change) {
-//                if(change.wasAdded())
-//                {
-//                    ClassNode addedNode = change.getElementAdded();
-//                    Set<ClassNode> topDependencies = _model.getTopDependencies(addedNode);
-//                    Set<ClassNode> bottomDependencies = _model.getBottomDependencies(addedNode);
-//
-//                    for(Set<ClassNode> topDependencies)
-//                }
-//            }
-//        });
-//    }
 
     private ClassNode getClassToVisit(final ClassNode classNode) {
         for (ClassNode node : getNextMarkedClasses()) {
@@ -188,9 +166,9 @@ public class ChangePropagationProcess{
             System.out.println("addEdge - AffectedEdge already in model : " +  edge);
         }
         addAffectedNode(edge.getDependentClass());
-        addAffectedNode(edge.get_independentClass());
+        addAffectedNode(edge.getIndependentClass());
         addNodeEdge(edge.getDependentClass(), edge);
-        addNodeEdge(edge.get_independentClass(), edge);
+        addNodeEdge(edge.getIndependentClass(), edge);
     }
 
     public void addNodeEdge(final ClassNode node, final ClassDependency edge)
@@ -230,24 +208,32 @@ public class ChangePropagationProcess{
 
         TypePointer pointer = (TypePointer) traceabilityLink.getTarget();
         ClassNode swiftClassNode = getClassNodeMaterial(new ClassNode(pointer.getFullyQualifiedName(), ClassLanguageType.Swift));
-        update(swiftClassNode, Marking.CHANGED);
+
 
         //Add Dependency
-        ClassDependency traceDependency = new ClassDependency(classNodeMaterial,swiftClassNode, RelationshipType.Traceability_Association, traceabilityLink.getProbability());
+        TraceLinkClassDependency traceDependency = new TraceLinkClassDependency(classNodeMaterial,swiftClassNode, traceabilityLink.getProbability());
         _traceabilityLinks.add(traceDependency);
         _model.addEdge(traceDependency);
+        _model.createInconsistencies(swiftClassNode);
+        _model.addEdge(traceDependency);
+        update(swiftClassNode, Marking.NEXT);
+
     }
     public void addTraceabilityLinkSwiftSource(final ClassNode swiftClassNodeMaterial, final TraceabilityLink traceabilityLink)
     {
 
         TypePointer pointer = (TypePointer) traceabilityLink.getTarget();
         ClassNode javaClassNode = getClassNodeMaterial(new ClassNode(pointer.getFullyQualifiedName(), ClassLanguageType.Java));
-        update(javaClassNode, Marking.CHANGED);
+
 
         //Add Dependency
-        ClassDependency traceDependency = new ClassDependency(javaClassNode, swiftClassNodeMaterial, RelationshipType.Traceability_Association, traceabilityLink.getProbability());
+        TraceLinkClassDependency traceDependency = new TraceLinkClassDependency(javaClassNode, swiftClassNodeMaterial,  traceabilityLink.getProbability());
         _traceabilityLinks.add(traceDependency);
         _model.addEdge(traceDependency);
+        _model.createInconsistencies(javaClassNode);
+
+        _model.addEdge(traceDependency);
+        update(javaClassNode, Marking.NEXT);
     }
 
     public void addGraphChangeListener(final GraphChangeListener observer)
@@ -306,5 +292,5 @@ public class ChangePropagationProcess{
 
     public ObservableMap<ClassNode, Set<ClassDependency>> getAffectedNodeEdges(){return _affectedNodeEdges;}
 
-    public ObservableSet<ClassDependency> getTraceLinkDepenendecySet(){return _traceabilityLinks;}
+    public ObservableSet<TraceLinkClassDependency> getTraceLinkDepenendecySet(){return _traceabilityLinks;}
 }

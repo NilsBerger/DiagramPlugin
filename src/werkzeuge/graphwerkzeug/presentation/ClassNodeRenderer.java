@@ -21,21 +21,6 @@ public class ClassNodeRenderer extends BasicGraphNodeRenderer<ClassNode, ClassDe
 
     @Override
     protected String getNodeName(ClassNode node) {
-        return node.getSimpleClassName();
+        return node.getSimpleName();
     }
-
-    //    @Override
-//    protected Icon getIcon(Object node) {
-//        return super.getIcon(node);
-//    }
-//
-//    @Override
-//    protected String getNodeName(Object node) {
-//        return super.getNodeName(node);
-//    }
-//
-//    @Override
-//    protected Color getSelectionColor() {
-//        return new Color(199,99,199);
-//    }
 }

@@ -4,13 +4,12 @@ import Utils.HashUtils;
 import valueobjects.RelationshipType;
 
 /**
- * Created by Nils-Pc on 06.08.2018.
+ * Defines a relationship between two ClassNodes
  */
 public class ClassDependency{
     private final ClassNode _dependentClass;
     private final ClassNode _independentClass;
     private RelationshipType _relationshipType;
-    private double _tracelinkvalue = 0;
 
 
     public ClassDependency(ClassNode dependentClass, ClassNode independentClass, RelationshipType relationshipType)
@@ -20,20 +19,30 @@ public class ClassDependency{
         this._relationshipType = relationshipType;
     }
 
-    public ClassDependency(ClassNode dependentClass, ClassNode independentClass, RelationshipType relationshipType, double tracelinkValue)
-    {
-        this._dependentClass = dependentClass;
-        this._independentClass = independentClass;
-        this._relationshipType = relationshipType;
-        this._tracelinkvalue = tracelinkValue;
+    /**
+     * Sets the new RelationshipType of the dependency
+     */
+    public void setRelationshipType(RelationshipType type){
+        _relationshipType = type;
     }
-    public ClassDependency switchDependencies()
+
+
+    /**
+     *Returns true, if their is a dependency between the nodes.
+     */
+    public boolean containsNodes(ClassNode oneNode, ClassNode otherNode)
     {
-        return new ClassDependency(this._independentClass, this._dependentClass, this._relationshipType, this._tracelinkvalue);
+        boolean independent = _independentClass.equals(oneNode) || _independentClass.equals(otherNode);
+        boolean dependent = _dependentClass.equals(oneNode) || _dependentClass.equals(otherNode);
+        if(independent && dependent)
+        {
+            return true;
+        }
+        return false;
     }
 
     /**
-     * Returns a ClassNode, that dependents on another class
+     * Returns a ClassNode that dependents on another class
      * @return ClassNode
      */
 
@@ -45,32 +54,15 @@ public class ClassDependency{
      * Returns a ClassNode that the depeendent ClassNode depends on.
      * @return
      */
-    public ClassNode get_independentClass() {
+    public ClassNode getIndependentClass() {
         return _independentClass;
     }
 
+    /**
+     * Returns the RelationshipType of the Dependency
+     */
     public RelationshipType getRelationshipType() {
         return _relationshipType;
-    }
-
-    public void setRelationshipType(RelationshipType type){
-        _relationshipType = type;
-    }
-
-    /**
-     * @return The Trace Link Value of the dependency
-     */
-    public double getTracelinkValue() {
-        return _tracelinkvalue;
-    }
-
-    /**
-     * Sets
-     * @param tracelinkvalue A value between 0.0 and 100.0.
-     */
-    public void setTracelinkvalue(double tracelinkvalue) {
-        assert tracelinkvalue >=0 && tracelinkvalue <= 100.00 : "Precondition violated: Trace-Link not between 0.0 and 100.0";
-        this._tracelinkvalue = tracelinkvalue;
     }
 
     @Override
@@ -86,17 +78,6 @@ public class ClassDependency{
         return hash;
     }
 
-    public boolean containsNodes(ClassNode oneNode, ClassNode otherNode)
-    {
-        boolean independent = _independentClass.equals(oneNode) || _independentClass.equals(otherNode);
-        boolean dependent = _dependentClass.equals(oneNode) || _dependentClass.equals(otherNode);
-        if(independent && dependent)
-        {
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if(obj == null)
@@ -107,8 +88,7 @@ public class ClassDependency{
             return false;
         final ClassDependency otherClassNodeFachwert = (ClassDependency) obj;
         return  this.getDependentClass().equals(otherClassNodeFachwert.getDependentClass()) &&
-                this.get_independentClass().equals(otherClassNodeFachwert.get_independentClass()) &&
-                this.getRelationshipType() == otherClassNodeFachwert.getRelationshipType() &&
-                this._tracelinkvalue == otherClassNodeFachwert.getTracelinkValue();
+                this.getIndependentClass().equals(otherClassNodeFachwert.getIndependentClass()) &&
+                this.getRelationshipType() == otherClassNodeFachwert.getRelationshipType();
     }
 }

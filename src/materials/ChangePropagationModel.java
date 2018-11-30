@@ -1,33 +1,11 @@
-/*
- * Copyright 1998-2018 Konstantin Bulenkov
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package materials;
 
 
-import materials.ClassDependency;
-import materials.ClassNode;
 import valueobjects.RelationshipType;
 
 import java.util.*;
 
 public class ChangePropagationModel {
-
-    private Set<ClassNode> _oldnodes;
-    private Set<ClassDependency> _oldedges;
-    private Map<ClassNode, Set<ClassDependency>> _oldnodesEdges;
 
     private Set<ClassNode> _nodes;
     private Set<ClassDependency> _edges;
@@ -47,23 +25,6 @@ public class ChangePropagationModel {
         addAll(classdependencies);
     }
 
-    /**
-     * Makes a copy of the _nodes, _edges and _nodeEdges
-     */
-    private void saveNodes() {
-        Iterator<ClassNode> nodesIterator = _nodes.iterator();
-        while (nodesIterator.hasNext()) {
-            _oldnodes.add(nodesIterator.next());
-        }
-        Iterator<ClassDependency> edgesIterator = _edges.iterator();
-        while (edgesIterator.hasNext()) {
-            _oldedges.add(edgesIterator.next());
-        }
-        for (Map.Entry<ClassNode, Set<ClassDependency>> entry : _nodesEdges.entrySet()) {
-            _oldnodesEdges.put(entry.getKey(), entry.getValue());
-        }
-    }
-
     private void addNode(final ClassNode node) {
         boolean added = _nodes.add(node);
         if (added) {
@@ -81,9 +42,9 @@ public class ChangePropagationModel {
             System.out.println("addEdge - Edge already in model : " + edge);
         }
         addNode(edge.getDependentClass());
-        addNode(edge.get_independentClass());
+        addNode(edge.getIndependentClass());
         addNodeEdge(edge.getDependentClass(), edge);
-        addNodeEdge(edge.get_independentClass(), edge);
+        addNodeEdge(edge.getIndependentClass(), edge);
     }
 
     public void addNodeEdge(final ClassNode node, final ClassDependency edge) {
@@ -139,11 +100,11 @@ public class ChangePropagationModel {
         Set<ClassDependency> edgesForNode = _nodesEdges.get(classNode);
         Set<ClassNode> topDependencies = new HashSet();
         for (ClassDependency edge : edgesForNode) {
-            if (edge.getRelationshipType() != RelationshipType.Traceability_Association) {
-                if (!edge.get_independentClass().equals(classNode)) {
-                    topDependencies.add(edge.get_independentClass());
+            //if (edge.getRelationshipType() != RelationshipType.Traceability_Association) {
+                if (!edge.getIndependentClass().equals(classNode)) {
+                    topDependencies.add(edge.getIndependentClass());
                 }
-            }
+            //}
         }
         return topDependencies;
     }
@@ -151,11 +112,11 @@ public class ChangePropagationModel {
     public Set<ClassNode> getBottomDependencies(final ClassNode classNode) {
         Set<ClassNode> topDependencies = new HashSet();
         for (ClassDependency edge : _nodesEdges.get(classNode)) {
-            if (edge.getRelationshipType() != RelationshipType.Traceability_Association) {
+           // if (edge.getRelationshipType() != RelationshipType.Traceability_Association) {
                 if (!edge.getDependentClass().equals(classNode)) {
                     topDependencies.add(edge.getDependentClass());
                 }
-            }
+           // }
         }
         return topDependencies;
     }
@@ -164,8 +125,8 @@ public class ChangePropagationModel {
         Set<ClassNode> bottomDependencies = new HashSet();
         for (ClassDependency edge : _nodesEdges.get(classNode)) {
             if (edge.getRelationshipType() == RelationshipType.InconsistentRelationship) {
-                if (!edge.get_independentClass().equals(classNode)) {
-                    bottomDependencies.add(edge.get_independentClass());
+                if (!edge.getIndependentClass().equals(classNode)) {
+                    bottomDependencies.add(edge.getIndependentClass());
                 }
             }
         }
@@ -183,15 +144,6 @@ public class ChangePropagationModel {
             }
         }
         return topDependencies;
-    }
-
-    public Set<ClassNode> getNeighbourhood(final ClassNode clazz) {
-        Set<ClassNode> neighbourhood = new HashSet<>();
-        neighbourhood.addAll(getTopDependencies(clazz));
-        neighbourhood.addAll(getBottomDependencies(clazz));
-        neighbourhood.addAll(getTopInconsistencies(clazz));
-        neighbourhood.addAll(getBottomInconsistencies(clazz));
-        return neighbourhood;
     }
 
     public Set<ClassNode> getNeighbourhoodWithoutIncomingInconsistencies(final ClassNode clazz) {
@@ -230,16 +182,16 @@ public class ChangePropagationModel {
             if(dependency.getRelationshipType() != RelationshipType.InconsistentRelationship)
             {
                 boolean isReflexiv = dependency.getDependentClass().equals(changedNode) &&
-                         dependency.get_independentClass().equals(changedNode);
+                         dependency.getIndependentClass().equals(changedNode);
                 if(isReflexiv)
                 {
-                    ClassDependency reflexivDependency = new ClassDependency(dependency.getDependentClass(), dependency.get_independentClass(), RelationshipType.InconsistentRelationship);
+                    ClassDependency reflexivDependency = new ClassDependency(dependency.getDependentClass(), dependency.getIndependentClass(), RelationshipType.InconsistentRelationship);
                     newInconsistencies.add(reflexivDependency);
                     break;
                 }
-                if(dependency.get_independentClass().equals(changedNode) )
+                if(dependency.getIndependentClass().equals(changedNode) )
                 {
-                    if(!inconcistencyBetweenNodes(dependency.getDependentClass(), dependency.get_independentClass()))
+                    if(!inconcistencyBetweenNodes(dependency.getDependentClass(), dependency.getIndependentClass()))
                     {
                         newInconsistencies.add(new ClassDependency(changedNode, dependency.getDependentClass(), RelationshipType.InconsistentRelationship));
                     }
@@ -247,9 +199,9 @@ public class ChangePropagationModel {
                 }
                 else
                 {
-                    if(!inconcistencyBetweenNodes(dependency.getDependentClass(), dependency.get_independentClass()))
+                    if(!inconcistencyBetweenNodes(dependency.getDependentClass(), dependency.getIndependentClass()))
                     {
-                        newInconsistencies.add(new ClassDependency(dependency.getDependentClass(), dependency.get_independentClass(), RelationshipType.InconsistentRelationship));
+                        newInconsistencies.add(new ClassDependency(dependency.getDependentClass(), dependency.getIndependentClass(), RelationshipType.InconsistentRelationship));
                     }
 
                 }
@@ -279,7 +231,7 @@ public class ChangePropagationModel {
         for(ClassDependency dependency : _edges)
         {
             boolean dependent = dependency.getDependentClass().equals(a) || dependency.getDependentClass().equals(b);
-            boolean independent = dependency.get_independentClass().equals(a) || dependency.get_independentClass().equals(b);
+            boolean independent = dependency.getIndependentClass().equals(a) || dependency.getIndependentClass().equals(b);
             boolean isInconsistency = (dependency.getRelationshipType() == RelationshipType.InconsistentRelationship);
             boolean inconsistency = dependent && independent && isInconsistency;
             if(inconsistency)

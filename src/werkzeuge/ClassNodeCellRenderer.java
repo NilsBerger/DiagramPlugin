@@ -17,7 +17,7 @@ public class ClassNodeCellRenderer extends DefaultListCellRenderer {
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
         final ClassNode classnode = (ClassNode) value;
-        final String classname = classnode.getSimpleClassName();
+        final String classname = classnode.getSimpleName();
         Marking marking = classnode.getMarking();
 
         JPanel panel = new JBPanel<>();

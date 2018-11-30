@@ -23,13 +23,13 @@ public class TraceabilityClassNodeService {
     public List<TraceabilityLink> getJavaTraceabilityLinks(final ClassNode classNode)
     {
         ITraceabilityRecoveryService service = ServiceManager.getService(_project, ITraceabilityRecoveryService.class);
-        return filterListForTypPointer(service.getSortedTraceabilityLinksForQuery(Language.JAVA, classNode.getSimpleClassName()));
+        return filterListForTypPointer(service.getSortedTraceabilityLinksForQuery(Language.JAVA, classNode.getSimpleName()));
     }
 
     public List<TraceabilityLink> getSwiftTraceabilityLinks(final ClassNode classNode)
     {
         ITraceabilityRecoveryService service = ServiceManager.getService(_project, ITraceabilityRecoveryService.class);
-        List<TraceabilityLink> sortedTraceabilityLinks = service.getSortedTraceabilityLinksForQuery(Language.SWIFT, classNode.getSimpleClassName());
+        List<TraceabilityLink> sortedTraceabilityLinks = service.getSortedTraceabilityLinksForQuery(Language.SWIFT, classNode.getSimpleName());
         return filterListForTypPointer(sortedTraceabilityLinks);
     }
     private List<TraceabilityLink> filterListForTypPointer(List<TraceabilityLink> traceabilityLinkList)

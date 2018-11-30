@@ -6,7 +6,7 @@ import valueobjects.ClassLanguageType;
 
 import java.util.Set;
 
-public class JavaClassGraphDataModel extends GerneralClassGraphDataModel {
+public class JavaClassGraphDataModel extends GeneralClassGraphDataModel {
 
     @Override
     public void refreshDataModel(final ClassNode changedClassNode)

@@ -1,10 +1,12 @@
-package werkzeuge.graphwerkzeug.presentation;
+package werkzeuge.graphwerkzeug.presentation.toolbaractions;
 
 import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.graph.builder.actions.AbstractGraphAction;
 import com.intellij.openapi.graph.view.Graph2D;
-import werkzeuge.graphwerkzeug.model.ClassGraphFilterer;
+import werkzeuge.graphwerkzeug.presentation.ClassGraph;
+import werkzeuge.graphwerkzeug.presentation.graphfilter.NodeFilterStrategy;
+import werkzeuge.graphwerkzeug.presentation.graphfilter.ClassGraphFilterer;
 
 public class NodeFilterAction extends AbstractGraphAction {
     ClassGraph _classGraph;
@@ -12,14 +14,14 @@ public class NodeFilterAction extends AbstractGraphAction {
 
     public NodeFilterAction(ClassGraph classGraph)
     {
-        super(classGraph.getGraph(), "Filter", AllIcons.Actions.Show);
+        super(classGraph.getGraph(), "Hide Nodes", AllIcons.Actions.Show);
         _classGraph = classGraph;
         _filter = new ClassGraphFilterer(_classGraph);
 
     }
     @Override
     protected void actionPerformed(AnActionEvent anActionEvent, Graph2D graph2D) {
-        _filter.setFilterOn(true);
+        _filter.setFilterStrategy(new NodeFilterStrategy());
         _filter.update(graph2D, _classGraph.getView());
     }
 }

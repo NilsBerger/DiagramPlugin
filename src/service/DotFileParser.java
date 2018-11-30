@@ -66,7 +66,7 @@ public class DotFileParser {
            {
                it.remove();
            }
-           if(dependency.get_independentClass().getFullClassName().contains(lang))
+           if(dependency.getIndependentClass().getFullClassName().contains(lang))
            {
                it.remove();
            }

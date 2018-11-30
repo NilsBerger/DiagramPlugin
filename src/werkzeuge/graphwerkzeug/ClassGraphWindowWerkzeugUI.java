@@ -1,43 +1,26 @@
-/*
- * Copyright 1998-2018 Konstantin Bulenkov
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package werkzeuge.graphwerkzeug;
 
+import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.graph.builder.actions.*;
 import com.intellij.openapi.graph.builder.actions.layout.ApplyCurrentLayoutAction;
 import com.intellij.openapi.graph.builder.actions.printing.PrintGraphAction;
 import com.intellij.openapi.graph.builder.actions.printing.PrintPreviewAction;
-import com.intellij.openapi.graph.view.Graph2D;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTabbedPane;
 import org.jetbrains.annotations.NotNull;
-import werkzeuge.StatusIcons;
 import werkzeuge.ToolWindowWerkzeug;
-import werkzeuge.graphwerkzeug.model.ClassGraphFilterer;
 import werkzeuge.graphwerkzeug.presentation.ClassGraph;
-import werkzeuge.graphwerkzeug.presentation.CustomLayouterAction;
-import werkzeuge.graphwerkzeug.presentation.NodeFilterAction;
-import werkzeuge.graphwerkzeug.presentation.NodeUnfilterAction;
+import werkzeuge.graphwerkzeug.presentation.toolbaractions.ImagePrinterAction;
+import werkzeuge.graphwerkzeug.presentation.toolbaractions.NodeFilterAction;
+import werkzeuge.graphwerkzeug.presentation.toolbaractions.MarkingFilterAction;
+import werkzeuge.graphwerkzeug.presentation.toolbaractions.NodeUnfilterAction;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ClassGraphWindowWerkzeugUI {
-    private final static Icon _ICON = StatusIcons.getBlankIcon();
+    private final static Icon _ICON = AllIcons.Nodes.Artifact;
     private final JComponent _myComponent;
     private ClassGraph _generalClassGraph;
     private ClassGraph _javaClassGraph;
@@ -46,7 +29,13 @@ public class ClassGraphWindowWerkzeugUI {
     private JTabbedPane _tabbedPane;
 
 
-
+    /**
+     * Creates the the user interface and defines a layout of the graph components
+     * @param classGraph
+     * @param javaClassGraph
+     * @param swiftClassGraph
+     * @param werkzeug
+     */
     public ClassGraphWindowWerkzeugUI(@NotNull ClassGraph classGraph, ClassGraph javaClassGraph, ClassGraph swiftClassGraph, ToolWindowWerkzeug werkzeug) {
         _generalClassGraph = classGraph;
         _javaClassGraph = javaClassGraph;
@@ -94,6 +83,11 @@ public class ClassGraphWindowWerkzeugUI {
 
     }
 
+    /**
+     * Creates the Toolbar for a given Classgraph
+     * @param classgraph
+     * @return
+     */
     private DefaultActionGroup getToolbarActionGroup(final ClassGraph classgraph) {
         DefaultActionGroup actions = new DefaultActionGroup();
         actions.add(new ShowHideGridAction(classgraph.getGraph()));
@@ -115,10 +109,12 @@ public class ClassGraphWindowWerkzeugUI {
         //actions.add(new DeleteSelectionAction());
         actions.addSeparator();
 
-        actions.add(new PrintGraphAction(classgraph.getGraph()));
+        //actions.add(new PrintGraphAction(classgraph.getGraph()));
+        actions.add(new ImagePrinterAction(classgraph));
         actions.add(new PrintPreviewAction(classgraph.getGraph()));
         actions.addSeparator();
         actions.add(new NodeFilterAction(classgraph));
+        actions.add(new MarkingFilterAction(classgraph));
         actions.add(new NodeUnfilterAction(classgraph));
 
         return actions;

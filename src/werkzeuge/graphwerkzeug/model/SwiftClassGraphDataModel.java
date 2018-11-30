@@ -22,7 +22,7 @@ import valueobjects.ClassLanguageType;
 
 import java.util.Set;
 
-public class SwiftClassGraphDataModel extends GerneralClassGraphDataModel {
+public class SwiftClassGraphDataModel extends GeneralClassGraphDataModel {
 
     @Override
    public void refreshDataModel(final ClassNode changedClassNode) {

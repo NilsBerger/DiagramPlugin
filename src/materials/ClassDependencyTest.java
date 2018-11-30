@@ -29,18 +29,6 @@ public class ClassDependencyTest {
         ClassDependency classDependency = new ClassDependency(javaClassNodeMaterial, swiftClassNodeMaterial, RelationshipType.Dependency);
 
         assertThat(javaClassNodeMaterial, is(classDependency.getDependentClass()));
-        assertThat(swiftClassNodeMaterial, is(classDependency.get_independentClass()));
-
-    }
-
-    @Test
-    public void getSwitchedDependenciesTest() {
-
-        ClassNode javaClassNodeMaterial = new ClassNode("a", ClassLanguageType.Java);
-        ClassNode swiftClassNodeMaterial = new ClassNode("b", ClassLanguageType.Swift);
-        ClassDependency classDependency = new ClassDependency(javaClassNodeMaterial, swiftClassNodeMaterial, RelationshipType.Dependency);
-        ClassDependency switchedClassDependency = new ClassDependency(swiftClassNodeMaterial, javaClassNodeMaterial, RelationshipType.Dependency);
-
-        assertThat(classDependency, is(switchedClassDependency.switchDependencies()));
+        assertThat(swiftClassNodeMaterial, is(classDependency.getIndependentClass()));
     }
 }

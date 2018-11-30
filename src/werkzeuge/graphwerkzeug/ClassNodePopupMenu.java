@@ -7,17 +7,21 @@ import com.intellij.openapi.ui.JBPopupMenu;
 import materials.ClassNode;
 import service.ChangePropagationProcess;
 import valueobjects.Marking;
-import werkzeuge.graphwerkzeug.model.ClassGraphFilterer;
+import werkzeuge.graphwerkzeug.presentation.graphfilter.NodeFilterStrategy;
+import werkzeuge.graphwerkzeug.presentation.graphfilter.ClassGraphFilterer;
 import werkzeuge.graphwerkzeug.presentation.ClassGraph;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class ClassGraphPopupMenu extends PopupMode {
+/**
+ * Creates a PopupMenue on a selected ClassNode in a diagram.
+ */
+public class ClassNodePopupMenu extends PopupMode {
     private ClassGraph _classGraph;
     private ChangePropagationProcess _process = ChangePropagationProcess.getInstance();
 
-    public ClassGraphPopupMenu(ClassGraph classGraph) {
+    public ClassNodePopupMenu(ClassGraph classGraph) {
         _classGraph = classGraph;
 
     }
@@ -104,7 +108,7 @@ public class ClassGraphPopupMenu extends PopupMode {
             ClassGraphFilterer filter = new ClassGraphFilterer(_classGraph);
             ClassNode classNode = _classGraph.getGraphBuilder().getNodeObject(_node);
             classNode.setHide(true);
-            filter.setFilterOn(true);
+            filter.setFilterStrategy(new NodeFilterStrategy());
             filter.update(_classGraph.getGraph(), _classGraph.getView());
         }
 

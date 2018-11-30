@@ -37,7 +37,7 @@ public class ClassGraphWindowWerkzeug implements ProjectComponent {
     private ClassGraph _swiftClassGraph;
     private ToolWindowWerkzeug _werkzeug;
     private ChangePropagationProcess _propagationProcess;
-    private ClassGraphPopupMenu _popupMenu;
+    private ClassNodePopupMenu _popupMenu;
 
     public static final String TOOL_WINDOW_ID = "Class Graph";
     public static final Key<ClassGraph> GENERAL_GRAPH_KEY = Key.create("General Graph");
@@ -126,12 +126,12 @@ public class ClassGraphWindowWerkzeug implements ProjectComponent {
             public void valueChanged(ListSelectionEvent e) {
                e.getSource();
                ClassDependency link = _werkzeug.getTaceabilityWerkzeug().getTraceablilityList().getSelectedValue();
-               if(link.get_independentClass().getType() == ClassLanguageType.Java)
+               if(link.getIndependentClass().getType() == ClassLanguageType.Java)
                {
-                   zoomToNode(_javaClassGraph, link.get_independentClass());
+                   zoomToNode(_javaClassGraph, link.getIndependentClass());
                }
                else{
-                   zoomToNode(_swiftClassGraph, link.get_independentClass());
+                   zoomToNode(_swiftClassGraph, link.getIndependentClass());
                }
                 if(link.getDependentClass().getType() == ClassLanguageType.Java)
                 {
@@ -163,10 +163,10 @@ public class ClassGraphWindowWerkzeug implements ProjectComponent {
                     changedMenuItem.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                            new ClassGraphPopupMenu(_javaClassGraph).getNodePopup(selectedNode).show(_javaClassGraph.getView().getJComponent(),x,y);
+                            new ClassNodePopupMenu(_javaClassGraph).getNodePopup(selectedNode).show(_javaClassGraph.getView().getJComponent(),x,y);
                         }
                     });
-                    new ClassGraphPopupMenu(_javaClassGraph).getNodePopup(selectedNode).show(_javaClassGraph.getView().getJComponent(),x,y);
+                    new ClassNodePopupMenu(_javaClassGraph).getNodePopup(selectedNode).show(_javaClassGraph.getView().getJComponent(),x,y);
 
 
                 }

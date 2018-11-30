@@ -1,4 +1,20 @@
-package werkzeuge.graphwerkzeug.model;
+/*
+ * Copyright 1998-2018 Konstantin Bulenkov
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package werkzeuge.graphwerkzeug.presentation.graphfilter;
 
 import com.intellij.openapi.graph.GraphManager;
 import com.intellij.openapi.graph.base.Edge;
@@ -9,25 +25,33 @@ import com.intellij.openapi.graph.view.Graph2D;
 import com.intellij.openapi.graph.view.Graph2DView;
 import materials.ClassDependency;
 import materials.ClassNode;
-import service.ClassNodeFilter;
 import werkzeuge.graphwerkzeug.presentation.ClassGraph;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *
+ */
 public class ClassGraphFilterer extends CustomGraphUpdater {
 
     private GraphHider _graphHider;
     private ClassGraph _classGraph;
     private Map<ClassNode, Boolean> _nodeShouldHideMap;
     private boolean _filterOn = false;
+    private FilterStrategy _filterStrategy;
 
     public ClassGraphFilterer(ClassGraph classGraph) {
         _classGraph = classGraph;
         _nodeShouldHideMap = new HashMap<>();
     }
 
+    /**
+     * Updates the Graph for the given FilterStrategy. If no Stragey
+     * @param graph2D
+     * @param graph2DView
+     */
     @Override
     public void update(Graph2D graph2D, Graph2DView graph2DView)
     {
@@ -35,25 +59,26 @@ public class ClassGraphFilterer extends CustomGraphUpdater {
         _graphHider.setFireGraphEventsEnabled(true);
         Collection<ClassNode> nodes = _classGraph.getDataModel().getNodes();
         unfilterAll();
-        if(_filterOn)
+        if(_filterStrategy != null)
         {
-            for(ClassNode node : nodes)
-            {
-                if(shouldFilter(node) ||node.isHidden())
+            for (ClassNode node : nodes)
+                if(_filterStrategy.filterNode(node))
                 {
                     filter(node);
-                }
             }
         }
         else{
-           unfilterAll();
+            //Log error
         }
-
-        //Edge Filter?
     }
-    public void setFilterOn(boolean setOn)
+
+    /**
+     * Sets the Filterstratgy for the ClassGraph. The FilterStrategy needs to be set before "update()" is called.
+     * @param filterStrategy A filterstrategy for a ClassNode
+     */
+    public void setFilterStrategy(FilterStrategy filterStrategy)
     {
-        _filterOn = setOn;
+        _filterStrategy = filterStrategy;
     }
 
     public void unfilterAll() {
@@ -91,7 +116,7 @@ public class ClassGraphFilterer extends CustomGraphUpdater {
         _graphHider.unhideEdge(edge);
     }
 
-    public void unfilter(final ClassNode classGraphNode)
+   private void unfilter(final ClassNode classGraphNode)
     {
         Node node = _classGraph.getNode(classGraphNode);
         if(node != null)
@@ -114,29 +139,6 @@ public class ClassGraphFilterer extends CustomGraphUpdater {
         }
     }
 
-    public boolean shouldFilter(ClassNode node)
-    {
-        return ClassNodeFilter.isClassNodeFromAPI(node);
-    }
-//    public boolean shouldFilter(ClassGraphNode.Type type)
-//    {
-//        Boolean shoulHide = _nodeShouldHideMap.get(type);
-//        return shoulHide != null && shoulHide;
-//    }
-
-//    public setShouldFilter(St)
-//    {
-//        _edgeShouldHideMap.put()
-//    }
-    public boolean shouldFilter(ClassDependency edge )
-    {
-        return true;
-    }
-
-    public void setShouldFilter(ClassNode node, boolean value)
-    {
-
-    }
     public void clear()
     {
         _nodeShouldHideMap.clear();

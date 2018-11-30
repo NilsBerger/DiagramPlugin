@@ -1,9 +1,14 @@
 package service;
 
+import de.unihamburg.masterprojekt2016.traceability.TraceabilityLink;
+import de.unihamburg.masterprojekt2016.traceability.TraceabilityPointer;
+import de.unihamburg.masterprojekt2016.traceability.TypePointer;
+import de.unihamburg.masterprojekt2016.traceability.TypePointerClassification;
 import materials.*;
 import org.hamcrest.core.IsNull;
 import org.junit.Test;
 import valueobjects.ClassLanguageType;
+import valueobjects.ClassNodeType;
 import valueobjects.Marking;
 import valueobjects.RelationshipType;
 
@@ -114,10 +119,10 @@ public class ChangePropagationProcessTest {
         assertThat(classesMarkedByNext, hasSize(1));
         assertThat(classesMarkedByNext, hasItem(new ClassNode("b", ClassLanguageType.Java)));
 
-        ClassNode b = classesMarkedByNext.stream().filter(item -> item.getSimpleClassName().equals("b")).findFirst().orElse(null);
+        ClassNode b = classesMarkedByNext.stream().filter(item -> item.getSimpleName().equals("b")).findFirst().orElse(null);
         assertThat(b.getMarking(), is(Marking.NEXT));
 
-        ClassNode c = classesMarkedByNext.stream().filter(item -> item.getSimpleClassName().equals("c")).findFirst().orElse(null);
+        ClassNode c = classesMarkedByNext.stream().filter(item -> item.getSimpleName().equals("c")).findFirst().orElse(null);
         assertThat(c, IsNull.nullValue());
 
     }
@@ -147,11 +152,11 @@ public class ChangePropagationProcessTest {
         assertThat(classesMarkedByNext, hasSize(1));
         assertThat(classesMarkedByNext, hasItem(new ClassNode("b", ClassLanguageType.Java)));
 
-        ClassNode b = classesMarkedByNext.stream().filter(item -> item.getSimpleClassName().equals("b")).findFirst().orElse(null);
+        ClassNode b = classesMarkedByNext.stream().filter(item -> item.getSimpleName().equals("b")).findFirst().orElse(null);
         assertThat(b.getMarking(), is(Marking.NEXT));
         b.setMarking(Marking.INSPECTED);
 
-        ClassNode c = classesMarkedByNext.stream().filter(item -> item.getSimpleClassName().equals("c")).findFirst().orElse(null);
+        ClassNode c = classesMarkedByNext.stream().filter(item -> item.getSimpleName().equals("c")).findFirst().orElse(null);
         assertThat(c, IsNull.nullValue());
     }
 
@@ -398,9 +403,87 @@ public class ChangePropagationProcessTest {
 
         //Neighbour through Trace Link
         assertThat(classesMarkedByNext, hasItem(new ClassNode("Search", ClassLanguageType.Swift)));
+    }
 
+
+    @Test
+    public void getAffectedDependencies()
+    {
+        ChangePropagationProcess propgatatesProcess = ChangePropagationProcess.getInstance();
+        propgatatesProcess.initialize(getSimpleDependeniesFromPaperWithoutTraceLink(), new RandomChangeAndFixStrategy());
+        propgatatesProcess.change(new ClassNode("C", ClassLanguageType.Java));
+
+        Set<ClassNode> affectedClasses = propgatatesProcess.getAffectedClassesByChange();
+        Set<ClassNode> classesMarkedByNext = propgatatesProcess.getNextMarkedClasses();
+
+        //Tests
+        assertThat(affectedClasses, hasSize(2));
+        assertThat(affectedClasses, hasItem(new ClassNode("Search", ClassLanguageType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("C", ClassLanguageType.Java)));
+
+        assertThat(classesMarkedByNext, hasSize(1));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Search", ClassLanguageType.Java)));
+
+        //Add TraceLink between Java-ClassNode "C" and Swift-ClassNode "C"
+
+        ClassNode javaC = new ClassNode("C", ClassLanguageType.Java);
+        ClassNode swiftC = new ClassNode("C", ClassLanguageType.Swift);
+        TraceabilityPointer javaPointer = new TypePointer("C", TypePointerClassification.CLASS,0);
+        TraceabilityPointer swiftPointer = new TypePointer("C",TypePointerClassification.CLASS,0);
+
+        TraceabilityLink tracelink = new TraceabilityLink(javaPointer, swiftPointer,1d);
+        propgatatesProcess.addTraceabilityLinkJavaSource(javaC,tracelink);
+
+
+        classesMarkedByNext = propgatatesProcess.getNextMarkedClasses();
+        assertThat(classesMarkedByNext, hasSize(2));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Search", ClassLanguageType.Java)));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("C", ClassLanguageType.Swift)));
+
+        propgatatesProcess.getAffectedDependencies(javaC);
 
     }
+    
+    @Test
+    public void createTracelinkTest()
+    {
+        ChangePropagationProcess propgatatesProcess = ChangePropagationProcess.getInstance();
+        propgatatesProcess.initialize(getSimpleDependeniesFromPaperWithoutTraceLink(), new RandomChangeAndFixStrategy());
+        propgatatesProcess.change(new ClassNode("C", ClassLanguageType.Java));
+
+        Set<ClassNode> affectedClasses = propgatatesProcess.getAffectedClassesByChange();
+        Set<ClassNode> classesMarkedByNext = propgatatesProcess.getNextMarkedClasses();
+
+        //Tests
+        assertThat(affectedClasses, hasSize(2));
+        assertThat(affectedClasses, hasItem(new ClassNode("Search", ClassLanguageType.Java)));
+        assertThat(affectedClasses, hasItem(new ClassNode("C", ClassLanguageType.Java)));
+
+        assertThat(classesMarkedByNext, hasSize(1));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Search", ClassLanguageType.Java)));
+
+       //Add TraceLink between Java-ClassNode "C" and Swift-ClassNode "C"
+
+        ClassNode javaC = new ClassNode("C", ClassLanguageType.Java);
+        ClassNode swiftC = new ClassNode("C", ClassLanguageType.Swift);
+        TraceabilityPointer javaPointer = new TypePointer("C", de.unihamburg.masterprojekt2016.traceability.TypePointerClassification.CLASS,0);
+        TraceabilityPointer swiftPointer = new TypePointer("C",TypePointerClassification.CLASS,0);
+
+        TraceabilityLink tracelink = new TraceabilityLink(javaPointer, swiftPointer,1d);
+        propgatatesProcess.addTraceabilityLinkJavaSource(javaC,tracelink);
+
+
+        classesMarkedByNext = propgatatesProcess.getNextMarkedClasses();
+        assertThat(classesMarkedByNext, hasSize(2));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("Search", ClassLanguageType.Java)));
+        assertThat(classesMarkedByNext, hasItem(new ClassNode("C", ClassLanguageType.Swift)));
+
+        Set<ClassDependency> affectedDependencies = propgatatesProcess.getAffectedDependencies(javaC);
+        //TraceLinkClassDependency dependency = new TraceLinkClassDependency();
+        //assertThat(affectedClasses, ());
+
+    }
+
 
     @Test
     public void strategyStrict()
@@ -519,6 +602,36 @@ public class ChangePropagationProcessTest {
         dependencyList.add(new ClassDependency(search, data, RelationshipType.Dependency));
         dependencyList.add(new ClassDependency(search, searchswift, RelationshipType.Dependency));
         dependencyList.add(new ClassDependency(init, data, RelationshipType.Dependency));
+
+        return dependencyList;
+    }
+
+    /**
+     * Java and Swift dependency graph. Both sgraphs are not connected.
+     * @return
+     */
+    public static final Set<ClassDependency> getSimpleDependeniesFromPaperWithoutTraceLink()
+    {
+        ClassNode main = new ClassNode("Main", ClassLanguageType.Java);
+        ClassNode search = new ClassNode("Search", ClassLanguageType.Java);
+        ClassNode cSwift = new ClassNode("C", ClassLanguageType.Swift);
+        ClassNode input = new ClassNode("Input", ClassLanguageType.Java);
+        ClassNode c = new ClassNode("C", ClassLanguageType.Java);
+        ClassNode data = new ClassNode("Data", ClassLanguageType.Java);
+        ClassNode init = new ClassNode("Init", ClassLanguageType.Java);
+
+        Set<ClassDependency> dependencyList = new HashSet<>();
+        //conistent
+
+
+        dependencyList.add(new ClassDependency(main,input, RelationshipType.Dependency));
+        dependencyList.add(new ClassDependency(main, search, RelationshipType.Dependency));
+        dependencyList.add(new ClassDependency(main, init, RelationshipType.Dependency));
+        dependencyList.add(new ClassDependency(search, input, RelationshipType.Dependency));
+        dependencyList.add(new ClassDependency(search, c, RelationshipType.Dependency));
+        dependencyList.add(new ClassDependency(search, data, RelationshipType.Dependency));
+        dependencyList.add(new ClassDependency(init, data, RelationshipType.Dependency));
+        dependencyList.add(new ClassDependency(cSwift, cSwift, RelationshipType.Dependency));
 
         return dependencyList;
     }

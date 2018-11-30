@@ -48,16 +48,4 @@ public class ClassNodeTest {
     }
 
 
-    @Test
-    public void oldMarking()
-    {
-        ClassNode classNode = new ClassNode("C", ClassLanguageType.Default);
-        classNode.setMarking(Marking.BLANK);
-
-        Marking oldMarking = classNode.getMarking();
-        Marking newMarking = Marking.CHANGED;
-        classNode.setMarking(newMarking);
-        assertThat(oldMarking, is(classNode.getOldMarking()));
-        assertThat(classNode.getMarking(), is(newMarking));
-    }
 }

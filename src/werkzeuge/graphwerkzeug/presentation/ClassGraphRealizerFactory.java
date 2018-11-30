@@ -1,7 +1,6 @@
 package werkzeuge.graphwerkzeug.presentation;
 
 import com.intellij.openapi.graph.GraphManager;
-import com.intellij.openapi.graph.base.Graph;
 import com.intellij.openapi.graph.view.*;
 import materials.ClassNode;
 
@@ -13,7 +12,7 @@ public class ClassGraphRealizerFactory {
     {
         Graph2DNodeRealizer nodeRealizer = GraphManager.getGraphManager().createGraph2DNodeRealizer();
 
-        String nameText = classGraphNode.getSimpleClassName();
+        String nameText = classGraphNode.getSimpleName();
         NodeLabel nameLabel = addNodeNameLabel(nameText, nodeRealizer);
 
         calculateAndSetNodeSize(nodeRealizer, nameLabel);
@@ -23,14 +22,11 @@ public class ClassGraphRealizerFactory {
         return nodeRealizer;
     }
 
-    private static void setNodeOnSelectionListener(Graph2DNodeRealizer nodeRealizer) {
-        //nodeRealizer.s
-
-    }
 
     private static void setNodeShape(Graph2DNodeRealizer nodeRealizer) {
         nodeRealizer.setShapeType(ShapeNodeRealizer.RECT);
     }
+
 
 
     public static void setNodeColor(final Graph2DNodeRealizer nodeRealizer, ClassNode classGraphNode)
@@ -64,18 +60,4 @@ public class ClassGraphRealizerFactory {
         nodeRealizer.addLabel(nameLabel);
         return nameLabel;
     }
-
-    private static void a ()
-    {
-
-    }
-
-
-//    private static void onSelectOpenPopupMenu(NodeRealizer nodeRealizer, ClassGraphNode classGraphNode)
-//    {
-//        classGraphNode.
-//    }
-
-
-
 }
