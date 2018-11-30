@@ -3,11 +3,8 @@ package werkzeuge.graphwerkzeug.presentation;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.graph.GraphManager;
-import com.intellij.openapi.graph.base.EdgeMap;
-import com.intellij.openapi.graph.base.NodeMap;
 import com.intellij.openapi.graph.builder.GraphBuilder;
 import com.intellij.openapi.graph.builder.GraphBuilderFactory;
-import com.intellij.openapi.graph.builder.GraphDataModel;
 import com.intellij.openapi.graph.view.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.graph.base.Edge;
@@ -62,7 +59,7 @@ public class ClassGraph implements Disposable, GraphChangeListener {
     {
         Graph2D graph = GraphManager.getGraphManager().createGraph2D();
         Graph2DView view = GraphManager.getGraphManager().createGraph2DView();
-        GeneralClassGraphDataModel dataModel = new SwiftClassGraphDataModel();
+        GeneralClassGraphDataModel dataModel = new LanguageTypeClassGraphDataModel(ClassLanguageType.Swift);
         ClassGraphPresentationModel presentationModel = new ClassGraphPresentationModel(graph);
 
         return new ClassGraph(project, graph, view,  dataModel, presentationModel);
@@ -71,7 +68,7 @@ public class ClassGraph implements Disposable, GraphChangeListener {
     {
         Graph2D graph = GraphManager.getGraphManager().createGraph2D();
         Graph2DView view = GraphManager.getGraphManager().createGraph2DView();
-        GeneralClassGraphDataModel dataModel = new JavaClassGraphDataModel();
+        GeneralClassGraphDataModel dataModel = new LanguageTypeClassGraphDataModel(ClassLanguageType.Java);
         ClassGraphPresentationModel presentationModel = new ClassGraphPresentationModel(graph);
 
         return new ClassGraph(project, graph, view,  dataModel, presentationModel);
