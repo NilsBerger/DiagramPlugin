@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package preferences;
+package werkzeuge.settingswerkzeug;
 
 import Utils.PluginProperties;
 import Utils.PropertyName;
@@ -32,13 +32,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
-public class Settings implements Configurable {
-    SettingsUI _ui;
+public class SettingsWerkzeug implements Configurable {
+    SettingsWerkzeugUI _ui;
 
     private boolean _isSwiftModified = false;
     private boolean _isAndroidModified = false;
-    public Settings() {
-        _ui = new SettingsUI();
+    public SettingsWerkzeug() {
+        _ui = new SettingsWerkzeugUI();
         addSwingTextFieldWithBrowseButton();
         addSwingSchemeTextFieldWithBrowseButton();
         addAndroidTextFieldWithBrowseButton();

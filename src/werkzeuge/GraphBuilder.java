@@ -43,7 +43,7 @@ import java.util.Set;
 //        graph2D.addDataProvider (DataProviderKeys.DEPENDENCY_INFO_NODE_KEY, nodeMap);
 //        graph2D.addDataProvider (DataProviderKeys.DEPENDENCY_INFO_EDGE_KEY, edgeMap);
 //
-//        DependencyAnalyzer analyzer = new DependencyAnalyzer (psiClass, Settings.getSettings ());
+//        DependencyAnalyzer analyzer = new DependencyAnalyzer (psiClass, SettingsWerkzeug.getSettings ());
 //
 //        DependencyCollection usedClasses      = analyzer.getUsedClasses ();
 //        DependencyCollection usingClasses     = analyzer.getUsingClasses ();
@@ -116,7 +116,7 @@ import java.util.Set;
 //                {
 //                    boolean cycle = (dependencyType == DependencyType.USED || dependencyType == DependencyType.USING) &&
 //                            cyclicDependendClasses.contains (dependendClass) &&
-//                            Settings.getSettings ().isHightlightCyclicEdges ();
+//                            SettingsWerkzeug.getSettings ().isHightlightCyclicEdges ();
 //                    if (subjectIsSourceNode)
 //                    {
 //                        createEdge (subjectNode, dependendNode, dependendClass, reason.getOffset (), reason.getUsageType (),
@@ -146,7 +146,7 @@ import java.util.Set;
 //        NodeInfo info = new NodeInfo (psiClass, dependencyType);
 //        nodeMap.set (classNode, info);
 //        ClassType classType = DependencyAnalyzer.computeClassType (psiClass);
-//        nodeRealizer.setFillColor (Settings.getSettings ().getColorForClassType (classType));
+//        nodeRealizer.setFillColor (SettingsWerkzeug.getSettings ().getColorForClassType (classType));
 //        nodeRealizer.setLabelText (createNodeText (psiClass, classType));
 //        NodeLabel label = nodeRealizer.getLabel ();
 //        nodeRealizer.setLocation (100, 100);

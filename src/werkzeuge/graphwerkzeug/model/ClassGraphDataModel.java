@@ -2,35 +2,52 @@ package werkzeuge.graphwerkzeug.model;
 
 import com.intellij.openapi.graph.builder.GraphDataModel;
 import com.intellij.openapi.graph.builder.NodesGroup;
+import javafx.collections.ObservableSet;
 import javafx.collections.SetChangeListener;
 import materials.ClassDependency;
 import materials.ClassNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import service.ChangePropagationProcess;
+import service.GraphChangeListener;
+import valueobjects.ClassLanguageType;
 import werkzeuge.graphwerkzeug.util.ClassGraphLogger;
 import valueobjects.RelationshipType;
 
 import java.util.*;
 
-public class GeneralClassGraphDataModel extends GraphDataModel<ClassNode, ClassDependency>{
+public class ClassGraphDataModel extends GraphDataModel<ClassNode, ClassDependency> implements GraphChangeListener {
 
     private Set<ClassNode> _nodes;
     private Map<ClassNode, Set<ClassDependency>> _nodesEdges;
     private Set<ClassDependency> _edges;
+    private  ClassLanguageType _languageType;
     protected ChangePropagationProcess _changePropagationProcess = ChangePropagationProcess.getInstance();
 
-    public GeneralClassGraphDataModel() {
+    public ClassGraphDataModel() {
+        init();
+    }
+    public ClassGraphDataModel(ClassLanguageType classLanguageType) {
+        if(classLanguageType != null)
+        {
+            _languageType = classLanguageType;
+        }
+        init();
+    }
+
+    private void init()
+    {
         _nodes = new HashSet<>();
         _nodesEdges = new HashMap<>();
         _edges = new HashSet<>();
         addNodeChangeListener();
+        _changePropagationProcess.addGraphChangeListener(this);
     }
+
 
     @Nullable
     @Override
     public NodesGroup getGroup(ClassNode classNode) {
-        //TODO
         return super.getGroup(classNode);
     }
 
@@ -89,29 +106,24 @@ public class GeneralClassGraphDataModel extends GraphDataModel<ClassNode, ClassD
     }
 
     public void refreshDataModel(final ClassNode changedClassNode) {
-            addNode(changedClassNode);
-            Set<ClassDependency> affectedDependencies = _changePropagationProcess.getAffectedDependencies(changedClassNode);
-            addAll(affectedDependencies);
-
-//        Set<ClassNode> topDependencies = _changePropagationProcess.getModel().getTopDependencies(changedClassNode);
-//            Set<ClassNode> bottomDependencies = _changePropagationProcess.getModel().getBottomDependencies(changedClassNode);
-//
-//
-//
-//            addNeighbourhoodForClass(changedClassNode, topDependencies);
-//            addNeighbourhoodForClass(changedClassNode, bottomDependencies);
-
+        if(_languageType != null)
+        {
+            if(changedClassNode.getClassLanguageType() == _languageType)
+            {
+                refreshNeighbourhood(changedClassNode);
+            }
+        }
+        else
+        {
+            refreshNeighbourhood(changedClassNode);
+        }
     }
 
-    protected void addNeighbourhoodForClass(final ClassNode classNode, final Set<ClassNode> dependencies) {
-
-        for (ClassNode topdependency : dependencies) {
-           if (_changePropagationProcess.getAffectedClassesByChange().contains(topdependency)) {
-
-                ClassDependency edge = new ClassDependency(classNode, topdependency, RelationshipType.Dependency);
-                addEdge(edge);
-           }
-        }
+    private void refreshNeighbourhood(final ClassNode classNode)
+    {
+        addNode(classNode);
+        Set<ClassDependency> affectedDependencies = _changePropagationProcess.getAffectedDependencies(classNode);
+        addAll(affectedDependencies);
     }
 
     public void dispose() {
@@ -192,5 +204,21 @@ public class GeneralClassGraphDataModel extends GraphDataModel<ClassNode, ClassD
             ClassGraphLogger.debug("removeEdge - Edge not in model : " + edge);
         }
         return removed;
+    }
+    private void clear()
+    {
+        _nodes.clear();
+        _nodesEdges.clear();
+        _edges.clear();
+    }
+
+    @Override
+    public void updateView() {
+        clear();
+        ObservableSet<ClassNode> affectedClassesByChange = _changePropagationProcess.getAffectedClassesByChange();
+        for(ClassNode classNode : affectedClassesByChange)
+        {
+            refreshDataModel(classNode);
+        }
     }
 }

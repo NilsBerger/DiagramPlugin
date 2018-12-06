@@ -1,10 +1,12 @@
 package werkzeuge.graphwerkzeug.presentation;
 
 import colorspectrum.ColorUtils;
+import com.intellij.openapi.diff.impl.incrementalMerge.Change;
 import com.intellij.openapi.graph.GraphManager;
 import com.intellij.openapi.graph.base.*;
 import com.intellij.openapi.graph.builder.components.BasicGraphPresentationModel;
 import com.intellij.openapi.graph.builder.util.GraphViewUtil;
+import com.intellij.openapi.graph.layout.Layouter;
 import com.intellij.openapi.graph.layout.PortConstraintKeys;
 import com.intellij.openapi.graph.layout.orthogonal.DirectedOrthogonalLayouter;
 import com.intellij.openapi.graph.view.*;
@@ -13,15 +15,17 @@ import materials.ClassNode;
 import materials.TraceLinkClassDependency;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import service.ChangePropagationProcess;
+import service.GraphChangeListener;
 import valueobjects.RelationshipType;
-import werkzeuge.graphwerkzeug.ClassNodePopupMenu;
-import werkzeuge.graphwerkzeug.model.GeneralClassGraphDataModel;
+import werkzeuge.graphwerkzeug.ClassGraphPopupMenu;
+import werkzeuge.graphwerkzeug.model.ClassGraphDataModel;
 
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
 
-public class ClassGraphPresentationModel extends BasicGraphPresentationModel<ClassNode, ClassDependency> {
+public class ClassGraphPresentationModel extends BasicGraphPresentationModel<ClassNode, ClassDependency> implements GraphChangeListener {
 
     private ClassGraph _classGraph;
     private ClassNodeRenderer _nodeRenderer;
@@ -35,6 +39,8 @@ public class ClassGraphPresentationModel extends BasicGraphPresentationModel<Cla
     private static final String UML_ANGLE_ARROW_NAME = "angle";
     private static final String RENDERER_NAME = "ClassGraph.NodeRenderer";
 
+    private final ChangePropagationProcess _changePropagationProcess = ChangePropagationProcess.getInstance();
+
     public ClassGraphPresentationModel(final Graph graph)
     {
         super(graph);
@@ -45,6 +51,7 @@ public class ClassGraphPresentationModel extends BasicGraphPresentationModel<Cla
         graph.addDataProvider (DataProviderKeys.DEPENDENCY_INFO_EDGE_KEY,      _edgeMap);
         graph.addDataProvider (DirectedOrthogonalLayouter.DIRECTED_EDGE_DPKEY, _directedEdgeMap);
         graph.addDataProvider (PortConstraintKeys.TARGET_GROUPID_KEY,          _groupEdgeMap);
+        _changePropagationProcess.addGraphChangeListener(this);
     }
 
     public void setClassGraph(final ClassGraph classGraph)
@@ -55,21 +62,23 @@ public class ClassGraphPresentationModel extends BasicGraphPresentationModel<Cla
         setGraphBuilder(classGraph.getGraphBuilder());
     }
 
-    private GeneralClassGraphDataModel getDataModel()
+    private ClassGraphDataModel getDataModel()
     {
         return _classGraph.getDataModel();
     }
 
     @Override
     public void customizeSettings(Graph2DView view, EditMode editMode) {
+        ClassGraphPopupMenu popupMode = new ClassGraphPopupMenu(_classGraph);
 
-        ClassNodePopupMenu popupMode = new ClassNodePopupMenu(_classGraph);
+
         editMode.setPopupMode(popupMode);
 
         editMode.allowMoveSelection(false);
         editMode.allowMoving(true);
         editMode.allowNodeCreation(false);
         editMode.allowEdgeCreation(false);
+
     }
 
     @Override
@@ -92,13 +101,17 @@ public class ClassGraphPresentationModel extends BasicGraphPresentationModel<Cla
     public EdgeRealizer getEdgeRealizer(@Nullable ClassDependency classDependency) {
         GraphManager graphManager = GraphManager.getGraphManager ();
         PolyLineEdgeRealizer edgeRealizer = graphManager.createPolyLineEdgeRealizer();
+        //configureEdge(classDependency, edgeRealizer);
+
         Node sourceNode = _classGraph.getNode(classDependency.getIndependentClass());
         Node targetNode = _classGraph.getNode(classDependency.getDependentClass());
-        configureEdge(classDependency, edgeRealizer);
-//        if(sourceNode!= null && targetNode != null)
-//        {
-//            createEdge(sourceNode, targetNode, classDependency, edgeRealizer);
-//        }
+        if(sourceNode != null && targetNode != null)
+        {
+            if(doesEdgeAlreadyExist(sourceNode,targetNode))
+            {
+                createEdge(sourceNode, targetNode, classDependency, edgeRealizer);
+            }
+        }
         return edgeRealizer;
     }
 
@@ -139,7 +152,6 @@ public class ClassGraphPresentationModel extends BasicGraphPresentationModel<Cla
                     TraceLinkClassDependency dependency = (TraceLinkClassDependency) classDependency;
                     double traceLinkValue = dependency.getTracelinkValue();
                     edgeRealizer.setLineType (LineType.DASHED_1);
-                    edgeRealizer.setTargetArrow (customArrow);
                     LineType lineType = LineType.LINE_1;
                     edgeRealizer.setLineType(lineType);
                     edgeRealizer.setLineColor(ColorUtils.test(traceLinkValue));
@@ -203,51 +215,112 @@ public class ClassGraphPresentationModel extends BasicGraphPresentationModel<Cla
      */
     public void createEdge (@NotNull Node sourceNode, @NotNull Node targetNode, @NotNull ClassDependency dependency, EdgeRealizer edgeRealizer)
     {
-        for (EdgeCursor edgeCursor = sourceNode.edges (); edgeCursor.ok (); edgeCursor.next ())
-        {
-            Edge existingEdge = edgeCursor.edge ();
-            if (existingEdge.target () != targetNode)
+
+
+//        for (EdgeCursor edgeCursor = sourceNode.edges (); edgeCursor.ok (); edgeCursor.next ())
+//        {
+////            doesEdgeExist = doesEdgeAlreadyExist(sourceNode,targetNode, dependency);
+////            if(doesEdgeExist)
+////            {
+////                return;
+////            }
+//
+//            Edge existingEdge = edgeCursor.edge();
+//            if(existingEdge.target().equals(targetNode))
+//            {
+//
+//            }
+//
+////            Edge existingEdge = edgeCursor.edge();
+////            if(existingEdge.target() )
+////            {
+////
+////            }
+////            Edge existingEdge = edgeCursor.edge ();
+////            if (existingEdge.target () != targetNode)
+////            {
+////                //RelationshipType edgeType = (RelationshipType) _edgeMap.get(existingEdge);
+////                RelationshipType edgeType = dependency.getRelationshipType();
+//                // compare existing usage type with new usage type
+////                boolean newUsageTypeIsExtending = edgeType == RelationshipType.Extends ||
+////                        edgeType == RelationshipType.Implements||
+////                        edgeType == RelationshipType.Dependency;
+////                boolean oldUsageTypeIsExtending = edgeType == RelationshipType.Extends ||
+////                        edgeType == RelationshipType.Implements||
+////                        edgeType == RelationshipType.Dependency;
+//////                if (newUsageTypeIsExtending)
+//////                {
+//////                    if (oldUsageTypeIsExtending)
+//////                    {
+//////                        // do not create edge, if new edge is extending edge and extending edge already exists
+//////                        //return;
+//////                    }
+//////                }
+//////                else
+//////                {
+////                    if (edgeType.compareTo (edgeType) > 0)
+////                    {
+////                        // remove old edge, because new edge is "more important"
+////                        existingEdge.getGraph ().removeEdge (existingEdge);
+////                    }
+////                    else if (!oldUsageTypeIsExtending)
+////                    {
+////                        // do not create edge, if old edge is not extending edge and new edge is "less important"
+////                        return;
+////                    }
+////                }
+//            }
+//        //}
+
+
+            configureEdge(dependency,edgeRealizer);
+            if(doesEdgeAlreadyExist(sourceNode, targetNode))
             {
-                RelationshipType edgeType = (RelationshipType) _edgeMap.get (existingEdge);
-                // compare existing usage type with new usage type
-                boolean newUsageTypeIsExtending = edgeType == RelationshipType.Extends ||
-                        edgeType == RelationshipType.Implements;
-                boolean oldUsageTypeIsExtending = edgeType == RelationshipType.Extends ||
-                        edgeType == RelationshipType.Implements;
-                if (newUsageTypeIsExtending)
-                {
-                    if (oldUsageTypeIsExtending)
-                    {
-                        // do not create edge, if new edge is extending edge and extending edge already exists
-                        return;
-                    }
-                }
-                else
-                {
-                    if (edgeType.compareTo (edgeType) > 0)
-                    {
-                        // remove old edge, because new edge is "more important"
-                        existingEdge.getGraph ().removeEdge (existingEdge);
-                    }
-                    else if (!oldUsageTypeIsExtending)
-                    {
-                        // do not create edge, if old edge is not extending edge and new edge is "less important"
-                        return;
-                    }
-                }
+                return;
+            }
+            Edge edge = _graph.createEdge(sourceNode, targetNode);
+            // provide information for layouter to be able to group implements and extends edges
+            RelationshipType relationshipType = dependency.getRelationshipType();
+            _edgeMap.set(edge, relationshipType);
+            if (relationshipType == RelationshipType.Extends || relationshipType == RelationshipType.Implements)
+            {
+                String groupID = _graph.getRealizer(targetNode).getLabelText ();
+                _groupEdgeMap.set(edge, groupID);
+            }
+            boolean directedEdge = configureEdge (dependency, edgeRealizer);
+            _graph.setRealizer(edge, edgeRealizer);
+            _directedEdgeMap.set(edge, directedEdge);
+
+
+    }
+
+    private boolean doesEdgeAlreadyExist(Node sourceNode, Node targetNode){
+        for(EdgeCursor edgeCursor = sourceNode.edges (); edgeCursor.ok (); edgeCursor.next ())
+        {
+            Edge existingEdge = edgeCursor.edge();
+            if(existingEdge.target().equals(targetNode))
+            {
+                return true;
             }
         }
-        Edge edge = _graph.createEdge (sourceNode, targetNode);
-        // provide information for layouter to be able to group implements and extends edges
-        RelationshipType relationshipType = dependency.getRelationshipType();
-        _edgeMap.set (edge, relationshipType);
-        if (relationshipType == RelationshipType.Extends || relationshipType == RelationshipType.Implements)
+        return false;
+    }
+
+    private Edge getExistingEdge(Node sourceNode, Node targetNode)
+    {
+        for(EdgeCursor edgeCursor = sourceNode.edges (); edgeCursor.ok (); edgeCursor.next ())
         {
-            String groupID = _graph.getRealizer (targetNode).getLabelText ();
-            _groupEdgeMap.set (edge, groupID);
+            Edge existingEdge = edgeCursor.edge();
+            if(existingEdge.target().equals(targetNode))
+            {
+                return existingEdge;
+            }
         }
-        boolean directedEdge = configureEdge (dependency, edgeRealizer);
-        _graph.setRealizer (edge, edgeRealizer);
-        _directedEdgeMap.set (edge, directedEdge);
+        throw new IllegalStateException("Node should exist");
+    }
+
+    public void updateView()
+    {
+
     }
 }

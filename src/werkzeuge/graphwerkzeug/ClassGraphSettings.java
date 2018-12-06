@@ -14,7 +14,7 @@ package werkzeuge.graphwerkzeug;
 ///**
 // * Graphical navigator settings.
 // */
-//public class Settings
+//public class SettingsWerkzeug
 //{
 //    /** Color of normal classes in graphical navigator and UML diagrams. */
 //    private Color       classColor               = new Color (240, 233, 194);
@@ -85,7 +85,7 @@ package werkzeuge.graphwerkzeug;
 //     * Gets global uml plugin settings.
 //     * @return settings
 //     */
-//    public static @NotNull Settings getSettings ()
+//    public static @NotNull SettingsWerkzeug getSettings ()
 //    {
 //        Application application = ApplicationManager.getApplication ();
 //        SettingsPlugin settingsPlugin = application.getComponent (SettingsPlugin.class);
@@ -95,7 +95,7 @@ package werkzeuge.graphwerkzeug;
 //    /**
 //     * Package visible constructor may only be called from plugin application component.
 //     */
-//    Settings ()
+//    SettingsWerkzeug ()
 //    {
 //    }
 //

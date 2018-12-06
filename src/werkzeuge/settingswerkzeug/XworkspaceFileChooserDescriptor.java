@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package preferences;
+package werkzeuge.settingswerkzeug;
 
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.vfs.VirtualFile;

@@ -1,25 +1,40 @@
 package werkzeuge.graphwerkzeug;
 
 import com.intellij.icons.AllIcons;
+import com.intellij.icons.AllIcons.Graph;
 import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.graph.builder.GraphBuilder;
 import com.intellij.openapi.graph.builder.actions.*;
+import com.intellij.openapi.graph.builder.actions.layout.AbstractLayoutAction;
 import com.intellij.openapi.graph.builder.actions.layout.ApplyCurrentLayoutAction;
-import com.intellij.openapi.graph.builder.actions.printing.PrintGraphAction;
 import com.intellij.openapi.graph.builder.actions.printing.PrintPreviewAction;
+import com.intellij.openapi.graph.layout.Layouter;
+import com.intellij.openapi.graph.settings.GraphSettings;
+import com.intellij.openapi.graph.view.Graph2D;
+import com.intellij.openapi.graph.view.Graph2DView;
+import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBTabbedPane;
 import org.jetbrains.annotations.NotNull;
 import werkzeuge.ToolWindowWerkzeug;
 import werkzeuge.graphwerkzeug.presentation.ClassGraph;
+import werkzeuge.graphwerkzeug.presentation.TraceabilityLayouter;
+import werkzeuge.graphwerkzeug.presentation.TraceabilityLayouter2;
+import werkzeuge.graphwerkzeug.presentation.TraceabilityLayouterAction;
 import werkzeuge.graphwerkzeug.presentation.toolbaractions.ImagePrinterAction;
 import werkzeuge.graphwerkzeug.presentation.toolbaractions.NodeFilterAction;
 import werkzeuge.graphwerkzeug.presentation.toolbaractions.MarkingFilterAction;
 import werkzeuge.graphwerkzeug.presentation.toolbaractions.NodeUnfilterAction;
+import werkzeuge.graphwerkzeug.util.GraphUtils;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class ClassGraphWindowWerkzeugUI {
+
+    public static final int CLASS_GRAPH_INDEX = 0;
+    public static final int SEPERATED_CLASS_GRAPH_INDEX = 1;
+
     private final static Icon _ICON = AllIcons.Nodes.Artifact;
     private final JComponent _myComponent;
     private ClassGraph _generalClassGraph;
@@ -27,6 +42,7 @@ public class ClassGraphWindowWerkzeugUI {
     private ClassGraph _swiftClassGraph;
 
     private JTabbedPane _tabbedPane;
+
 
 
     /**
@@ -56,7 +72,7 @@ public class ClassGraphWindowWerkzeugUI {
         generalPane.setLayout(new BorderLayout());
         generalPane.add(generalActionToolbar.getComponent(), BorderLayout.NORTH);
         generalPane.add(_generalClassGraph.getView().getComponent(), BorderLayout.CENTER);
-        _tabbedPane.insertTab("Combined Class Graph", _ICON, generalPane, "", 0);
+        _tabbedPane.insertTab("Combined Class Graph", _ICON, generalPane, "", CLASS_GRAPH_INDEX);
 
         JSplitPane splitPane = new JSplitPane();
 
@@ -73,7 +89,7 @@ public class ClassGraphWindowWerkzeugUI {
         splitPane.setLeftComponent(javaPane);
         splitPane.setRightComponent(swiftPane);
 
-        _tabbedPane.insertTab("Seperated Class Graphs", _ICON, splitPane, "",1);
+        _tabbedPane.insertTab("Seperated Class Graphs", _ICON, splitPane, "",SEPERATED_CLASS_GRAPH_INDEX);
 
 
         _myComponent.add(_tabbedPane, BorderLayout.CENTER);
@@ -81,6 +97,7 @@ public class ClassGraphWindowWerkzeugUI {
 
         _generalClassGraph.initialize();
 
+        //Set Layouter
     }
 
     /**
@@ -94,7 +111,8 @@ public class ClassGraphWindowWerkzeugUI {
         actions.add(new SnapToGridAction(classgraph.getGraph()));
         actions.addSeparator();
 
-        actions.add(new ZoomInAction(classgraph.getGraph()));
+        actions.add(new
+                ZoomInAction(classgraph.getGraph()));
         actions.add(new ZoomOutAction(classgraph.getGraph()));
 
         actions.add(new ActualZoomAction(classgraph.getGraph()));
@@ -102,20 +120,19 @@ public class ClassGraphWindowWerkzeugUI {
         actions.add(new FitContentAction(classgraph.getGraph()));
         actions.addSeparator();
 
-        actions.add(new ApplyCurrentLayoutAction(classgraph.getGraph()));
-        //actions.add(new CustomLayouterAction(classgraph.getGraphBuilder(), _generalClassGraph.getGraphBuilder().getS));
-        actions.addSeparator();
-
-        //actions.add(new DeleteSelectionAction());
+        //actions.add(new ApplyCurrentLayoutAction(classgraph.getGraph()));
+        actions.add(new TraceabilityLayouterAction(classgraph));
         actions.addSeparator();
 
         //actions.add(new PrintGraphAction(classgraph.getGraph()));
         actions.add(new ImagePrinterAction(classgraph));
         actions.add(new PrintPreviewAction(classgraph.getGraph()));
+
         actions.addSeparator();
         actions.add(new NodeFilterAction(classgraph));
         actions.add(new MarkingFilterAction(classgraph));
         actions.add(new NodeUnfilterAction(classgraph));
+        actions.addSeparator();
 
         return actions;
     }
@@ -130,18 +147,7 @@ public class ClassGraphWindowWerkzeugUI {
         return _tabbedPane;
     }
 
-    public ClassGraph getGeneralClassGraph()
-    {
-        return _generalClassGraph;
-    }
-    public ClassGraph getJavaClassGraph()
-    {
-        return _javaClassGraph;
-    }
-    public ClassGraph getSwiftClassGraph()
-    {
-        return _swiftClassGraph;
-    }
+
 
 }
 

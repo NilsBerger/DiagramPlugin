@@ -239,4 +239,22 @@ public class ChangePropagationModel {
         }
         return false;
     }
+
+    public void updateDependency(ClassDependency classDependency, RelationshipType relationshipType)
+    {
+        Iterator<ClassDependency> iterator = _edges.iterator();
+        while(iterator.hasNext())
+        {
+            ClassDependency dependency = iterator.next();
+            if(dependency.equals(classDependency))
+            {
+                dependency.setRelationshipType(relationshipType);
+            }
+        }
+    }
+
+    public Set<ClassDependency> getDependencies()
+    {
+        return _edges;
+    }
 }

@@ -9,6 +9,7 @@ import service.GraphChangeListener;
 import valueobjects.ClassLanguageType;
 import valueobjects.Marking;
 import javafx.collections.SetChangeListener;
+import werkzeuge.graphwerkzeug.util.GraphUtils;
 import werkzeuge.tracebilitychooserwerkzeug.TracebilityChooserWerkzeug;
 
 import javax.swing.*;
@@ -51,7 +52,7 @@ public class FinalContextWerkzeug implements GraphChangeListener {
     }
     private void addEntry(final ClassNode classnode)
     {
-        if(classnode.getType() == _type)
+        if(classnode.getClassLanguageType() == _type)
         {
             _ui.getModel().addEntry(classnode);
         }
@@ -80,6 +81,15 @@ public class FinalContextWerkzeug implements GraphChangeListener {
         _ui.getJBList().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if(SwingUtilities.isLeftMouseButton(e))
+                {
+                    if(_ui.getJBList().getSelectedValue() instanceof ClassNode)
+                    {
+                        ClassNode classNode = (ClassNode) _ui.getJBList().getSelectedValue();
+                        //TODO Zoom
+                    }
+
+                }
                 if (SwingUtilities.isRightMouseButton(e)
                         && !_ui.getJBList().isSelectionEmpty()
                         && _ui.getJBList().locationToIndex(e.getPoint()) == _ui.getJBList().getSelectedIndex())
@@ -137,6 +147,11 @@ public class FinalContextWerkzeug implements GraphChangeListener {
     public JBPanel getPanel()
     {
         return _ui.getPanel();
+    }
+
+    public JList getList()
+    {
+        return  _ui.getJBList();
     }
 
 

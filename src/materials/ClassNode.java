@@ -115,9 +115,9 @@ public class ClassNode {
     }
 
     /**
-     * Returns the ClassLanguageType of the ClassNode. The ClassLanguageType is final.
+     * Returns the getClassLanguageType of the ClassNode. The getClassLanguageType is final.
      */
-    public ClassLanguageType getType()
+    public ClassLanguageType getClassLanguageType()
     {
         return _classLanguageType;
     }
@@ -162,7 +162,7 @@ public class ClassNode {
             return false;
         final ClassNode otherClassNodeFachwert = (ClassNode) obj;
         return this.getSimpleName().equals(otherClassNodeFachwert.getSimpleName()) &&
-                this._classLanguageType == otherClassNodeFachwert.getType();
+                this._classLanguageType == otherClassNodeFachwert.getClassLanguageType();
     }
 }
 

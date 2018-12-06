@@ -4,26 +4,28 @@ import com.intellij.openapi.graph.base.Edge;
 import com.intellij.openapi.graph.base.Node;
 import com.intellij.openapi.graph.view.PopupMode;
 import com.intellij.openapi.ui.JBPopupMenu;
+import materials.ClassDependency;
 import materials.ClassNode;
 import service.ChangePropagationProcess;
 import valueobjects.Marking;
+import valueobjects.RelationshipType;
 import werkzeuge.graphwerkzeug.presentation.graphfilter.NodeFilterStrategy;
 import werkzeuge.graphwerkzeug.presentation.graphfilter.ClassGraphFilterer;
 import werkzeuge.graphwerkzeug.presentation.ClassGraph;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 
 /**
- * Creates a PopupMenue on a selected ClassNode in a diagram.
+ * Creates a PopupMenu on a selected ClassNode in a diagram.
  */
-public class ClassNodePopupMenu extends PopupMode {
+public class ClassGraphPopupMenu extends PopupMode {
     private ClassGraph _classGraph;
     private ChangePropagationProcess _process = ChangePropagationProcess.getInstance();
 
-    public ClassNodePopupMenu(ClassGraph classGraph) {
+    public ClassGraphPopupMenu(ClassGraph classGraph) {
         _classGraph = classGraph;
-
     }
 
     @Override
@@ -39,11 +41,24 @@ public class ClassNodePopupMenu extends PopupMode {
         return menu;
     }
 
+    /**
+     * Create a PopupMenu that opens on a clicked edge.
+     * @param edge
+     * @return
+     */
     @Override
     public JPopupMenu getEdgePopup(Edge edge) {
+        final ClassDependency classGraphEdge = _classGraph.getClassGraphEdge(edge);
+        if(classGraphEdge != null && classGraphEdge.getRelationshipType()!= RelationshipType.Traceability_Association)
+        {
+            return null;
+        }
         JBPopupMenu menu = new JBPopupMenu();
-        menu.add(new EdgeChangeAction(edge ));
-
+        menu.add(new DependencyAction("Implements", edge, RelationshipType.Implements));
+        menu.add(new DependencyAction("Extends", edge, RelationshipType.Extends));
+        menu.add(new DependencyAction("Dependency", edge, RelationshipType.Dependency));
+        menu.setVisible(true);
+        menu.show();
 
         return menu;
     }
@@ -114,18 +129,31 @@ public class ClassNodePopupMenu extends PopupMode {
 
     }
 
-    class EdgeChangeAction extends AbstractAction{
+    class DependencyAction extends AbstractAction{
 
         private Edge _edge;
+        private RelationshipType _relationshipType;
 
-        public EdgeChangeAction(Edge edge)
+        public DependencyAction(String name, Edge edge, RelationshipType relationship)
         {
-            super("Change Edge");
+            super(name);
             _edge = edge;
+            _relationshipType = relationship;
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            final ClassDependency classDependency = _classGraph.getGraphBuilder().getEdgeObject(_edge);
+            _classGraph.getDataModel().removeEdge(classDependency);
+            classDependency.setRelationshipType(_relationshipType);
+            _classGraph.getDataModel().addEdge(classDependency);
+            _process.updateDependency(classDependency, _relationshipType );
+        }
+
+        @Override
+        public void setEnabled(boolean newValue) {
+            ClassDependency dependency = _classGraph.getClassGraphEdge(_edge);
+            super.setEnabled(!(dependency.getRelationshipType() == _relationshipType));
         }
     }
 }

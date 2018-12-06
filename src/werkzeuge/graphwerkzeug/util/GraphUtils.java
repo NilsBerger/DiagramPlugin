@@ -11,17 +11,19 @@ public class GraphUtils {
     /**
      * Creates hierarchic layouter with specified orientation
      *
-     * @param horisontal orientation
+     * @param horizontal orientation
      * @return created layouter
      */
-    public static Layouter createLayouter(boolean horisontal) {
+    public static Layouter createLayouter(boolean horizontal) {
         HierarchicGroupLayouter layouter = GraphManager.getGraphManager().createHierarchicGroupLayouter();
-        layouter.setLayoutOrientation(horisontal ? LayoutOrientation.LEFT_TO_RIGHT : LayoutOrientation.TOP_TO_BOTTOM);
-        setLayoutOrientation(layouter, horisontal);
+        layouter.setLayoutOrientation(LayoutOrientation.TOP_TO_BOTTOM);
         return layouter;
     }
 
-    public static void setLayoutOrientation(HierarchicLayouter layouter, boolean horisontal) {
-        layouter.setLayoutOrientation(horisontal ? LayoutOrientation.LEFT_TO_RIGHT : LayoutOrientation.TOP_TO_BOTTOM);
+    public static void setLayoutOrientationLeftToRight(HierarchicLayouter layouter, boolean horizontal) {
+        layouter.setLayoutOrientation(horizontal ? LayoutOrientation.LEFT_TO_RIGHT : LayoutOrientation.TOP_TO_BOTTOM);
+    }
+    public static void setLayoutOrientationRight(HierarchicLayouter layouter, boolean horizontal) {
+        layouter.setLayoutOrientation(horizontal ? LayoutOrientation.RIGHT_TO_LEFT : LayoutOrientation.TOP_TO_BOTTOM);
     }
 }

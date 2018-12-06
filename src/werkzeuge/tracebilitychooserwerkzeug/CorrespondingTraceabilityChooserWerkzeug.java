@@ -37,11 +37,11 @@ public class CorrespondingTraceabilityChooserWerkzeug{
 
     private List<TraceabilityLink> getTraceabilityLinks(final ClassNode classNode)
     {
-        if(classNode.getType() == ClassLanguageType.Java)
+        if(classNode.getClassLanguageType() == ClassLanguageType.Java)
         {
             return traceabilityClassNodeService.getSwiftTraceabilityLinks(_classNode);
         }
-        if(classNode.getType() == ClassLanguageType.Swift)
+        if(classNode.getClassLanguageType() == ClassLanguageType.Swift)
         {
             return traceabilityClassNodeService.getJavaTraceabilityLinks(classNode);
         }
@@ -59,11 +59,11 @@ public class CorrespondingTraceabilityChooserWerkzeug{
             public void mouseClicked(MouseEvent e) {
                 TraceabilityLink link = _ui.getTracebilityTableModel().getTraceabilityLink(_ui.getJBTable().getSelectedRow());
                 link.setSource(new TypePointer());
-                if(_classNode.getType() == ClassLanguageType.Java)
+                if(_classNode.getClassLanguageType() == ClassLanguageType.Java)
                 {
                     _propagationProcessService.addTraceabilityLinkJavaSource(_classNode, link);
                 }
-                if(_classNode.getType() == ClassLanguageType.Swift)
+                if(_classNode.getClassLanguageType() == ClassLanguageType.Swift)
                 {
                     _propagationProcessService.addTraceabilityLinkSwiftSource(_classNode, link);
                 }

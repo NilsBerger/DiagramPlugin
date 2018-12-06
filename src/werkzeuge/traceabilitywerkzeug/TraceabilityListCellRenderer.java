@@ -4,7 +4,6 @@ import colorspectrum.ColorUtils;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.util.ui.UIUtil;
-import materials.ClassDependency;
 import materials.ClassNode;
 import materials.TraceLinkClassDependency;
 import valueobjects.ClassLanguageType;
@@ -50,7 +49,7 @@ public class TraceabilityListCellRenderer extends DefaultListCellRenderer {
     {
         _traceLinkJLabel = new TraceLinkJLabel(tracelinkValue);
         String text = "";
-        if(classNode.getType() == ClassLanguageType.Java)
+        if(classNode.getClassLanguageType() == ClassLanguageType.Java)
         {
             panel.add(new JBLabel(classNode.getSimpleName()), BorderLayout.WEST);
             panel.add(new JBLabel(otherclassNode.getSimpleName()), BorderLayout.EAST);

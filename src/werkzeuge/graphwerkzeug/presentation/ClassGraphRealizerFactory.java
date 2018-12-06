@@ -31,7 +31,7 @@ public class ClassGraphRealizerFactory {
 
     public static void setNodeColor(final Graph2DNodeRealizer nodeRealizer, ClassNode classGraphNode)
     {
-        //ClassGraphNode.Type type = classGraphNode.getType();
+        //ClassGraphNode.Type type = classGraphNode.getClassLanguageType();
         Color color = Color.WHITE;
 //        switch(type)
 //        {
@@ -46,9 +46,7 @@ public class ClassGraphRealizerFactory {
     }
 
     private static void calculateAndSetNodeSize(NodeRealizer nodeRealizer, NodeLabel nameLabel) {
-        double width = 5 +  nameLabel.getWidth() + 5;
-        double height = 3 + nameLabel.getHeight() + 3;
-        nodeRealizer.setSize(width, height);
+
     }
 
     private static NodeLabel addNodeNameLabel(String nameText, NodeRealizer nodeRealizer) {

@@ -236,6 +236,12 @@ public class ChangePropagationProcess{
         update(javaClassNode, Marking.NEXT);
     }
 
+    public void updateDependency(ClassDependency classDependency, RelationshipType relationshipType)
+    {
+        notifyGraphChangeListener();
+        _model.updateDependency(classDependency, relationshipType);
+    }
+
     public void addGraphChangeListener(final GraphChangeListener observer)
     {
         assert observer != null : "Precondition violated: != null";

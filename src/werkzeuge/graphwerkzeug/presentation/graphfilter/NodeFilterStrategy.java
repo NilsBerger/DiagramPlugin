@@ -9,7 +9,7 @@ import valueobjects.ClassLanguageType;
 public final class NodeFilterStrategy implements FilterStrategy{
     @Override
     public boolean filterNode(ClassNode classNode) {
-        if(classNode.getType() == ClassLanguageType.Java && !classNode.getFullClassName().contains("de.unihamburg"))
+        if(classNode.getClassLanguageType() == ClassLanguageType.Java && !classNode.getFullClassName().contains("de.unihamburg"))
         {
            return true;
         }

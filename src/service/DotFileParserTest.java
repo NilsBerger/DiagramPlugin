@@ -27,8 +27,8 @@ public class DotFileParserTest
 
         for(ClassDependency dependency : dependencies)
         {
-            assertThat(dependency.getDependentClass().getType(), is(ClassLanguageType.Java));
-            assertThat(dependency.getIndependentClass().getType(), is(ClassLanguageType.Java));
+            assertThat(dependency.getDependentClass().getClassLanguageType(), is(ClassLanguageType.Java));
+            assertThat(dependency.getIndependentClass().getClassLanguageType(), is(ClassLanguageType.Java));
         }
     }
 
@@ -43,8 +43,8 @@ public class DotFileParserTest
 
         for(ClassDependency dependency : dependencies)
         {
-            assertThat(dependency.getDependentClass().getType(), is(ClassLanguageType.Swift));
-            assertThat(dependency.getIndependentClass().getType(), is(ClassLanguageType.Swift));
+            assertThat(dependency.getDependentClass().getClassLanguageType(), is(ClassLanguageType.Swift));
+            assertThat(dependency.getIndependentClass().getClassLanguageType(), is(ClassLanguageType.Swift));
         }
     }
 }

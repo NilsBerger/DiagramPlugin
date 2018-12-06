@@ -3,18 +3,18 @@ package werkzeuge.graphwerkzeug.presentation;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.graph.GraphManager;
+import com.intellij.openapi.graph.base.Graph;
 import com.intellij.openapi.graph.builder.GraphBuilder;
 import com.intellij.openapi.graph.builder.GraphBuilderFactory;
+import com.intellij.openapi.graph.layout.LayoutGraph;
 import com.intellij.openapi.graph.view.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.graph.base.Edge;
 import com.intellij.openapi.graph.base.Node;
-import com.intellij.util.containers.ContainerUtil;
-import java.awt.geom.Point2D;
 
-import javafx.collections.SetChangeListener;
 import materials.ClassDependency;
 import materials.ClassNode;
+import org.jetbrains.annotations.Nullable;
 import service.ChangePropagationProcess;
 import service.GraphChangeListener;
 import valueobjects.ClassLanguageType;
@@ -23,104 +23,43 @@ import werkzeuge.graphwerkzeug.util.ClassGraphLogger;
 
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 public class ClassGraph implements Disposable, GraphChangeListener {
 
     private GraphBuilder<ClassNode, ClassDependency> _graphBuilder;
     private static final ChangePropagationProcess _propagationProcessService = ChangePropagationProcess.getInstance();
+    //private final TraceabilityLayouter _layouter;
+    private ClassGraphDataModel _dataModel;
 
-    private GeneralClassGraphDataModel _dataModel;
 
-
-    public ClassGraph(Project project, Graph2D graph, Graph2DView view, GeneralClassGraphDataModel dataModel, ClassGraphPresentationModel presentationModel) {
+    public ClassGraph(Project project, Graph2D graph, Graph2DView view, ClassGraphDataModel dataModel, ClassGraphPresentationModel presentationModel) {
         _graphBuilder = GraphBuilderFactory.getInstance(project).createGraphBuilder(graph, view, dataModel, presentationModel);
+
+
         _dataModel = dataModel;
+        //_layouter = layouter;
         presentationModel.setClassGraph(this);
         _propagationProcessService.addGraphChangeListener(this);
         view.setGraph2D(graph);
-        reactOnChange();
-
+        //_graphBuilder.getGraphPresentationModel().getSettings().setCurrentLayouter(layouter);
+        //_layouter.setClassGraph(this);
     }
 
-    public static ClassGraph createGeneralGraph(Project project)
+
+    public static ClassGraph createGraph(Project project, @Nullable ClassLanguageType classLanguageType)
     {
         Graph2D graph = GraphManager.getGraphManager().createGraph2D();
         Graph2DView view = GraphManager.getGraphManager().createGraph2DView();
-        GeneralClassGraphDataModel dataModel = new GeneralClassGraphDataModel();
+
+        ClassGraphDataModel dataModel = new ClassGraphDataModel(classLanguageType);
         ClassGraphPresentationModel presentationModel = new ClassGraphPresentationModel(graph);
+        //TraceabilityLayouter layouter = new TraceabilityLayouter();
+        //LayoutGraph layoutGraph = GraphManager.getGraphManager().createDefaultLayoutGraph();
+
+
+        //layouter.setLayoutGraph(layoutGraph);
 
         return new ClassGraph(project, graph, view,  dataModel, presentationModel);
-    }
-    public static ClassGraph createSwiftGraph(Project project)
-    {
-        Graph2D graph = GraphManager.getGraphManager().createGraph2D();
-        Graph2DView view = GraphManager.getGraphManager().createGraph2DView();
-        GeneralClassGraphDataModel dataModel = new LanguageTypeClassGraphDataModel(ClassLanguageType.Swift);
-        ClassGraphPresentationModel presentationModel = new ClassGraphPresentationModel(graph);
-
-        return new ClassGraph(project, graph, view,  dataModel, presentationModel);
-    }
-    public static ClassGraph createJavaGraph(Project project)
-    {
-        Graph2D graph = GraphManager.getGraphManager().createGraph2D();
-        Graph2DView view = GraphManager.getGraphManager().createGraph2DView();
-        GeneralClassGraphDataModel dataModel = new LanguageTypeClassGraphDataModel(ClassLanguageType.Java);
-        ClassGraphPresentationModel presentationModel = new ClassGraphPresentationModel(graph);
-
-        return new ClassGraph(project, graph, view,  dataModel, presentationModel);
-    }
-
-    private void reactOnChange()
-    {
-        _propagationProcessService.getAffectedClassesByChange().addListener(new SetChangeListener<ClassNode>() {
-            @Override
-            public void onChanged(Change<? extends ClassNode> change) {
-
-                Collection<ClassDependency> edges = _dataModel.getEdges();
-                for(ClassDependency dependency: edges) {
-                }
-            }
-        });
-    }
-
-
-    public void zoomToNode(Node node)
-    {
-         final Graph2DView view = getView();
-         double x = view.getGraph2D().getX(node);
-         double y = view.getGraph2D().getY(node);
-        getView().focusView(1.0, new Point2D.Double(x,y),true);
-    }
-    private void selectedNodes()
-    {
-        final List<ClassNode> toSelect = new ArrayList<>(Arrays.asList(new ClassNode("List", ClassLanguageType.Java)));
-        final Graph2D graph = _graphBuilder.getGraph();
-        for(final ClassNode node : toSelect)
-        {
-            Node graphNode = _graphBuilder.getNode(node);
-            graph.setSelected(graphNode, true);
-        }
-    }
-
-    public List<ClassNode> getSelectedClassNodes()
-    {
-        final List<ClassNode> selected = new ArrayList<>();
-        final Graph2D graph = _graphBuilder.getGraph();
-        for(final Node node : graph.getNodeArray())
-        {
-            if(graph.isSelected(node)){
-                final ClassNode nodeObject = _graphBuilder.getNodeObject(node);
-                if(nodeObject != null)
-                {
-                    ContainerUtil.addIfNotNull(nodeObject, selected);
-                }
-            }
-        }
-        return selected;
     }
 
     public Project getProject()
@@ -138,9 +77,14 @@ public class ClassGraph implements Disposable, GraphChangeListener {
         return _graphBuilder.getView();
     }
 
-    public GeneralClassGraphDataModel getDataModel()
+    public TraceabilityLayouter getTraceabilityLayouter()
     {
-        return (GeneralClassGraphDataModel) _graphBuilder.getGraphDataModel();
+        return null;
+    }
+
+    public ClassGraphDataModel getDataModel()
+    {
+        return (ClassGraphDataModel) _graphBuilder.getGraphDataModel();
     }
 
     public  ClassGraphPresentationModel getPresentationMode()
@@ -164,9 +108,9 @@ public class ClassGraph implements Disposable, GraphChangeListener {
         getGraph().clear();
     }
 
-    public ClassNode getClassGraphNode(Node node)
+    public ClassNode getClassNode(Node node)
     {
-        return  _graphBuilder.getNodeObject(node);
+        return _graphBuilder.getNodeObject(node);
     }
     public ClassDependency getClassGraphEdge(Edge edge)
     {
@@ -235,7 +179,7 @@ public class ClassGraph implements Disposable, GraphChangeListener {
     @Override
     public void updateView() {
         updateGraph();
-        //updateGraphView();
+        updateGraphView();
         fitContent();
     }
 }
