@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package service;
+package service.functional;
 
 import materials.ClassNode;
+import service.functional.ChangeAndFixStrategyIF;
 
 import java.util.Set;
 
-public class StrictChangeAndFixStrategy implements ChangeAndFixStrategyIF{
-    private int _allowedSize = 0;
+public class RandomChangeAndFixStrategy implements ChangeAndFixStrategyIF {
     @Override
     public boolean accept(Set<ClassNode> affectedClasses) {
-        return affectedClasses.size() == _allowedSize;
+        return true;
     }
 }

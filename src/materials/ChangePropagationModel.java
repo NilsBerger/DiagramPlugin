@@ -5,6 +5,9 @@ import valueobjects.RelationshipType;
 
 import java.util.*;
 
+/**
+ * Def
+ */
 public class ChangePropagationModel {
 
     private Set<ClassNode> _nodes;
@@ -211,19 +214,6 @@ public class ChangePropagationModel {
         addAll(newInconsistencies);
     }
 
-    public Set<ClassDependency> getInconsistencies()
-    {
-        Set<ClassDependency> inconsistencies = new HashSet<>();
-        for(ClassDependency dependency : _edges)
-        {
-            if(dependency.getRelationshipType() == RelationshipType.InconsistentRelationship)
-            {
-                inconsistencies.add(dependency);
-            }
-        }
-        return inconsistencies;
-    }
-
     private boolean inconcistencyBetweenNodes(ClassNode a, ClassNode b)
     {
         assert _nodesEdges.containsKey(a) : "ClassNode stored as a key";
@@ -251,6 +241,19 @@ public class ChangePropagationModel {
                 dependency.setRelationshipType(relationshipType);
             }
         }
+    }
+
+    public Set<ClassDependency> getInconsistencies()
+    {
+        Set<ClassDependency> inconsistencies = new HashSet<>();
+        for(ClassDependency dependency : _edges)
+        {
+            if(dependency.getRelationshipType() == RelationshipType.InconsistentRelationship)
+            {
+                inconsistencies.add(dependency);
+            }
+        }
+        return inconsistencies;
     }
 
     public Set<ClassDependency> getDependencies()

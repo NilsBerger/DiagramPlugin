@@ -3,7 +3,7 @@ package werkzeuge.traceabilitywerkzeug;
 import com.intellij.ui.components.JBList;
 import javafx.collections.SetChangeListener;
 import materials.ClassDependency;
-import service.ChangePropagationProcess;
+import service.functional.ChangePropagationProcess;
 
 import javax.swing.*;
 

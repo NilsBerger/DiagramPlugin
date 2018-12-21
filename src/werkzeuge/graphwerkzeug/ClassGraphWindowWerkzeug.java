@@ -67,9 +67,9 @@ public class ClassGraphWindowWerkzeug implements ProjectComponent {
 
         toolWindowManager.registerToolWindow(TOOL_WINDOW_ID, false, ToolWindowAnchor.BOTTOM);
 
-        _generalClassGraph = ClassGraph.createGraph(_project, null);
-        _javaClassGraph = ClassGraph.createGraph(_project, ClassLanguageType.Java);
-        _swiftClassGraph = ClassGraph.createGraph(_project, ClassLanguageType.Swift);
+        _generalClassGraph = ClassGraph.createGraph(_project, null, "General");
+        _javaClassGraph = ClassGraph.createGraph(_project, ClassLanguageType.Java, "Java");
+        _swiftClassGraph = ClassGraph.createGraph(_project, ClassLanguageType.Swift, "Swift");
 
         _project.putUserData(GENERAL_GRAPH_KEY, _generalClassGraph);
         _project.putUserData(JAVA_GRAPH_KEY, _javaClassGraph);
@@ -80,7 +80,7 @@ public class ClassGraphWindowWerkzeug implements ProjectComponent {
         _swiftClassGraph.initialize();
 
         ToolWindow toolWindow = toolWindowManager.getToolWindow(ClassGraphWindowWerkzeug.TOOL_WINDOW_ID);
-        _ui = new ClassGraphWindowWerkzeugUI(_generalClassGraph,_javaClassGraph, _swiftClassGraph,  _werkzeug);
+        _ui = new ClassGraphWindowWerkzeugUI(_generalClassGraph, _javaClassGraph, _swiftClassGraph,  _werkzeug);
         Content content = toolWindow.getContentManager().getFactory().createContent(_ui.getComponent(), "", false);
         toolWindow.getContentManager().addContent(content);
         toolWindow.activate(null);
@@ -117,8 +117,8 @@ public class ClassGraphWindowWerkzeug implements ProjectComponent {
                 }
             }
         });
-        registerFocusOnNode(_werkzeug.getJavaContextWerkzeuf());
-        registerFocusOnNode(_werkzeug.getSwiftContext());
+        registerFocusOnNode(_werkzeug.getJavaContextWerkzeug());
+        registerFocusOnNode(_werkzeug.getSwiftContextWerkzeug());
 
     }
 

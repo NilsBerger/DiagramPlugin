@@ -16,7 +16,7 @@
 
 package werkzeuge.graphselectionwerkzeug;
 
-import service.DependencyPersistenceAutomaton;
+import service.technical.DependencyPersistenceAutomaton;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

@@ -1,7 +1,7 @@
 package materials;
 
 import org.junit.Test;
-import service.ChangePropagationProcessTest;
+import service.functional.ChangePropagationProcessTest;
 import valueobjects.ClassLanguageType;
 import valueobjects.RelationshipType;
 
@@ -12,6 +12,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
+
 
 public class ChangePropagationModelTest {
 

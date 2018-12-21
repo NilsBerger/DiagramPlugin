@@ -17,6 +17,7 @@ public class ClassNode {
     private final ClassLanguageType _classLanguageType;
     private ClassNodeType _classNodeType = ClassNodeType.CLASS;
     private String _sourceFilePath = "";
+    private boolean _initialClass;
 
 
 
@@ -84,6 +85,15 @@ public class ClassNode {
     }
 
     /**
+     * To set if a ClassNode was found through the Concept Location
+     * @param isInitalClass
+     */
+    public void setAsInitialClass(final boolean isInitalClass)
+    {
+        _initialClass = isInitalClass;
+    }
+
+    /**
      * Returns the Name of the ClassNode, that
      * Note: The name can
      */
@@ -120,6 +130,14 @@ public class ClassNode {
     public ClassLanguageType getClassLanguageType()
     {
         return _classLanguageType;
+    }
+
+    /**
+     * Return if a ClassNode was found through the concept location
+     * @return True if initial
+     */
+    public boolean isInitialClass(){
+        return _initialClass;
     }
 
     /**

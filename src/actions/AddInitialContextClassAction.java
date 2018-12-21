@@ -6,9 +6,9 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import materials.ClassDependency;
 import materials.ClassNode;
-import service.ChangePropagationProcess;
-import service.DotFileParser;
-import service.RandomChangeAndFixStrategy;
+import service.functional.ChangePropagationProcess;
+import service.technical.DotFileParser;
+import service.functional.RandomChangeAndFixStrategy;
 import valueobjects.ClassLanguageType;
 
 import java.util.HashSet;

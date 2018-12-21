@@ -4,6 +4,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
+import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
@@ -11,6 +12,7 @@ import com.intellij.ui.table.JBTable;
 import de.unihamburg.masterprojekt2016.traceability.TraceabilityLink;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
@@ -20,6 +22,7 @@ public class TracebilityChooserWerkzeugUI {
 
     private JBPopup _popup;
     private JBPanel _panel;
+    private JBLabel _titelLabel;
     private JBTable _tracebilityTable;
     private TraceabilityTableModel _tableModel;
 
@@ -38,6 +41,10 @@ public class TracebilityChooserWerkzeugUI {
         initColumnWidths(_tracebilityTable);
         _panel.add(new JBScrollPane(_tracebilityTable), BorderLayout.CENTER);
 
+        _titelLabel = new JBLabel();
+        _titelLabel.setHorizontalAlignment(SwingUtilities.CENTER);
+        _panel.add(_titelLabel, BorderLayout.NORTH);
+
         _selectButton = new JButton();
         _showCorrespondingButton = new JButton();
         _panel.add(erstelleBottomPanel(), BorderLayout.SOUTH);
@@ -50,10 +57,7 @@ public class TracebilityChooserWerkzeugUI {
         _popup.pack(true, true);
     }
 
-    public void show() {
-        _popup.showInFocusCenter();
-        _panel.grabFocus();
-    }
+
 
     public void setContent(final List<TraceabilityLink> traceabilityLinkList) {
         _tableModel.setContent(traceabilityLinkList);
@@ -77,6 +81,15 @@ public class TracebilityChooserWerkzeugUI {
         bottomPanel.add(_selectButton);
 
         return bottomPanel;
+    }
+
+    public void show() {
+        _popup.showInFocusCenter();
+        _panel.grabFocus();
+    }
+    public void hide()
+    {
+        _popup.setUiVisible(false);
     }
 
     public JButton getSelectButton() {

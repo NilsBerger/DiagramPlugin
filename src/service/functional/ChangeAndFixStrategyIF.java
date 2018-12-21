@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package service;
+package service.functional;
 
 import materials.ClassNode;
 
 import java.util.Set;
 
-public class RandomChangeAndFixStrategy implements ChangeAndFixStrategyIF{
-    @Override
-    public boolean accept(Set<ClassNode> affectedClasses) {
-        return true;
-    }
+public interface ChangeAndFixStrategyIF {
+    public boolean accept(Set<ClassNode> affectedClasses);
 }

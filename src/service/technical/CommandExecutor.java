@@ -1,4 +1,4 @@
-package service;
+package service.technical;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
@@ -10,6 +10,7 @@ public class CommandExecutor {
 
     public String executeCommand(final String command)
     {
+        System.out.println(command);
         StringBuffer output = new StringBuffer();
 
         Process process;
@@ -22,7 +23,7 @@ public class CommandExecutor {
             String line = "";
             while ((line = reader.readLine())!= null) {
                 output.append(line + "\n");
-                System.out.println(line + "\n");
+                //System.out.println(line + "\n");
             }
         }catch (Exception ex)
         {

@@ -18,8 +18,6 @@ import com.intellij.ui.components.JBTabbedPane;
 import org.jetbrains.annotations.NotNull;
 import werkzeuge.ToolWindowWerkzeug;
 import werkzeuge.graphwerkzeug.presentation.ClassGraph;
-import werkzeuge.graphwerkzeug.presentation.TraceabilityLayouter;
-import werkzeuge.graphwerkzeug.presentation.TraceabilityLayouter2;
 import werkzeuge.graphwerkzeug.presentation.TraceabilityLayouterAction;
 import werkzeuge.graphwerkzeug.presentation.toolbaractions.ImagePrinterAction;
 import werkzeuge.graphwerkzeug.presentation.toolbaractions.NodeFilterAction;
@@ -37,9 +35,9 @@ public class ClassGraphWindowWerkzeugUI {
 
     private final static Icon _ICON = AllIcons.Nodes.Artifact;
     private final JComponent _myComponent;
-    private ClassGraph _generalClassGraph;
-    private ClassGraph _javaClassGraph;
-    private ClassGraph _swiftClassGraph;
+    private final ClassGraph _generalClassGraph;
+    private final ClassGraph _javaClassGraph;
+    private final ClassGraph _swiftClassGraph;
 
     private JTabbedPane _tabbedPane;
 
@@ -59,9 +57,9 @@ public class ClassGraphWindowWerkzeugUI {
 
         _myComponent = new JBPanel(new BorderLayout());
 
-        DefaultActionGroup generalActions = getToolbarActionGroup(_generalClassGraph);
-        DefaultActionGroup javaActions = getToolbarActionGroup(_javaClassGraph);
-        DefaultActionGroup swiftActions = getToolbarActionGroup(_swiftClassGraph);
+        final DefaultActionGroup generalActions = getToolbarActionGroup(_generalClassGraph);
+        final DefaultActionGroup javaActions = getToolbarActionGroup(_javaClassGraph);
+        final DefaultActionGroup swiftActions = getToolbarActionGroup(_swiftClassGraph);
         ActionToolbar generalActionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, generalActions, true);
         ActionToolbar javaActionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, javaActions, true);
         ActionToolbar swiftActionToolbar = ActionManager.getInstance().createActionToolbar(ActionPlaces.UNKNOWN, swiftActions, true);
@@ -111,16 +109,13 @@ public class ClassGraphWindowWerkzeugUI {
         actions.add(new SnapToGridAction(classgraph.getGraph()));
         actions.addSeparator();
 
-        actions.add(new
-                ZoomInAction(classgraph.getGraph()));
+        actions.add(new ZoomInAction(classgraph.getGraph()));
         actions.add(new ZoomOutAction(classgraph.getGraph()));
 
         actions.add(new ActualZoomAction(classgraph.getGraph()));
 
         actions.add(new FitContentAction(classgraph.getGraph()));
         actions.addSeparator();
-
-        //actions.add(new ApplyCurrentLayoutAction(classgraph.getGraph()));
         actions.add(new TraceabilityLayouterAction(classgraph));
         actions.addSeparator();
 

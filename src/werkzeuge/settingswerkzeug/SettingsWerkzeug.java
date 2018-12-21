@@ -25,7 +25,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
-import service.ProjectDependencyExtrator;
+import service.technical.ProjectDependencyExtractor;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -150,8 +150,8 @@ public class SettingsWerkzeug implements Configurable {
                     final String swift_filepath = properties.getProperty(PropertyName.SWIFT_WORKSPACE);
                     final String swift_scheme_folder = properties.getProperty(PropertyName.Swift_SCHEME_FOLDER);
 
-                    ProjectDependencyExtrator.extractDependenciesFromSwiftProject(swift_filepath, swift_scheme_folder);
-                    ProjectDependencyExtrator.extractDependenciesFromJavaProject(android_filepath);
+                    ProjectDependencyExtractor.extractDependenciesFromSwiftProject(swift_filepath, swift_scheme_folder);
+                    ProjectDependencyExtractor.extractDependenciesFromJavaProject(android_filepath);
 
                 } catch (IOException e1) {
                     e1.printStackTrace();

@@ -6,7 +6,7 @@ import com.intellij.openapi.graph.view.PopupMode;
 import com.intellij.openapi.ui.JBPopupMenu;
 import materials.ClassDependency;
 import materials.ClassNode;
-import service.ChangePropagationProcess;
+import service.functional.ChangePropagationProcess;
 import valueobjects.Marking;
 import valueobjects.RelationshipType;
 import werkzeuge.graphwerkzeug.presentation.graphfilter.NodeFilterStrategy;
@@ -15,7 +15,6 @@ import werkzeuge.graphwerkzeug.presentation.ClassGraph;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 
 /**
  * Creates a PopupMenu on a selected ClassNode in a diagram.
@@ -49,16 +48,13 @@ public class ClassGraphPopupMenu extends PopupMode {
     @Override
     public JPopupMenu getEdgePopup(Edge edge) {
         final ClassDependency classGraphEdge = _classGraph.getClassGraphEdge(edge);
-        if(classGraphEdge != null && classGraphEdge.getRelationshipType()!= RelationshipType.Traceability_Association)
-        {
-            return null;
-        }
+
         JBPopupMenu menu = new JBPopupMenu();
         menu.add(new DependencyAction("Implements", edge, RelationshipType.Implements));
         menu.add(new DependencyAction("Extends", edge, RelationshipType.Extends));
         menu.add(new DependencyAction("Dependency", edge, RelationshipType.Dependency));
         menu.setVisible(true);
-        menu.show();
+        menu.show(true);
 
         return menu;
     }

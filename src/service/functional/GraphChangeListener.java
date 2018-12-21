@@ -14,12 +14,8 @@
  * limitations under the License.
  */
 
-package service;
+package service.functional;
 
-import materials.ClassNode;
-
-import java.util.Set;
-
-public interface ChangeAndFixStrategyIF {
-    public boolean accept(Set<ClassNode> affectedClasses);
+public interface GraphChangeListener {
+    void updateView();
 }

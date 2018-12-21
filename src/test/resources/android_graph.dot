@@ -21,4 +21,9 @@ digraph "android_workspace.jar" {
    "de.unihamburg.hdw.model.events.EventFeed"         -> "java.util.Collection";
    "de.unihamburg.hdw.model.events.EventFeed"         -> "java.util.Date";
    "de.unihamburg.hdw.model.events.EventFeed"         -> "java.util.List";
+   "de.unihamburg.hdw.model.shared.constants.JSONKeys" -> "com.android.tools.ir.runtime.InstantReloadException (not found)";
+   "de.unihamburg.hdw.model.shared.constants.JSONKeys" -> "de.unihamburg.hdw.model.shared.constants.JSONKeys$Event (android_workspace.jar)";
+   "de.unihamburg.hdw.model.shared.constants.JSONKeys" -> "de.unihamburg.hdw.model.shared.constants.JSONKeys$Image (android_workspace.jar)";
+   "de.unihamburg.hdw.model.shared.constants.JSONKeys" -> "de.unihamburg.hdw.model.shared.constants.JSONKeys$Institute (android_workspace.jar)";
+   "de.unihamburg.hdw.model.shared.constants.JSONKeys" -> "de.unihamburg.hdw.model.shared.constants.JSONKeys$News (android_workspace.jar)";
 }

@@ -50,20 +50,17 @@
   </project-components>
 
   <actions>
-    <!--<group id="test" text="Test" popup="false">-->
-      <!--<add-to-group group-id="AnalyzeMenu" anchor="last"></add-to-group>-->
+    <group id="test" text="Test" popup="false">
+      <add-to-group group-id="AnalyzeMenu" anchor="last"></add-to-group>
 
-      <!--<separator></separator>-->
+      <separator></separator>
 
-      <!--<action id="update" class="actions.UpdateDependencyModelAction"-->
-              <!--text="Update Dependency Models"-->
-              <!--description="Update the dependency models by analyzing the workspaces">-->
-        <!--<keyboard-shortcut keymap="$default" first-keystroke="ctrl alt D"/>-->
-      <!--</action>-->
-
-
-
-    <!--</group>-->
+      <action id="update" class="actions.UpdateDependencyModelAction"
+              text="Update Dependency Models"
+              description="Update the dependency models by analyzing the workspaces">
+        <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt D"/>
+      </action>
+    </group>
 
     <action id="Add Class"
             class="actions.AddInitialContextClassAction"
@@ -79,9 +76,6 @@
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
-    <!--<applicationConfigurable instance="werkzeuge.settingswerkzeug.SettingsWerkzeugWerkzeug" id="Impact-Traceability_settings" displayName="Impact_Traceability" />-->
-    <!--&lt;!&ndash;<diagram.Provider implementation="com.intellij.examples.FileDiagramProvider"/>&ndash;&gt;-->
-      <!--<diagram.Provider implementation="actions.ClassDiagramProvider"/>-->
-    <!--<toolWindow id="Class Dependency Graph" factoryClass="werkzeuge.ToolWindowWerkzeugFactory" anchor="bottom"/>-->
+    <applicationConfigurable instance="werkzeuge.settingswerkzeug.SettingsWerkzeug" id="Impact-Traceability_settings" displayName="Impact_Traceability"/>
   </extensions>
 </idea-plugin>

@@ -1,4 +1,4 @@
-package service;
+package service.functional;
 
 import de.unihamburg.masterprojekt2016.traceability.TraceabilityLink;
 import de.unihamburg.masterprojekt2016.traceability.TypePointer;
@@ -10,8 +10,6 @@ import valueobjects.ClassLanguageType;
 import valueobjects.Marking;
 import valueobjects.RelationshipType;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -28,7 +26,7 @@ public class ChangePropagationProcess{
     private ChangeAndFixStrategyIF _strategy;
     private ChangePropagationModel _model;
     private final ObservableSet<ClassDependency> _affectedEdges  = FXCollections.observableSet(new HashSet<>());
-    private final ObservableSet<ClassNode> _initialChangedClasse = FXCollections.observableSet(new HashSet<>());
+    //private final ObservableSet<ClassNode> _initialChangedClasse = FXCollections.observableSet(new HashSet<>());
     private final ObservableSet<ClassNode> _affectedNodes = FXCollections.observableSet(new HashSet<>());
     private final ObservableMap<ClassNode, Set<ClassDependency>> _affectedNodeEdges = FXCollections.observableHashMap();
     private final ObservableSet<TraceLinkClassDependency> _traceabilityLinks = FXCollections.observableSet(new HashSet<>());
@@ -51,7 +49,6 @@ public class ChangePropagationProcess{
         //Model clear
         _affectedNodes.clear();
         _affectedEdges.clear();
-        _initialChangedClasse.clear();
     }
 
     private void init(ChangeAndFixStrategyIF strategy) {
@@ -66,7 +63,7 @@ public class ChangePropagationProcess{
             return false;
         }
         final ClassNode changedClass = getClassNodeMaterial(classNode);
-        _initialChangedClasse.add(classNode);
+        changedClass.setAsInitialClass(true);
         update(changedClass, Marking.CHANGED);
         return true;
     }
@@ -293,8 +290,6 @@ public class ChangePropagationProcess{
     public ObservableSet<ClassNode> getAffectedClassesByChange() {
         return _affectedNodes;
     }
-
-    public ObservableSet<ClassNode> getInitalChangedClasses(){return _initialChangedClasse;}
 
     public ObservableMap<ClassNode, Set<ClassDependency>> getAffectedNodeEdges(){return _affectedNodeEdges;}
 

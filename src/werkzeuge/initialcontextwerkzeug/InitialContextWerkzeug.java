@@ -1,52 +1,40 @@
 package werkzeuge.initialcontextwerkzeug;
 
-import service.ChangePropagationProcess;
+import service.functional.ChangePropagationProcess;
 import com.intellij.openapi.project.Project;
 import materials.ClassNode;
 import javafx.collections.SetChangeListener;
+import service.functional.GraphChangeListener;
 
 import javax.swing.*;
 
-public class InitialContextWerkzeug {
+public class InitialContextWerkzeug{
 
     private InitialContextWerkzeugUI _ui;
     private ChangePropagationProcess _cpProcess;
-    private Project _project;
 
     public InitialContextWerkzeug()
     {
         _ui = new InitialContextWerkzeugUI();
         _ui.setLabelText("Initial Context");
-        //_ui.getPanel().add(createAndRegisterToolbar());
         _cpProcess = ChangePropagationProcess.getInstance();
         registerUIActions();
     }
 
     private void registerUIActions() {
-       _cpProcess.getInitalChangedClasses().addListener(new SetChangeListener<ClassNode>() {
+       _cpProcess.getAffectedClassesByChange().addListener(new SetChangeListener<ClassNode>() {
            @Override
            public void onChanged(Change<? extends ClassNode> change) {
                if(change.wasAdded())
                {
-                   addEntry(change.getElementAdded());
+                   ClassNode classNode = change.getElementAdded();
+                   if(classNode != null && classNode.isInitialClass()){
+                       addEntry(change.getElementAdded());
+                   }
                }
-               if(change.wasRemoved())
-               {
-                   //addEntry(change.getElementRemoved());
-               }
-
            }
        });
     }
-
-    //// {
-//        return _ui.getToolbarDecorator().setAddAction(new AnActionButtonRunnable() {
-//            @Override
-//            public void run(AnActionButton anActionButton) {
-//                _cpProcess.change(new SwiftClassNode("C"));
-//            }
-//        }).disableUpAction().disableDownAction().createPanel();
-   // }
 
     private void addEntry(final ClassNode initialClassNode)
     {
@@ -62,8 +50,4 @@ public class InitialContextWerkzeug {
         return _ui.getPanel();
     }
 
-    public void setProject(Project project) {
-
-        _project = project;
-    }
 }

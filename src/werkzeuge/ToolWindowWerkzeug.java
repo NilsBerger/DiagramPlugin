@@ -1,7 +1,7 @@
 package werkzeuge;
 
 import com.intellij.ui.components.JBPanel;
-import service.ChangePropagationProcess;
+import service.functional.ChangePropagationProcess;
 import valueobjects.ClassLanguageType;
 import werkzeuge.finalcontextwerkzeug.FinalContextWerkzeug;
 import werkzeuge.graphselectionwerkzeug.GraphSelectionWerkzeug;
@@ -52,11 +52,11 @@ public class ToolWindowWerkzeug {
         return _traceabilityWerkzeug;
     }
 
-    public FinalContextWerkzeug getJavaContextWerkzeuf()
+    public FinalContextWerkzeug getJavaContextWerkzeug()
     {
         return _javaFinalContextWerkzeug;
     }
-    public FinalContextWerkzeug getSwiftContext()
+    public FinalContextWerkzeug getSwiftContextWerkzeug()
     {
         return _swiftFinalContextWerkzeug;
     }

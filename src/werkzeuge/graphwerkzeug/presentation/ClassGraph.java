@@ -3,10 +3,8 @@ package werkzeuge.graphwerkzeug.presentation;
 
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.graph.GraphManager;
-import com.intellij.openapi.graph.base.Graph;
 import com.intellij.openapi.graph.builder.GraphBuilder;
 import com.intellij.openapi.graph.builder.GraphBuilderFactory;
-import com.intellij.openapi.graph.layout.LayoutGraph;
 import com.intellij.openapi.graph.view.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.graph.base.Edge;
@@ -15,8 +13,8 @@ import com.intellij.openapi.graph.base.Node;
 import materials.ClassDependency;
 import materials.ClassNode;
 import org.jetbrains.annotations.Nullable;
-import service.ChangePropagationProcess;
-import service.GraphChangeListener;
+import service.functional.ChangePropagationProcess;
+import service.functional.GraphChangeListener;
 import valueobjects.ClassLanguageType;
 import werkzeuge.graphwerkzeug.model.*;
 import werkzeuge.graphwerkzeug.util.ClassGraphLogger;
@@ -26,40 +24,31 @@ import javax.swing.*;
 
 public class ClassGraph implements Disposable, GraphChangeListener {
 
-    private GraphBuilder<ClassNode, ClassDependency> _graphBuilder;
+    private final GraphBuilder<ClassNode, ClassDependency> _graphBuilder;
     private static final ChangePropagationProcess _propagationProcessService = ChangePropagationProcess.getInstance();
-    //private final TraceabilityLayouter _layouter;
-    private ClassGraphDataModel _dataModel;
+    public final String _classGraphName;
 
 
-    public ClassGraph(Project project, Graph2D graph, Graph2DView view, ClassGraphDataModel dataModel, ClassGraphPresentationModel presentationModel) {
+
+   private ClassGraph(final Project project, final Graph2D graph, final Graph2DView view, final ClassGraphDataModel dataModel, final String name) {
+        final ClassGraphPresentationModel presentationModel = new ClassGraphPresentationModel(graph);
         _graphBuilder = GraphBuilderFactory.getInstance(project).createGraphBuilder(graph, view, dataModel, presentationModel);
-
-
-        _dataModel = dataModel;
-        //_layouter = layouter;
         presentationModel.setClassGraph(this);
         _propagationProcessService.addGraphChangeListener(this);
-        view.setGraph2D(graph);
-        //_graphBuilder.getGraphPresentationModel().getSettings().setCurrentLayouter(layouter);
-        //_layouter.setClassGraph(this);
+        _classGraphName = name;
     }
 
 
-    public static ClassGraph createGraph(Project project, @Nullable ClassLanguageType classLanguageType)
+    public static ClassGraph createGraph(Project project, @Nullable ClassLanguageType classLanguageType, String name)
     {
-        Graph2D graph = GraphManager.getGraphManager().createGraph2D();
-        Graph2DView view = GraphManager.getGraphManager().createGraph2DView();
+        final Graph2D graph = GraphManager.getGraphManager().createGraph2D();
+        final Graph2DView view = GraphManager.getGraphManager().createGraph2DView();
+        view.setGraph2D(graph);
 
-        ClassGraphDataModel dataModel = new ClassGraphDataModel(classLanguageType);
-        ClassGraphPresentationModel presentationModel = new ClassGraphPresentationModel(graph);
-        //TraceabilityLayouter layouter = new TraceabilityLayouter();
-        //LayoutGraph layoutGraph = GraphManager.getGraphManager().createDefaultLayoutGraph();
+        final ClassGraphDataModel dataModel = new ClassGraphDataModel(classLanguageType);
 
 
-        //layouter.setLayoutGraph(layoutGraph);
-
-        return new ClassGraph(project, graph, view,  dataModel, presentationModel);
+        return new ClassGraph(project, graph, view, dataModel, name);
     }
 
     public Project getProject()
@@ -77,10 +66,6 @@ public class ClassGraph implements Disposable, GraphChangeListener {
         return _graphBuilder.getView();
     }
 
-    public TraceabilityLayouter getTraceabilityLayouter()
-    {
-        return null;
-    }
 
     public ClassGraphDataModel getDataModel()
     {

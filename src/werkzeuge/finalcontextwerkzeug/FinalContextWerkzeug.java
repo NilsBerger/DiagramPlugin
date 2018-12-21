@@ -1,16 +1,15 @@
 package werkzeuge.finalcontextwerkzeug;
 
-import service.ChangePropagationProcess;
+import service.functional.ChangePropagationProcess;
 import com.intellij.openapi.ui.JBMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.ui.components.JBPanel;
 import materials.ClassNode;
-import service.GraphChangeListener;
+import service.functional.GraphChangeListener;
 import valueobjects.ClassLanguageType;
 import valueobjects.Marking;
 import javafx.collections.SetChangeListener;
-import werkzeuge.graphwerkzeug.util.GraphUtils;
-import werkzeuge.tracebilitychooserwerkzeug.TracebilityChooserWerkzeug;
+import werkzeuge.tracebilitychooserwerkzeug.TraceabilityChooserWerkzeug;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -124,13 +123,13 @@ public class FinalContextWerkzeug implements GraphChangeListener {
         _showSourcecodeItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new TracebilityChooserWerkzeug(_selectedClass);
+                new TraceabilityChooserWerkzeug(_selectedClass, false);
             }
         });
         _showCorrespondingClassItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new TracebilityChooserWerkzeug(_selectedClass);
+                new TraceabilityChooserWerkzeug(_selectedClass, true);
             }
         });
     }
