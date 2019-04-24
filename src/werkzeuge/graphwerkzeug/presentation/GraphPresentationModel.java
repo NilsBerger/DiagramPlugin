@@ -3,7 +3,6 @@ package werkzeuge.graphwerkzeug.presentation;
 import com.intellij.openapi.graph.GraphManager;
 import com.intellij.openapi.graph.builder.components.BasicGraphPresentationModel;
 import com.intellij.openapi.graph.layout.PortConstraintKeys;
-import com.intellij.openapi.graph.layout.orthogonal.DirectedOrthogonalLayouter;
 import com.intellij.openapi.graph.view.*;
 import materials.ProgramEntity;
 import materials.ProgramEntityRelationship;
@@ -17,24 +16,18 @@ public class GraphPresentationModel extends BasicGraphPresentationModel<ProgramE
     private ImpactAnalysisGraph _impactAnalysisGraph;
     private Graph2D _graph;
     private GroupEdgeTargetDataProvider _groupEdgeTargetDataProvider;
-    private DirectedEdgeDataProvider _directedEdgeDataProvider;
 
     public GraphPresentationModel(final Graph2D graph) {
         super(graph);
         _graph = graph;
-        //setShowEdgeLabels(false);
     }
 
     public void setClassGraph(final ImpactAnalysisGraph impactAnalysisGraph) {
         _impactAnalysisGraph = impactAnalysisGraph;
         setGraphBuilder(impactAnalysisGraph.getGraphBuilder());
 
-        _directedEdgeDataProvider = new DirectedEdgeDataProvider(impactAnalysisGraph, _graph);
-        _graph.addDataProvider(DirectedOrthogonalLayouter.DIRECTED_EDGE_DPKEY, _directedEdgeDataProvider);
-
-
         _groupEdgeTargetDataProvider = new GroupEdgeTargetDataProvider(_impactAnalysisGraph, _graph);
-        _graph.addDataProvider(PortConstraintKeys.TARGET_GROUPID_KEY, _groupEdgeTargetDataProvider);
+        _graph.addDataProvider(PortConstraintKeys.SOURCE_GROUPID_KEY, _groupEdgeTargetDataProvider);
 
         addBridgeCalculator(impactAnalysisGraph.getView());
     }
