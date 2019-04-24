@@ -4,25 +4,24 @@ import com.intellij.icons.AllIcons;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.graph.builder.actions.AbstractGraphAction;
 import com.intellij.openapi.graph.view.Graph2D;
-import werkzeuge.graphwerkzeug.presentation.ClassGraph;
+import werkzeuge.graphwerkzeug.ImpactAnalysisGraph;
 import werkzeuge.graphwerkzeug.presentation.graphfilter.APINodeFilterStrategy;
-import werkzeuge.graphwerkzeug.presentation.graphfilter.NodeFilterStrategy;
 import werkzeuge.graphwerkzeug.presentation.graphfilter.ClassGraphFilterer;
 
 public class NodeFilterAction extends AbstractGraphAction {
-    ClassGraph _classGraph;
-    ClassGraphFilterer _filter;
+    private ImpactAnalysisGraph _impactAnalysisGraph;
+    private ClassGraphFilterer _filter;
 
-    public NodeFilterAction(ClassGraph classGraph)
+    public NodeFilterAction(ImpactAnalysisGraph impactAnalysisGraph)
     {
-        super(classGraph.getGraph(), "Hide Nodes", AllIcons.Actions.Show);
-        _classGraph = classGraph;
-        _filter = new ClassGraphFilterer(_classGraph);
+        super(impactAnalysisGraph.getGraph(), "Hide Nodes", AllIcons.Actions.Show);
+        _impactAnalysisGraph = impactAnalysisGraph;
+        _filter = new ClassGraphFilterer(_impactAnalysisGraph);
 
     }
     @Override
     protected void actionPerformed(AnActionEvent anActionEvent, Graph2D graph2D) {
         _filter.setFilterStrategy(new APINodeFilterStrategy());
-        _filter.update(graph2D, _classGraph.getView());
+        _filter.update(graph2D, _impactAnalysisGraph.getView());
     }
 }

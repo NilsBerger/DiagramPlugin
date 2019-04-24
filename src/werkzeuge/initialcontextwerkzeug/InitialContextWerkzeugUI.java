@@ -1,42 +1,59 @@
 package werkzeuge.initialcontextwerkzeug;
 
-import com.intellij.ui.ToolbarDecorator;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
-import materials.ClassNode;
-import werkzeuge.ClassNodeCellRenderer;
-import werkzeuge.DynamicListModel;
+import com.intellij.ui.components.JBTextField;
+import com.intellij.ui.table.JBTable;
+import valueobjects.Marking;
+import werkzeuge.ClassNodeTableCellRenderer;
+import werkzeuge.ContainsFilter;
+import werkzeuge.ContextTableModel;
 
 import javax.swing.*;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class InitialContextWerkzeugUI {
 
-    private  JBPanel _mainPanel;
-    private JBList _initialContextList;
-    private DynamicListModel<ClassNode> _model;
+    private JBPanel _mainPanel;
+    private JBTable _initialContextTabel;
+    private ContextTableModel _model;
     private JBLabel _label;
-   //private ToolbarDecorator _toolbarDecorator;
+    private JBTextField _textfield;
+    private final TableRowSorter _tableRowSorter;
+    private final ContainsFilter _containsFilter;
 
     public InitialContextWerkzeugUI()
     {
         createLabel();
-        createJBList();
+        createTextField();
+        createJBTable();
         createMainPanel();
-        _initialContextList.setCellRenderer(new ClassNodeCellRenderer());
-        //initToolbar();
+
+        _tableRowSorter = new TableRowSorter(_initialContextTabel.getModel());
+        _containsFilter = new ContainsFilter("");
+        _tableRowSorter.setRowFilter(_containsFilter);
+        _initialContextTabel.setRowSorter(_tableRowSorter);
+
+        _textfield.setMaximumSize(new Dimension(20000, 40));
+    }
+
+    private void createTextField() {
+        _textfield = new JBTextField();
     }
 
     private void createMainPanel() {
         _mainPanel = new JBPanel();
         _mainPanel.setLayout(new BoxLayout(_mainPanel, BoxLayout.Y_AXIS));
-        _initialContextList.setModel(_model);
+        _initialContextTabel.setModel(_model);
+        _initialContextTabel.setDefaultRenderer(Marking.class, new ClassNodeTableCellRenderer());
+        _initialContextTabel.setAutoCreateRowSorter(true);
         _mainPanel.add(_label);
         _label.setAlignmentY(Component.CENTER_ALIGNMENT);
-        _mainPanel.add(new JBScrollPane(_initialContextList));
+        _mainPanel.add(_textfield);
+        _mainPanel.add(new JBScrollPane(_initialContextTabel));
     }
 
     private void createLabel()
@@ -44,25 +61,18 @@ public class InitialContextWerkzeugUI {
         _label = new JBLabel();
     }
 
-    public void createJBList()
+    public void createJBTable()
     {
-        _initialContextList = new JBList();
-        _model = new DynamicListModel<>(new ArrayList<ClassNode>());
+        _initialContextTabel = new JBTable();
+        _model = new ContextTableModel(new ArrayList());
     }
-
-   // private void initToolbar()
-   // {
-   //// }
 
     public void setLabelText(final String text)
     {
         _label.setText(text);
     }
-    public JBList getJBList()
-    {
-        return _initialContextList;
-    }
-    public DynamicListModel<ClassNode> getModel()
+
+    public ContextTableModel getModel()
     {
         return _model;
     }
@@ -72,8 +82,15 @@ public class InitialContextWerkzeugUI {
         return _mainPanel;
     }
 
-    //public ToolbarDecorator getToolbarDecorator()
-   // {
-   //     return _toolbarDecorator;
-    //}
+    public JBTextField getTextField() {
+        return _textfield;
+    }
+
+    public ContainsFilter getContainsFilter() {
+        return _containsFilter;
+    }
+
+    public TableRowSorter getRowSorter() {
+        return _tableRowSorter;
+    }
 }

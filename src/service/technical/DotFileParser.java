@@ -16,9 +16,9 @@
 
 package service.technical;
 
-import materials.ClassDependency;
-import materials.ClassNode;
-import valueobjects.ClassLanguageType;
+import materials.ProgramEntity;
+import materials.ProgramEntityRelationship;
+import valueobjects.Language;
 import valueobjects.RelationshipType;
 
 import java.io.BufferedReader;
@@ -39,13 +39,16 @@ public class DotFileParser {
     public static final String ANDROID_JAR_NAME = "android_workspace.jar";
     public static final String JAVA_DOT_FILENAME = new File(".").getAbsolutePath() + "/dot/" + ANDROID_JAR_NAME + ".dot";
 
+    private static final Map<String, ProgramEntity> _javaLookUp = new HashMap();
+    private static final Map<String, ProgramEntity> _swiftLookUp = new HashMap();
+
     private DotFileParser()
     {
     }
 
-    public static Set<ClassDependency> parseJavaDependenciesFromDotFile(final String filepath)
+    public static Set<ProgramEntityRelationship> parseJavaDependenciesFromDotFile(final String filepath)
     {
-        Set<ClassDependency> dependencies = new HashSet<>();
+        Set<ProgramEntityRelationship> dependencies = new HashSet<>();
         File dotFile = new File(filepath);
         if(!dotFile.isFile())
         {
@@ -63,10 +66,10 @@ public class DotFileParser {
                 if (line.contains(delimiter))
                 {
                     String[] parts = line.split(delimiter);
-                    ClassNode dependentClass = new ClassNode(parts[0], ClassLanguageType.Java);
-                    ClassNode independentClass = new ClassNode(parts[1], ClassLanguageType.Java);
-                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass, RelationshipType.Dependency);
-                    dependencies.add(classDependency);
+                    ProgramEntity dependentClass = getClassNode(parts[0], Language.Java);
+                    ProgramEntity independentClass = getClassNode(parts[1], Language.Java);
+                    ProgramEntityRelationship programEntityRelationship = new ProgramEntityRelationship(dependentClass, independentClass, RelationshipType.Dependency);
+                    dependencies.add(programEntityRelationship);
                 }
             }
         } catch (IOException e) {
@@ -74,27 +77,55 @@ public class DotFileParser {
         }
         final String lang = ".lang";
         //Delete "lang." dependencies
-        Iterator<ClassDependency> it = dependencies.iterator();
+        Iterator<ProgramEntityRelationship> it = dependencies.iterator();
         while(it.hasNext())
         {
-            ClassDependency dependency = it.next();
-           if(dependency.getDependentClass().getFullClassName().contains(lang))
+            ProgramEntityRelationship dependency = it.next();
+            if (dependency.getDependentClass().getFullEntityName().contains(lang))
            {
                it.remove();
            }
-           if(dependency.getIndependentClass().getFullClassName().contains(lang))
+            if (dependency.getIndependentClass().getFullEntityName().contains(lang))
            {
                it.remove();
            }
         }
-        final Set<ClassDependency> javaMissedDependencies = MissedDependencies.getJavaMissedDependencies();
-        dependencies.addAll(javaMissedDependencies);
-        return dependencies;
+        final Set<ProgramEntityRelationship> javaMissedDependencies = MissedDependencies.getJavaMissedDependencies();
+        for (ProgramEntityRelationship programEntityRelationship : javaMissedDependencies) {
+            ProgramEntity dependentClass = getClassNode(programEntityRelationship.getDependentClass().getSimpleName(), Language.Java);
+            ProgramEntity independentClass = getClassNode((programEntityRelationship.getIndependentClass().getSimpleName()), Language.Java);
+            ProgramEntityRelationship dependency = new ProgramEntityRelationship(dependentClass, independentClass, RelationshipType.Dependency);
+            dependencies.add(dependency);
+        }
+        final Set<ProgramEntityRelationship> dependencies1 = deleteWrongDependencies(dependencies);
+        return Collections.unmodifiableSet(dependencies1);
     }
 
-    public static List<ClassDependency> parseSwiftDependenciesFromDotFile(final String filepath)
-    {
-        List<ClassDependency> dependencies = new ArrayList<>();
+    private static ProgramEntity getClassNode(String name, Language languageType) {
+        if (languageType == Language.Java) {
+            return findeNode(name, languageType, _javaLookUp);
+        }
+        if (languageType == Language.Swift) {
+            return findeNode(name, languageType, _swiftLookUp);
+        }
+        throw new IllegalStateException("Could not find ClassLanguage: " + languageType);
+
+    }
+
+    private static ProgramEntity findeNode(String className, Language type, Map<String, ProgramEntity> map) {
+        //TmpNode to get the Simple Name of the class that is used as a key
+        ProgramEntity tmpNode = new ProgramEntity(className, Language.Default);
+        if (!map.containsKey(tmpNode.getSimpleName())) {
+            ProgramEntity newProgramEntity = new ProgramEntity(className, type);
+            map.put(tmpNode.getSimpleName(), newProgramEntity);
+            return newProgramEntity;
+        } else {
+            return map.get(tmpNode.getSimpleName());
+        }
+    }
+
+    public static List<ProgramEntityRelationship> parseSwiftDependenciesFromDotFile(final String filepath) {
+        List<ProgramEntityRelationship> dependencies = new ArrayList<>();
         File dotFile = new File(filepath);
         if(!dotFile.isFile())
         {
@@ -112,16 +143,40 @@ public class DotFileParser {
                 if (line.contains(delimiter))
                 {
                     String[] parts = line.split(delimiter);
-                    ClassNode dependentClass = new ClassNode(parts[0], ClassLanguageType.Swift);
-                    ClassNode independentClass = new ClassNode(parts[1], ClassLanguageType.Swift);
-                    ClassDependency classDependency = new ClassDependency(dependentClass,independentClass, RelationshipType.Dependency);
-                    dependencies.add(classDependency);
+                    ProgramEntity dependentClass = getClassNode(parts[0], Language.Swift);
+                    ProgramEntity independentClass = getClassNode(parts[1], Language.Swift);
+                    ProgramEntityRelationship programEntityRelationship = new ProgramEntityRelationship(dependentClass, independentClass, RelationshipType.Dependency);
+                    dependencies.add(programEntityRelationship);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return dependencies;
+        return Collections.unmodifiableList(dependencies);
+    }
+
+    /**
+     * Delete the dependencies containing the ClassNodes "InstantReloadException" or "IncrementalChange".
+     *
+     * @param dependencyList
+     * @return
+     */
+    private static Set<ProgramEntityRelationship> deleteWrongDependencies(final Set<ProgramEntityRelationship> dependencyList) {
+        final String badNameA = "IncrementalChange";
+        final String badNameB = "InstantReloadException";
+        final Iterator<ProgramEntityRelationship> iterator = dependencyList.iterator();
+        while (iterator.hasNext()) {
+            ProgramEntityRelationship dependency = iterator.next();
+            ProgramEntity nodeA = dependency.getIndependentClass();
+            ProgramEntity nodeB = dependency.getDependentClass();
+            if (nodeA.getSimpleName().equals(badNameA) || nodeA.getSimpleName().equals(badNameB)) {
+                iterator.remove();
+            }
+            if (nodeB.getSimpleName().equals(badNameA) || nodeB.getSimpleName().equals(badNameB)) {
+                iterator.remove();
+            }
+        }
+        return dependencyList;
     }
 }
 

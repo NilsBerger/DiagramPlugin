@@ -1,39 +1,49 @@
 package service.technical;
 
-import materials.ClassDependency;
-import materials.ClassNode;
-import valueobjects.ClassLanguageType;
+import materials.ProgramEntity;
+import materials.ProgramEntityRelationship;
+import valueobjects.Language;
 import valueobjects.RelationshipType;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class MissedDependencies {
 
-    public static Set<ClassDependency> getJavaMissedDependencies()
+    public static Set<ProgramEntityRelationship> getJavaMissedDependencies()
     {
-        Set<ClassDependency> dependencyList = new HashSet<>();
+        Set<ProgramEntityRelationship> dependencyList = new HashSet<>();
 
-        ClassNode eventDetailModelNode = new ClassNode("EventDetailModel", ClassLanguageType.Java);
-        ClassNode jsonKeysNode = new ClassNode("JSONKeys", ClassLanguageType.Java);
-        ClassNode newsNode = new ClassNode("News", ClassLanguageType.Java);
-        ClassNode imageNode = new ClassNode("Image", ClassLanguageType.Java);
-        ClassNode instituteNode = new ClassNode("Institute", ClassLanguageType.Java);
-        ClassNode eventNode = new ClassNode("Event", ClassLanguageType.Java);
+        ProgramEntity eventDetailModelNode = new ProgramEntity("EventDetailModel", Language.Java);
+        ProgramEntity eventModelNode = new ProgramEntity("EventModel", Language.Java);
+        ProgramEntity jsonKeysNode = new ProgramEntity("JSONKeys", Language.Java);
+        ProgramEntity newsNode = new ProgramEntity("News", Language.Java);
+        ProgramEntity imageNode = new ProgramEntity("Image", Language.Java);
+        ProgramEntity instituteNode = new ProgramEntity("Institute", Language.Java);
+        ProgramEntity eventNode = new ProgramEntity("Event", Language.Java);
 
-        ClassDependency dependency1 = new ClassDependency(eventDetailModelNode, jsonKeysNode, RelationshipType.Dependency);
-        ClassDependency dependency2 = new ClassDependency(eventDetailModelNode, newsNode, RelationshipType.Dependency);
-        ClassDependency dependency3 = new ClassDependency(eventDetailModelNode, imageNode, RelationshipType.Dependency);
-        ClassDependency dependency4 = new ClassDependency(eventDetailModelNode, instituteNode, RelationshipType.Dependency);
-        ClassDependency dependency5 = new ClassDependency(eventDetailModelNode, eventNode, RelationshipType.Dependency);
+        ProgramEntityRelationship dependency1 = new ProgramEntityRelationship(eventDetailModelNode, jsonKeysNode, RelationshipType.Dependency);
+        ProgramEntityRelationship dependency2 = new ProgramEntityRelationship(eventDetailModelNode, newsNode, RelationshipType.Dependency);
+        ProgramEntityRelationship dependency3 = new ProgramEntityRelationship(eventDetailModelNode, imageNode, RelationshipType.Dependency);
+        ProgramEntityRelationship dependency4 = new ProgramEntityRelationship(eventDetailModelNode, instituteNode, RelationshipType.Dependency);
+        ProgramEntityRelationship dependency5 = new ProgramEntityRelationship(eventDetailModelNode, eventNode, RelationshipType.Dependency);
+
+        ProgramEntityRelationship dependency6 = new ProgramEntityRelationship(eventModelNode, jsonKeysNode, RelationshipType.Dependency);
+        ProgramEntityRelationship dependency7 = new ProgramEntityRelationship(eventModelNode, newsNode, RelationshipType.Dependency);
+        ProgramEntityRelationship dependency8 = new ProgramEntityRelationship(eventModelNode, imageNode, RelationshipType.Dependency);
+        ProgramEntityRelationship dependency9 = new ProgramEntityRelationship(eventModelNode, instituteNode, RelationshipType.Dependency);
+        ProgramEntityRelationship dependency10 = new ProgramEntityRelationship(eventModelNode, eventNode, RelationshipType.Dependency);
 
         dependencyList.add(dependency1);
         dependencyList.add(dependency2);
         dependencyList.add(dependency3);
         dependencyList.add(dependency4);
         dependencyList.add(dependency5);
+        dependencyList.add(dependency6);
+        dependencyList.add(dependency7);
+        dependencyList.add(dependency8);
+        dependencyList.add(dependency9);
+        dependencyList.add(dependency10);
 
         return dependencyList;
     }

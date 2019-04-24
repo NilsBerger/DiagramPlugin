@@ -2,118 +2,163 @@ package materials;
 
 import org.junit.Test;
 import service.functional.ChangePropagationProcessTest;
-import valueobjects.ClassLanguageType;
+import valueobjects.Language;
 import valueobjects.RelationshipType;
-
 
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 
 
 public class ChangePropagationModelTest {
 
     @Test
-    public void getTopDependencies() {
+    public void getBottomDependencies() {
+        //GIVEN
         ChangePropagationModel modelMaterial = new ChangePropagationModel(ChangePropagationProcessTest.getSimpleDependencyFromPaper());
 
-        ClassNode search = new ClassNode("Search", ClassLanguageType.Java);
-        Set<ClassNode> searchTopDependencies = modelMaterial.getTopDependencies(search);
+        //WHEN
+        ProgramEntity search = new ProgramEntity("Search", Language.Java);
+        Set<ProgramEntity> searchBottomDependencies = modelMaterial.getBottomDependencies(search);
 
-        assertThat(searchTopDependencies, hasSize(3));
-        assertThat(searchTopDependencies, hasItem(new ClassNode("Input", ClassLanguageType.Java)));
-        assertThat(searchTopDependencies, hasItem(new ClassNode("C", ClassLanguageType.Java)));
-        assertThat(searchTopDependencies, hasItem(new ClassNode("Data", ClassLanguageType.Java)));
+        assertThat(searchBottomDependencies, hasSize(3));
+        assertThat(searchBottomDependencies, hasItem(new ProgramEntity("Input", Language.Java)));
+        assertThat(searchBottomDependencies, hasItem(new ProgramEntity("C", Language.Java)));
+        assertThat(searchBottomDependencies, hasItem(new ProgramEntity("Data", Language.Java)));
 
-        ClassNode c = new ClassNode("C", ClassLanguageType.Java);
-        Set<ClassNode> cTopDependencies = modelMaterial.getTopDependencies(c);
+        //WHEN
+        ProgramEntity c = new ProgramEntity("C", Language.Java);
+        Set<ProgramEntity> cBottomDependencies = modelMaterial.getBottomDependencies(c);
 
+        //THEN
+        assertThat(cBottomDependencies, hasSize(0));
+    }
+
+    @Test
+    public void getTopDependencies() {
+        //GIVEN
+        ChangePropagationModel modelMaterial = new ChangePropagationModel(ChangePropagationProcessTest.getSimpleDependencyFromPaper());
+        ProgramEntity data = new ProgramEntity("Data", Language.Java);
+
+        //WHEN
+        Set<ProgramEntity> searchTopDependencies = modelMaterial.getTopDependencies(data);
+
+        //THEN
+        assertThat(searchTopDependencies, hasSize(2));
+        assertThat(searchTopDependencies, hasItem(new ProgramEntity("Search", Language.Java)));
+        assertThat(searchTopDependencies, hasItem(new ProgramEntity("Init", Language.Java)));
+
+        //GIVEN
+        ProgramEntity main = new ProgramEntity("Main", Language.Java);
+        Set<ProgramEntity> cTopDependencies = modelMaterial.getTopDependencies(main);
+
+        //THEN
         assertThat(cTopDependencies, hasSize(0));
     }
 
     @Test
-    public void getBottomDependencies() {
-        ChangePropagationModel modelMaterial = new ChangePropagationModel(ChangePropagationProcessTest.getSimpleDependencyFromPaper());
-        ClassNode data = new ClassNode("Data", ClassLanguageType.Java);
-        Set<ClassNode> searchBottomDependencies = modelMaterial.getBottomDependencies(data);
+    public void getBottomInconsistencies() {
+        //GIVEN
+        ChangePropagationModel modelMaterial = new ChangePropagationModel(ChangePropagationProcessTest.getSimpleDependencyFromPaperWithInconsistencies());
 
-        assertThat(searchBottomDependencies, hasSize(2));
-        assertThat(searchBottomDependencies, hasItem(new ClassNode("Search", ClassLanguageType.Java)));
-        assertThat(searchBottomDependencies, hasItem(new ClassNode("Init", ClassLanguageType.Java)));
+        //WHEN
+        ProgramEntity search = new ProgramEntity("Search", Language.Java);
+        Set<ProgramEntity> searchBottomDependencies = modelMaterial.getBottomInconsistencies(search);
 
-        ClassNode main = new ClassNode("Main", ClassLanguageType.Java);
-        Set<ClassNode> cTopDependencies = modelMaterial.getBottomDependencies(main);
+        //THEN
+        assertThat(searchBottomDependencies, hasSize(3));
+        assertThat(searchBottomDependencies, hasItem(new ProgramEntity("Input", Language.Java)));
+        assertThat(searchBottomDependencies, hasItem(new ProgramEntity("C", Language.Java)));
+        assertThat(searchBottomDependencies, hasItem(new ProgramEntity("Data", Language.Java)));
 
-        assertThat(cTopDependencies, hasSize(0));
+        //WHEN
+        ProgramEntity c = new ProgramEntity("C", Language.Java);
+        Set<ProgramEntity> cBottomDependencies = modelMaterial.getBottomInconsistencies(c);
+
+        //THEN
+        assertThat(cBottomDependencies, hasSize(0));
     }
 
     @Test
     public void getTopInconsistencies() {
         ChangePropagationModel modelMaterial = new ChangePropagationModel(ChangePropagationProcessTest.getSimpleDependencyFromPaperWithInconsistencies());
 
-        ClassNode search = new ClassNode("Search", ClassLanguageType.Java);
-        Set<ClassNode> searchTopDependencies = modelMaterial.getTopInconsistencies(search);
-
-        assertThat(searchTopDependencies, hasSize(3));
-        assertThat(searchTopDependencies, hasItem(new ClassNode("Input", ClassLanguageType.Java)));
-        assertThat(searchTopDependencies, hasItem(new ClassNode("C", ClassLanguageType.Java)));
-        assertThat(searchTopDependencies, hasItem(new ClassNode("Data", ClassLanguageType.Java)));
-
-        ClassNode c = new ClassNode("C", ClassLanguageType.Java);
-        Set<ClassNode> cTopDependencies = modelMaterial.getTopInconsistencies(c);
-
-        assertThat(cTopDependencies, hasSize(0));
-    }
-
-    @Test
-    public void getBottomInconsistencies() {
-        ChangePropagationModel modelMaterial = new ChangePropagationModel(ChangePropagationProcessTest.getSimpleDependencyFromPaperWithInconsistencies());
-
-        ClassNode data = new ClassNode("Data", ClassLanguageType.Java);
-        Set<ClassNode> searchTopDependencies = modelMaterial.getBottomInconsistencies(data);
+        ProgramEntity data = new ProgramEntity("Data", Language.Java);
+        Set<ProgramEntity> searchTopDependencies = modelMaterial.getTopInconsistencies(data);
 
         assertThat(searchTopDependencies, hasSize(2));
-        assertThat(searchTopDependencies, hasItem(new ClassNode("Search", ClassLanguageType.Java)));
-        assertThat(searchTopDependencies, hasItem(new ClassNode("Init", ClassLanguageType.Java)));
+        assertThat(searchTopDependencies, hasItem(new ProgramEntity("Search", Language.Java)));
+        assertThat(searchTopDependencies, hasItem(new ProgramEntity("Init", Language.Java)));
 
-        ClassNode main = new ClassNode("Main", ClassLanguageType.Java);
-        Set<ClassNode> cTopDependencies = modelMaterial.getBottomInconsistencies(main);
+        ProgramEntity main = new ProgramEntity("Main", Language.Java);
+        Set<ProgramEntity> cTopDependencies = modelMaterial.getTopInconsistencies(main);
 
         assertThat(cTopDependencies, hasSize(0));
     }
 
     @Test
     public void createInconsistenciesTest() {
+        //GIVEN
         ChangePropagationModel modelMaterial = new ChangePropagationModel(ChangePropagationProcessTest.getSimpleDependencyFromPaper());
 
-        modelMaterial.createInconsistencies(new ClassNode("C", ClassLanguageType.Java));
-        ClassDependency cToSearch = new ClassDependency(new ClassNode("C", ClassLanguageType.Java), new ClassNode("Search", ClassLanguageType.Java), RelationshipType.InconsistentRelationship);
-        Set<ClassDependency> inconsistencies = modelMaterial.getInconsistencies();
+        //WHEN
+        modelMaterial.createInconsistencies(new ProgramEntity("C", Language.Java));
+        ProgramEntityRelationship cToSearch = new ProgramEntityRelationship(new ProgramEntity("C", Language.Java), new ProgramEntity("Search", Language.Java), RelationshipType.InconsistentRelationship);
+
+        //THEN
+        Set<ProgramEntityRelationship> inconsistencies = modelMaterial.getInconsistencies();
         assertThat(inconsistencies, hasSize(1));
         assertThat(inconsistencies, hasItem(cToSearch));
 
-        modelMaterial.createInconsistencies(new ClassNode("Search", ClassLanguageType.Java));
-        ClassDependency searchToInput = new ClassDependency(new ClassNode("Search", ClassLanguageType.Java), new ClassNode("Input", ClassLanguageType.Java), RelationshipType.InconsistentRelationship);
-        ClassDependency searchToData = new ClassDependency(new ClassNode("Search", ClassLanguageType.Java), new ClassNode("Data", ClassLanguageType.Java), RelationshipType.InconsistentRelationship);
-        ClassDependency searchToMain = new ClassDependency(new ClassNode("Search", ClassLanguageType.Java), new ClassNode("Main", ClassLanguageType.Java), RelationshipType.InconsistentRelationship);
-        //InconsistentDependency searchToC = new InconsistentDependency(new JavaClassNode("Search"), new JavaClassNode("C"));
+        //WHEN
+        modelMaterial.createInconsistencies(new ProgramEntity("Search", Language.Java));
+
+        //THEN
         inconsistencies = modelMaterial.getInconsistencies();
+
+        ProgramEntityRelationship searchToInput = new ProgramEntityRelationship(new ProgramEntity("Search", Language.Java), new ProgramEntity("Input", Language.Java), RelationshipType.InconsistentRelationship);
+        ProgramEntityRelationship searchToData = new ProgramEntityRelationship(new ProgramEntity("Search", Language.Java), new ProgramEntity("Data", Language.Java), RelationshipType.InconsistentRelationship);
+        ProgramEntityRelationship searchToMain = new ProgramEntityRelationship(new ProgramEntity("Search", Language.Java), new ProgramEntity("Main", Language.Java), RelationshipType.InconsistentRelationship);
+        ProgramEntityRelationship searchToC = new ProgramEntityRelationship(new ProgramEntity("Search", Language.Java), new ProgramEntity("C", Language.Java), RelationshipType.InconsistentRelationship);
+
         assertThat(inconsistencies, hasSize(4));
         assertThat(inconsistencies, hasItem(cToSearch));
         assertThat(inconsistencies, hasItem(searchToData));
         assertThat(inconsistencies, hasItem(searchToInput));
         assertThat(inconsistencies, hasItem(searchToMain));
-        //assertThat(inconsistencies, hasItem(searchToC));
+        assertThat(inconsistencies, not(hasItem(searchToC)));
 
+        //WHEN
+        modelMaterial.createInconsistencies(new ProgramEntity("Data", Language.Java));
 
-        modelMaterial.createInconsistencies(new ClassNode("Data", ClassLanguageType.Java));
-        ClassDependency dataToInit = new ClassDependency(new ClassNode("Data", ClassLanguageType.Java), new ClassNode("Init", ClassLanguageType.Java), RelationshipType.InconsistentRelationship);
+        //THEN
+        ProgramEntityRelationship dataToInit = new ProgramEntityRelationship(new ProgramEntity("Data", Language.Java), new ProgramEntity("Init", Language.Java), RelationshipType.InconsistentRelationship);
         inconsistencies = modelMaterial.getInconsistencies();
+
         assertThat(inconsistencies, hasSize(5));
         assertThat(inconsistencies, hasItem(dataToInit));
+    }
+
+    @Test
+    public void inconcistencyBetweenNodesTest() {
+
+        //GIVEN
+        ChangePropagationModel model = new ChangePropagationModel(ChangePropagationProcessTest.getSimpleDependencyFromPaper());
+
+        //WHEN
+        //Nothing inconsistency
+        ProgramEntity c = new ProgramEntity("C", Language.Java);
+        ProgramEntity search = new ProgramEntity("Search", Language.Java);
+
+        //THEN
+        assertThat(model.inconcistencyBetweenNodes(c, search), is(false));
+
+        //WHEN
+        model.createInconsistencies(c);
+
+        //THEN
+        assertThat(model.inconcistencyBetweenNodes(c, search), is(true));
     }
 
     @Test
@@ -121,19 +166,17 @@ public class ChangePropagationModelTest {
         ChangePropagationModel model = new ChangePropagationModel(ChangePropagationProcessTest.getSimpleDependencyFromPaper());
 
 
-        ClassNode main = new ClassNode("Main", ClassLanguageType.Java);
-        ClassNode input = new ClassNode("Input", ClassLanguageType.Java);
-        ClassDependency dependency = new ClassDependency(main,input, RelationshipType.Dependency);
+        ProgramEntity main = new ProgramEntity("Main", Language.Java);
+        ProgramEntity input = new ProgramEntity("Input", Language.Java);
+        ProgramEntityRelationship dependency = new ProgramEntityRelationship(main, input, RelationshipType.Dependency);
 
         assertThat(model.getDependencies(), hasItem(dependency));
         //When
         RelationshipType newRelationshipType = RelationshipType.Extends;
         model.updateDependency(dependency, newRelationshipType);
-        ClassDependency newDependency = new ClassDependency(main,input, newRelationshipType);
+        ProgramEntityRelationship newDependency = new ProgramEntityRelationship(main, input, newRelationshipType);
 
         assertThat(model.getDependencies(), hasItem(newDependency));
         assertThat(model.getDependencies(), not(hasItem(dependency)));
     }
-
-
 }

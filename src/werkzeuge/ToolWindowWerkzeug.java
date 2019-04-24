@@ -1,13 +1,12 @@
 package werkzeuge;
 
-import com.intellij.ui.components.JBPanel;
 import service.functional.ChangePropagationProcess;
-import valueobjects.ClassLanguageType;
+import valueobjects.Language;
 import werkzeuge.finalcontextwerkzeug.FinalContextWerkzeug;
 import werkzeuge.graphselectionwerkzeug.GraphSelectionWerkzeug;
 import werkzeuge.initialcontextwerkzeug.InitialContextWerkzeug;
-import werkzeuge.traceabilitywerkzeug.TraceabilityWerkzeug;
-
+import werkzeuge.toolbarwerkzeug.ToolbarWerkzeug;
+import werkzeuge.traceabilitydisplaywerkzeug.TraceabilityWerkzeug;
 
 import javax.swing.*;
 
@@ -18,10 +17,11 @@ public class ToolWindowWerkzeug {
 
 
     private GraphSelectionWerkzeug _graphSelection;
-    private InitialContextWerkzeug _initialContext;
-    private FinalContextWerkzeug _javaFinalContextWerkzeug;
-    private FinalContextWerkzeug _swiftFinalContextWerkzeug;
-    private TraceabilityWerkzeug _traceabilityWerkzeug;
+    private final ToolbarWerkzeug _toolbarWerkzeug;
+    private final InitialContextWerkzeug _initialContext;
+    private final FinalContextWerkzeug _javaFinalContextWerkzeug;
+    private final FinalContextWerkzeug _swiftFinalContextWerkzeug;
+    private final TraceabilityWerkzeug _traceabilityWerkzeug;
     private ChangePropagationProcess service = ChangePropagationProcess.getInstance();
 
     //private final DependencyPersistenceAutomaton _dependencyPersistenceAutomaton;
@@ -35,13 +35,14 @@ public class ToolWindowWerkzeug {
         // _dependencyPersistenceAutomaton = new DependencyPersistenceAutomaton(ChangePropagationProcess.getInstance(),path);
 
         //_graphSelection = new GraphSelectionWerkzeug(_dependencyPersistenceAutomaton);
+        _toolbarWerkzeug = new ToolbarWerkzeug();
         _initialContext = new InitialContextWerkzeug();
-        _javaFinalContextWerkzeug = new FinalContextWerkzeug("Final Context Java", ClassLanguageType.Java);
-        _swiftFinalContextWerkzeug = new FinalContextWerkzeug("Final Context Swift", ClassLanguageType.Swift);
+        _javaFinalContextWerkzeug = new FinalContextWerkzeug("Java: Candidate Impact Set", Language.Java);
+        _swiftFinalContextWerkzeug = new FinalContextWerkzeug("Swift: Candidate Imapct Set", Language.Swift);
         _traceabilityWerkzeug = new TraceabilityWerkzeug();
         _traceabilityWerkzeug.setChangePropagationProcessService(service);
 
-        _ui = new ToolWindowWerkzeugUI(new JBPanel<>(), _initialContext.getPanel(), _javaFinalContextWerkzeug.getPanel(), _swiftFinalContextWerkzeug.getPanel(), _traceabilityWerkzeug.getPanel());
+        _ui = new ToolWindowWerkzeugUI(_toolbarWerkzeug.getToolbar(), _initialContext.getPanel(), _javaFinalContextWerkzeug.getPanel(), _swiftFinalContextWerkzeug.getPanel(), _traceabilityWerkzeug.getPanel());
     }
 
     public JPanel getPanel() {

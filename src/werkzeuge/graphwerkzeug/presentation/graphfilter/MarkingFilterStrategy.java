@@ -1,6 +1,6 @@
 package werkzeuge.graphwerkzeug.presentation.graphfilter;
 
-import materials.ClassNode;
+import materials.ProgramEntity;
 import valueobjects.Marking;
 
 /**
@@ -8,12 +8,8 @@ import valueobjects.Marking;
  */
 public final class MarkingFilterStrategy implements FilterStrategy{
     @Override
-    public boolean filterNode(ClassNode classNode) {
-        if(classNode.getMarking() == Marking.CHANGED || classNode.getMarking() == Marking.PROPAGATES)
-        {
-            return false;
-        }
-        return true;
+    public boolean filterNode(ProgramEntity programEntity) {
+        return programEntity.getMarking() == Marking.CHANGED || programEntity.getMarking() == Marking.PROPAGATES;
     }
 
     @Override

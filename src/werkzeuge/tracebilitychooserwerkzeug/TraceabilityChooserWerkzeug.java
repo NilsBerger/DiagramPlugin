@@ -8,11 +8,11 @@ import com.intellij.openapi.vfs.VirtualFile;
 import de.unihamburg.masterprojekt2016.traceability.TraceabilityLink;
 import de.unihamburg.masterprojekt2016.traceability.TraceabilityPointer;
 import de.unihamburg.masterprojekt2016.traceability.TypePointer;
-import materials.ClassNode;
+import materials.ProgramEntity;
 import org.apache.commons.io.FilenameUtils;
 import service.functional.ChangePropagationProcess;
-import service.functional.TraceabilityClassNodeService;
-import valueobjects.ClassLanguageType;
+import service.functional.ProgramEntityTraceLinkRecovery;
+import valueobjects.Language;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,29 +26,30 @@ import java.util.List;
 public class TraceabilityChooserWerkzeug {
 
     private TracebilityChooserWerkzeugUI _ui;
-    private TraceabilityClassNodeService _service;
+    private ProgramEntityTraceLinkRecovery _service;
     private Project _project;
-    private final ClassNode _classNode;
+    private final ProgramEntity _programEntity;
     private final boolean _isCrossPlatform;
     ChangePropagationProcess _propagationProcessService = ChangePropagationProcess.getInstance();
 
     /**
      *
-     * @param classNode The ClassNode containing the information
+     * @param programEntity The ClassNode containing the information
      * @param isCrossPlatform Set true for crossPlatform-Traceabilitylins, False for tracelinks of the given platform
      */
-    public TraceabilityChooserWerkzeug(final ClassNode classNode, boolean isCrossPlatform)
+    public TraceabilityChooserWerkzeug(final ProgramEntity programEntity, boolean isCrossPlatform)
     {
         _project = ProjectManager.getInstance().getOpenProjects()[0];
-        _classNode = classNode;
+        _programEntity = programEntity;
         _isCrossPlatform = isCrossPlatform;
 
         _ui = new TracebilityChooserWerkzeugUI();
-        _service = new TraceabilityClassNodeService(_project);
+        _service = new ProgramEntityTraceLinkRecovery(_project);
         if(!_isCrossPlatform){
             _ui.getSelectButton().setEnabled(false);
         }
         setContentAndShowUI();
+        _ui.setTitle(_programEntity);
 
     }
 
@@ -56,7 +57,7 @@ public class TraceabilityChooserWerkzeug {
      * Sets the calculated traceabilitylinks in the UI as the Content and shows the
      */
     private void setContentAndShowUI(){
-        List<TraceabilityLink> traceabilityLinks = getTraceLinks(_classNode);
+        List<TraceabilityLink> traceabilityLinks = getTraceLinks(_programEntity);
         _ui.setContent(traceabilityLinks);
         registerListener();
         show();
@@ -65,51 +66,51 @@ public class TraceabilityChooserWerkzeug {
 
     /**
      * Returns the right type of TraceabilityLinks
-     * @param classNode The given ClassNode
+     * @param programEntity The given ClassNode
      * @return A not null List of Traceabilitylinks. Links can be crossplatform traceabilitylinks or from the same platform.
      */
-    private List<TraceabilityLink> getTraceLinks(ClassNode classNode) {
+    private List<TraceabilityLink> getTraceLinks(ProgramEntity programEntity) {
         if(_isCrossPlatform)
         {
-            return getCrossPlatfromTraceabilityLinks(classNode);
+            return getCrossPlatfromTraceabilityLinks(programEntity);
         }
         else{
-            return  getPlatfromTraceabilityLinks(classNode);
+            return getPlatfromTraceabilityLinks(programEntity);
         }
     }
 
     /**
      * Finds the TraceabiltyLink representing the given ClassNode. Java -> Swift, Swift -> Java
-     * @param classNode The
+     * @param programEntity The
      * @return Return a List of Traceabilitylinks. List can not be null, but can be empty
      */
-    private List<TraceabilityLink> getCrossPlatfromTraceabilityLinks(final ClassNode classNode)
+    private List<TraceabilityLink> getCrossPlatfromTraceabilityLinks(final ProgramEntity programEntity)
     {
-        if(classNode.getClassLanguageType() == ClassLanguageType.Java)
+        if (programEntity.getLanguage() == Language.Java)
         {
-            return _service.getSwiftTraceabilityLinks(classNode);
+            return _service.getSwiftCrossPlatformTraceabilityLinks(programEntity);
         }
-        if(classNode.getClassLanguageType() ==  ClassLanguageType.Swift)
+        if (programEntity.getLanguage() == Language.Swift)
         {
-            return _service.getJavaTraceabilityLinks(classNode);
+            return _service.getJavaCrossPlatformTraceabilityLinks(programEntity);
         }
         return Collections.emptyList();
     }
 
     /**
      * Finds the TraceabiltyLink representing the given ClassNode. Java -> Java, Swift -> Swift
-     * @param classNode The
+     * @param programEntity The
      * @return Return a List of Traceabilitylinks. List can not be null, but can be empty
      */
-    private List<TraceabilityLink> getPlatfromTraceabilityLinks(final ClassNode classNode)
+    private List<TraceabilityLink> getPlatfromTraceabilityLinks(final ProgramEntity programEntity)
     {
-        if(classNode.getClassLanguageType() == ClassLanguageType.Java)
+        if (programEntity.getLanguage() == Language.Java)
         {
-            return _service.getJavaTraceabilityLinks(classNode);
+            return _service.getSwiftPlatformTraceabilityLinks(programEntity);
         }
-        if(classNode.getClassLanguageType() ==  ClassLanguageType.Swift)
+        if (programEntity.getLanguage() == Language.Swift)
         {
-            return _service.getSwiftTraceabilityLinks(classNode);
+            return _service.getJavaPlatformTraceabilityLinks(programEntity);
         }
         return Collections.emptyList();
     }
@@ -140,13 +141,13 @@ public class TraceabilityChooserWerkzeug {
             public void actionPerformed(ActionEvent e) {
                 TraceabilityLink link = _ui.getTracebilityTableModel().getTraceabilityLink(_ui.getJBTable().getSelectedRow());
                 link.setSource(new TypePointer());
-                if(_classNode.getClassLanguageType() == ClassLanguageType.Java)
+                if (_programEntity.getLanguage() == Language.Java)
                 {
-                    _propagationProcessService.addTraceabilityLinkJavaSource(_classNode, link);
+                    _propagationProcessService.addTraceabilityLinkJavaSource(_programEntity, link);
                 }
-                if(_classNode.getClassLanguageType() == ClassLanguageType.Swift)
+                if (_programEntity.getLanguage() == Language.Swift)
                 {
-                    _propagationProcessService.addTraceabilityLinkSwiftSource(_classNode, link);
+                    _propagationProcessService.addTraceabilityLinkSwiftSource(_programEntity, link);
                 }
                 _ui.hide();
             }

@@ -1,19 +1,14 @@
 package werkzeuge.graphwerkzeug.presentation.graphfilter;
 
-import materials.ClassNode;
-import valueobjects.ClassLanguageType;
+import materials.ProgramEntity;
 
 /**
  * This FilterStrategy filters  Java-ClassNodes that are classes form libaries and ClassNodes that the user wants to hide.
  */
-public final class NodeFilterStrategy implements FilterStrategy{
+public final class NodeFilterStrategy implements FilterStrategy {
     @Override
-    public boolean filterNode(ClassNode classNode) {
-        if(classNode.isHidden())
-        {
-            return true;
-        }
-        return false;
+    public boolean filterNode(ProgramEntity programEntity) {
+        return programEntity.isHidden();
     }
 
     @Override

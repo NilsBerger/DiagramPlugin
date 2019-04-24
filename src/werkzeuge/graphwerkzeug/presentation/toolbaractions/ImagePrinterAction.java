@@ -7,7 +7,7 @@ import com.intellij.openapi.graph.view.Graph2D;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import werkzeuge.ImageClassGraphWriter;
-import werkzeuge.graphwerkzeug.presentation.ClassGraph;
+import werkzeuge.graphwerkzeug.ImpactAnalysisGraph;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,9 +21,9 @@ public class ImagePrinterAction extends AbstractGraphAction
 {
     private ImageClassGraphWriter _writer;
 
-    public ImagePrinterAction(ClassGraph classGraph)
+    public ImagePrinterAction(ImpactAnalysisGraph impactAnalysisGraph)
     {
-        super(classGraph.getGraph(), "Only show changed Classes", AllIcons.Actions.Pause);
+        super(impactAnalysisGraph.getGraph(), "Only show changed Classes", AllIcons.Actions.Pause);
         _writer = new ImageClassGraphWriter();
 
     }

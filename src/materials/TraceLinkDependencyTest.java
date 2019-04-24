@@ -1,7 +1,7 @@
 package materials;
 
 import org.junit.Test;
-import valueobjects.ClassLanguageType;
+import valueobjects.Language;
 import valueobjects.RelationshipType;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -14,33 +14,33 @@ public class TraceLinkDependencyTest {
     @Test
     public void equalsAndHashCodeTest() {
 
-        ClassDependency classDependency = new TraceLinkClassDependency(new ClassNode("a", ClassLanguageType.Java), new ClassNode("b", ClassLanguageType.Java), 100);
-        ClassDependency otherclassDependency = new TraceLinkClassDependency(new ClassNode("a", ClassLanguageType.Java), new ClassNode("b", ClassLanguageType.Java), 100 );
+        ProgramEntityRelationship programEntityRelationship = new TraceLinkProgramEntityAssociation(new ProgramEntity("a", Language.Java), new ProgramEntity("b", Language.Java), 100);
+        ProgramEntityRelationship otherclassDependency = new TraceLinkProgramEntityAssociation(new ProgramEntity("a", Language.Java), new ProgramEntity("b", Language.Java), 100);
 
-        assertThat(classDependency, is((classDependency)));
-        assertThat(classDependency, is(otherclassDependency));
+        assertThat(programEntityRelationship, is((programEntityRelationship)));
+        assertThat(programEntityRelationship, is(otherclassDependency));
 
-        assertThat(classDependency.hashCode(), is(not(otherclassDependency.hashCode()+1)));
-        assertThat(classDependency.hashCode(), is(otherclassDependency.hashCode()));
+        assertThat(programEntityRelationship.hashCode(), is(not(otherclassDependency.hashCode() + 1)));
+        assertThat(programEntityRelationship.hashCode(), is(otherclassDependency.hashCode()));
     }
 
     @Test
     public void getDependenciesTest() {
-        ClassNode javaClassNodeMaterial = new ClassNode("a", ClassLanguageType.Java);
-        ClassNode swiftClassNodeMaterial = new ClassNode("b", ClassLanguageType.Swift);
-        TraceLinkClassDependency classDependency = new TraceLinkClassDependency(javaClassNodeMaterial, swiftClassNodeMaterial, 100.0);
+        ProgramEntity javaProgramEntityMaterial = new ProgramEntity("a", Language.Java);
+        ProgramEntity swiftProgramEntityMaterial = new ProgramEntity("b", Language.Swift);
+        TraceLinkProgramEntityAssociation classDependency = new TraceLinkProgramEntityAssociation(javaProgramEntityMaterial, swiftProgramEntityMaterial, 100.0);
 
-        assertThat(javaClassNodeMaterial, is(classDependency.getDependentClass()));
-        assertThat(swiftClassNodeMaterial, is(classDependency.getIndependentClass()));
+        assertThat(javaProgramEntityMaterial, is(classDependency.getDependentClass()));
+        assertThat(swiftProgramEntityMaterial, is(classDependency.getIndependentClass()));
         assertThat(classDependency.getTracelinkValue(), is(100.0));
     }
 
 
     @Test
     public void getChangeRelationshipTypeTest() {
-        ClassNode javaClassNodeMaterial = new ClassNode("a", ClassLanguageType.Java);
-        ClassNode swiftClassNodeMaterial = new ClassNode("b", ClassLanguageType.Swift);
-        TraceLinkClassDependency classDependency = new TraceLinkClassDependency(javaClassNodeMaterial, swiftClassNodeMaterial, 100.0);
+        ProgramEntity javaProgramEntityMaterial = new ProgramEntity("a", Language.Java);
+        ProgramEntity swiftProgramEntityMaterial = new ProgramEntity("b", Language.Swift);
+        TraceLinkProgramEntityAssociation classDependency = new TraceLinkProgramEntityAssociation(javaProgramEntityMaterial, swiftProgramEntityMaterial, 100.0);
 
         assertThat(classDependency.getRelationshipType(), is(RelationshipType.Traceability_Association));
 

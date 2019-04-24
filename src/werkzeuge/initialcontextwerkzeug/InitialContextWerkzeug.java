@@ -1,12 +1,12 @@
 package werkzeuge.initialcontextwerkzeug;
 
-import service.functional.ChangePropagationProcess;
-import com.intellij.openapi.project.Project;
-import materials.ClassNode;
 import javafx.collections.SetChangeListener;
-import service.functional.GraphChangeListener;
+import materials.ProgramEntity;
+import service.functional.ChangePropagationProcess;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class InitialContextWerkzeug{
 
@@ -16,19 +16,20 @@ public class InitialContextWerkzeug{
     public InitialContextWerkzeug()
     {
         _ui = new InitialContextWerkzeugUI();
-        _ui.setLabelText("Initial Context");
+        _ui.setLabelText("Java: Suggested Impact Set");
         _cpProcess = ChangePropagationProcess.getInstance();
         registerUIActions();
+        registerTextfieldListeners();
     }
 
     private void registerUIActions() {
-       _cpProcess.getAffectedClassesByChange().addListener(new SetChangeListener<ClassNode>() {
+        _cpProcess.getAffectedClassesByChange().addListener(new SetChangeListener<ProgramEntity>() {
            @Override
-           public void onChanged(Change<? extends ClassNode> change) {
+           public void onChanged(Change<? extends ProgramEntity> change) {
                if(change.wasAdded())
                {
-                   ClassNode classNode = change.getElementAdded();
-                   if(classNode != null && classNode.isInitialClass()){
+                   ProgramEntity programEntity = change.getElementAdded();
+                   if (programEntity != null && programEntity.isInitialClass()) {
                        addEntry(change.getElementAdded());
                    }
                }
@@ -36,14 +37,21 @@ public class InitialContextWerkzeug{
        });
     }
 
-    private void addEntry(final ClassNode initialClassNode)
+    public void registerTextfieldListeners()
     {
-        _ui.getModel().addEntry(initialClassNode);
-
+        _ui.getTextField().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                _ui.getContainsFilter().setFilterValue(_ui.getTextField().getText());
+                _ui.getRowSorter().sort();
+            }
+        });
     }
-    private void removeEntry(final ClassNode initialClassNode)
+
+    private void addEntry(final ProgramEntity initialProgramEntity)
     {
-        _ui.getModel().removeEntry(initialClassNode);
+        _ui.getModel().addEntry(initialProgramEntity);
+
     }
     public JPanel getPanel()
     {

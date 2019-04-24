@@ -1,20 +1,15 @@
 package werkzeuge.graphwerkzeug.presentation.graphfilter;
 
-import materials.ClassNode;
-import valueobjects.ClassLanguageType;
+import materials.ProgramEntity;
+import valueobjects.Language;
 
 public final class APINodeFilterStrategy implements FilterStrategy{
     @Override
-    public boolean filterNode(ClassNode classNode) {
-        if(classNode.getClassLanguageType() == ClassLanguageType.Java && !classNode.getFullClassName().contains("de.unihamburg"))
-        {
+    public boolean filterNode(ProgramEntity programEntity) {
+        if (programEntity.getLanguage() == Language.Java && !programEntity.getFullEntityName().contains("de.unihamburg")) {
             return true;
         }
-        else if(classNode.isHidden())
-        {
-            return true;
-        }
-        return false;
+        return programEntity.isHidden();
     }
 
     @Override

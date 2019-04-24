@@ -16,15 +16,14 @@
 
 package service.functional;
 
-import materials.ClassNode;
-import service.functional.ChangeAndFixStrategyIF;
+import materials.ProgramEntity;
 
 import java.util.Set;
 
 public class StrictChangeAndFixStrategy implements ChangeAndFixStrategyIF {
     private int _allowedSize = 0;
     @Override
-    public boolean accept(Set<ClassNode> affectedClasses) {
+    public boolean accept(Set<ProgramEntity> affectedClasses) {
         return affectedClasses.size() == _allowedSize;
     }
 }

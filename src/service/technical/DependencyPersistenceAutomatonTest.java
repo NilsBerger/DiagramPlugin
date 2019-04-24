@@ -18,11 +18,6 @@ package service.technical;
 
 import org.junit.Test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-
 public class DependencyPersistenceAutomatonTest {
 
 //    @Test
@@ -52,7 +47,7 @@ public class DependencyPersistenceAutomatonTest {
     {
 //        ChangePropagationProcess propgatatesProcess = ChangePropagationProcess.getInstance();
 //        propgatatesProcess.initialize(ChangePropagationProcessTest.getSmallGraph(), new RandomChangeAndFixStrategy());
-//        propgatatesProcess.change(new JavaClassNodeMaterial("a"));
+//        propgatatesProcess.changeInitial(new JavaClassNodeMaterial("a"));
 //
 //        DependencyPersistenceAutomaton dependencyPersistenceAutomaton = new DependencyPersistenceAutomaton(ChangePropagationProcess.getInstance(), "/Users/nilsberger/Documents/Masterarbeit/IntelliJIdeaDiagramDemo-master/resources/");
 //        try {

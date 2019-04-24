@@ -1,16 +1,14 @@
 package werkzeuge;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.ui.components.*;
+import com.intellij.ui.components.JBLabel;
+import com.intellij.ui.components.JBPanel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.io.File;
-import java.util.ArrayList;
 
 
 public class ToolWindowWerkzeugUI extends SimpleToolWindowPanel {
@@ -23,7 +21,7 @@ public class ToolWindowWerkzeugUI extends SimpleToolWindowPanel {
     private ComboBox<File> _fileComboBox;
     private JBPanel _listPanel;
 
-    public ToolWindowWerkzeugUI(JPanel graphSelection, JPanel initialContext, JPanel finalContextJava, JPanel finalContextSwift, JPanel tracelinkPanel) {
+    public ToolWindowWerkzeugUI(JComponent toolBar, JPanel initialContext, JPanel finalContextJava, JPanel finalContextSwift, JPanel tracelinkPanel) {
 
         super(true, true);
 
@@ -70,7 +68,11 @@ public class ToolWindowWerkzeugUI extends SimpleToolWindowPanel {
         _listPanel.add(finalContextSwift);
         _listPanel.add(tracelinkPanel);
 
-        _panel.add(graphSelection, BorderLayout.NORTH);
+        _panel.add(toolBar, BorderLayout.NORTH);
+        //final JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT,_listPanel, );
+        //splitPane.
+        //JBScrollPane scrollPane = new JBScrollPane(_listPanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
         _panel.add(_listPanel, BorderLayout.CENTER);
 
     }

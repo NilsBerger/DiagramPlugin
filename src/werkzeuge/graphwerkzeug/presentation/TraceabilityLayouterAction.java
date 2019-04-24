@@ -7,27 +7,32 @@ import com.intellij.openapi.graph.builder.GraphBuilder;
 import com.intellij.openapi.graph.builder.actions.AbstractGraphAction;
 import com.intellij.openapi.graph.view.Graph2D;
 import com.intellij.openapi.project.Project;
+import werkzeuge.graphwerkzeug.ImpactAnalysisGraph;
 
 public class TraceabilityLayouterAction extends AbstractGraphAction<Graph2D> {
-    private final ClassGraph _classGraph;
+    private final ImpactAnalysisGraph _impactAnalysisGraph;
 
 
-    public TraceabilityLayouterAction(ClassGraph graph) {
+    public TraceabilityLayouterAction(ImpactAnalysisGraph graph) {
         super(graph.getGraph(), "Set current layout", AllIcons.Graph.Layout);
-        _classGraph = graph;
+        _impactAnalysisGraph = graph;
     }
 
     @Override
     protected void actionPerformed(AnActionEvent anActionEvent, Graph2D graph2D) {
 
-        _classGraph.getGraphBuilder().getGraphPresentationModel().getSettings().getCurrentLayouter();
+        _impactAnalysisGraph.getGraphBuilder().getGraphPresentationModel().getSettings().getCurrentLayouter();
         Project project = getProject(anActionEvent);
         if (project != null) {
-            GraphBuilder builder = _classGraph.getGraphBuilder();
+            GraphBuilder builder = _impactAnalysisGraph.getGraphBuilder();
             if (builder != null) {
                 TraceabilityLayouter traceabilityLayouter = new TraceabilityLayouter();
-                traceabilityLayouter.setClassGraph(_classGraph);
-                traceabilityLayouter.doLayout(_classGraph.getGraph());
+                traceabilityLayouter.setClassGraph(_impactAnalysisGraph);
+                traceabilityLayouter.doLayout(_impactAnalysisGraph.getGraph());
+
+                builder.getGraphPresentationModel().getSettings().setCurrentLayouter(traceabilityLayouter);
+
+                _impactAnalysisGraph.updateView();
             }
         }
     }

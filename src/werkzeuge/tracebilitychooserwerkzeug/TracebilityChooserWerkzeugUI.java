@@ -5,14 +5,14 @@ import com.intellij.openapi.ui.popup.ComponentPopupBuilder;
 import com.intellij.openapi.ui.popup.JBPopup;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.components.JBLabel;
-import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import de.unihamburg.masterprojekt2016.traceability.TraceabilityLink;
+import materials.ProgramEntity;
 
 import javax.swing.*;
-import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
@@ -53,6 +53,7 @@ public class TracebilityChooserWerkzeugUI {
 
         JBPopupFactory factory = ServiceManager.getService(JBPopupFactory.class);
         ComponentPopupBuilder popupBuilder = factory.createComponentPopupBuilder(_panel, _tracebilityTable);
+        _panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         _popup = popupBuilder.createPopup();
         _popup.pack(true, true);
     }
@@ -81,6 +82,14 @@ public class TracebilityChooserWerkzeugUI {
         bottomPanel.add(_selectButton);
 
         return bottomPanel;
+    }
+
+    public void setTitle(ProgramEntity sourceProgramEntity) {
+        setTitle(sourceProgramEntity.getSimpleName());
+    }
+
+    public void setTitle(String title) {
+        _titelLabel.setText(title);
     }
 
     public void show() {

@@ -16,10 +16,10 @@
 
 package service.functional;
 
-import materials.ClassNode;
+import materials.ProgramEntity;
 
 import java.util.Set;
 
 public interface ChangeAndFixStrategyIF {
-    public boolean accept(Set<ClassNode> affectedClasses);
+    public boolean accept(Set<ProgramEntity> affectedClasses);
 }

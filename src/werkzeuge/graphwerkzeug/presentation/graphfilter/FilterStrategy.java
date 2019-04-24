@@ -1,7 +1,7 @@
 package werkzeuge.graphwerkzeug.presentation.graphfilter;
 
-import materials.ClassNode;
+import materials.ProgramEntity;
 
 public interface FilterStrategy {
-    boolean filterNode(final ClassNode Node);
+    boolean filterNode(final ProgramEntity Node);
 }

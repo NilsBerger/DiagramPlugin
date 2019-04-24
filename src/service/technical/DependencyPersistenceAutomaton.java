@@ -16,9 +16,9 @@
 
 package service.technical;
 
-import materials.ClassNode;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import materials.ProgramEntity;
 import service.functional.ChangePropagationProcess;
 
 import javax.xml.bind.JAXBContext;
@@ -92,25 +92,25 @@ public class DependencyPersistenceAutomaton {
         }
     }
 
-    public void writeClassNodeMaterial(ClassNode classNode) throws Exception
+    public void writeClassNodeMaterial(ProgramEntity programEntity) throws Exception
     {
         String filename = _directory.getCanonicalPath() +"/testxml";
-        final JAXBContext context = JAXBContext.newInstance(ClassNode.class);
+        final JAXBContext context = JAXBContext.newInstance(ProgramEntity.class);
         final Marshaller marshaller = context.createMarshaller();
 
         try(final OutputStream os = new BufferedOutputStream(new FileOutputStream(filename)))
         {
-            marshaller.marshal(classNode,os);
+            marshaller.marshal(programEntity, os);
         }
     }
 
-    public static ClassNode readClassNodeMaterial(final String filename) throws Exception {
-        final JAXBContext context = JAXBContext.newInstance(ClassNode.class);
+    public static ProgramEntity readClassNodeMaterial(final String filename) throws Exception {
+        final JAXBContext context = JAXBContext.newInstance(ProgramEntity.class);
         final Unmarshaller unmarshaller = context.createUnmarshaller();
 
         try (final InputStream in = new BufferedInputStream(new FileInputStream(filename)))
         {
-            return (ClassNode) unmarshaller.unmarshal(in);
+            return (ProgramEntity) unmarshaller.unmarshal(in);
         }
     }
 }

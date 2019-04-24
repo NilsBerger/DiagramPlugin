@@ -1,11 +1,11 @@
 package werkzeuge.graphwerkzeug.presentation.graphfilter;
 
-import materials.ClassNode;
+import materials.ProgramEntity;
 
 public final class NodeUnfilterStrategy implements FilterStrategy{
 
     @Override
-    public boolean filterNode(final ClassNode Node) {
+    public boolean filterNode(final ProgramEntity Node) {
         return false;
     }
 

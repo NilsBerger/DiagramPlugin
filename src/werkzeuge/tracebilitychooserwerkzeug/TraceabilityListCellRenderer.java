@@ -1,6 +1,5 @@
 package werkzeuge.tracebilitychooserwerkzeug;
 
-import colorspectrum.ColorUtils;
 import com.intellij.icons.AllIcons;
 import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBPanel;
@@ -30,9 +29,9 @@ public class TraceabilityListCellRenderer extends DefaultTableCellRenderer {
             label.setText(decimalFormat.format(value));
             label.setHorizontalAlignment(SwingConstants.CENTER);
             //label.setForeground(ColorUtils.test((double) value));
-            label.setBackground(ColorUtils.test((double) value));
+            //label.setBackground(ColorUtils.test((double) value));
             label.setBackground(UIUtil.getTableBackground(isSelected));
-            panel.setBackground(ColorUtils.test((double) value));
+            //panel.setBackground(ColorUtils.test((double) value));
             if(isSelected)
             {
                 panel.setBackground(UIUtil.getTableBackground(isSelected));
