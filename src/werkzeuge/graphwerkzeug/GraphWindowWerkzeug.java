@@ -5,7 +5,6 @@ import com.intellij.openapi.graph.base.Node;
 import com.intellij.openapi.graph.view.Graph2DView;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
-import com.intellij.ui.table.JBTable;
 import materials.ProgramEntity;
 import materials.TraceLinkProgramEntityAssociation;
 import valueobjects.Language;
@@ -24,7 +23,7 @@ public class GraphWindowWerkzeug {
     private ImpactAnalysisGraph _javaImpactAnalysisGraph;
     private ImpactAnalysisGraph _swiftImpactAnalysisGraph;
     private ImpactAnalysisGraph _evalImpactAnalysisGraph;
-    private final ToolWindowWerkzeug _werkzeug;
+    private final ToolWindowWerkzeug _toolWindowWerkzeug;
     private GraphWindowWerkzeugUI _ui;
 
     private static final Key<ImpactAnalysisGraph> GENERAL_GRAPH_KEY = Key.create("General Graph");
@@ -32,10 +31,10 @@ public class GraphWindowWerkzeug {
     private static final Key<ImpactAnalysisGraph> JAVA_GRAPH_KEY = Key.create("Java Graph");
     private static final Key<ImpactAnalysisGraph> SWIFT_GRAPH_KEY = Key.create("Swift Graph");
 
-    public GraphWindowWerkzeug(final Project project) {
+    public GraphWindowWerkzeug(final Project project, final ToolWindowWerkzeug toolWindowWerkzeug) {
         _project = project;
-        _werkzeug = new ToolWindowWerkzeug();
         initImpactAnalysisGraphs();
+        _toolWindowWerkzeug = toolWindowWerkzeug;
 
         _ui = new GraphWindowWerkzeugUI(_generalImpactAnalysisGraph, _javaImpactAnalysisGraph, _swiftImpactAnalysisGraph, _evalImpactAnalysisGraph);
         addFocusOnNode();
@@ -63,13 +62,15 @@ public class GraphWindowWerkzeug {
 
 
     private void addFocusOnNode() {
-        _werkzeug.getTraceabilityWerkzeug().getTraceablilityTable().addMouseListener(new MouseAdapter() {
+        ;
+
+        _toolWindowWerkzeug.getTraceabilityWerkzeug().getTraceablilityTable().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int selectedRow = _werkzeug.getTraceabilityWerkzeug().getTraceablilityTable().getSelectedRow();
-                int convertRow = _werkzeug.getTraceabilityWerkzeug().getTraceablilityTable().convertRowIndexToModel(selectedRow);
+                int selectedRow = _toolWindowWerkzeug.getTraceabilityWerkzeug().getTraceablilityTable().getSelectedRow();
+                int convertRow = _toolWindowWerkzeug.getTraceabilityWerkzeug().getTraceablilityTable().convertRowIndexToModel(selectedRow);
                 if (convertRow != -1) {
-                    TraceLinkProgramEntityAssociation traceLink = _werkzeug.getTraceabilityWerkzeug().getModel().getTraceLinkforRow(convertRow);
+                    TraceLinkProgramEntityAssociation traceLink = _toolWindowWerkzeug.getTraceabilityWerkzeug().getModel().getTraceLinkforRow(convertRow);
 
                     if (traceLink.getIndependentClass().getLanguage() == Language.Java) {
                         zoomToNode(_javaImpactAnalysisGraph, traceLink.getIndependentClass());
@@ -84,16 +85,17 @@ public class GraphWindowWerkzeug {
                 }
             }
         });
-        registerFocusOnNode(_werkzeug.getJavaContextWerkzeug());
-        registerFocusOnNode(_werkzeug.getSwiftContextWerkzeug());
+        registerFocusOnNode(_toolWindowWerkzeug.getJavaContextWerkzeug());
+        registerFocusOnNode(_toolWindowWerkzeug.getSwiftContextWerkzeug());
+
 
     }
 
     private void registerFocusOnNode(FinalContextWerkzeug werkzeug) {
-        final JBTable jbTable = werkzeug.getJBTable();
-        jbTable.getSelectionModel().addListSelectionListener(e -> {
-            int selectedRow = _werkzeug.getTraceabilityWerkzeug().getTraceablilityTable().getSelectedRow();
-            int convertRow = _werkzeug.getTraceabilityWerkzeug().getTraceablilityTable().convertRowIndexToModel(selectedRow);
+
+        werkzeug.getJBTable().getSelectionModel().addListSelectionListener(e -> {
+            int selectedRow = werkzeug.getJBTable().getSelectedRow();
+            int convertRow = werkzeug.getJBTable().convertRowIndexToModel(selectedRow);
             ProgramEntity selectedProgramEntity = werkzeug.getTableModel().getClassNodeFromRow(convertRow);
             if (selectedProgramEntity != null) {
                 final int selectedIndex = _ui.getTabbedPane().getSelectedIndex();

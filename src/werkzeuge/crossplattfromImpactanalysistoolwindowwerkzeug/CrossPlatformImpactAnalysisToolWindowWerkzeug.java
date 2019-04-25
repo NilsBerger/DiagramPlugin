@@ -21,8 +21,8 @@ public class CrossPlatformImpactAnalysisToolWindowWerkzeug implements ProjectCom
 
     public CrossPlatformImpactAnalysisToolWindowWerkzeug(Project project) {
         _project = project;
-        _graphWerkzeug = new GraphWindowWerkzeug(project);
         _toolWindowWerkzeug = new ToolWindowWerkzeug();
+        _graphWerkzeug = new GraphWindowWerkzeug(project, _toolWindowWerkzeug);
 
         _ui = new CrossPlatformImpactAnalysisToolWindowWerkzeugUI(_graphWerkzeug.getUI(), _toolWindowWerkzeug.getPanel());
     }
