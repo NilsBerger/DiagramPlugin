@@ -40,6 +40,7 @@ public class LanguageNodeSubgraphDataProvider implements DataProvider {
                 return programEntity.getLanguage() == _language;
             }
         }
-        throw new IllegalStateException("Could not map Node to ClassNode");
+        System.out.println("Could not map Node to ClassNode");
+        return false;
     }
 }

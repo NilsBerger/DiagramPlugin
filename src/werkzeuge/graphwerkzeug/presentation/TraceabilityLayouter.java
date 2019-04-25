@@ -8,8 +8,6 @@ import com.intellij.openapi.graph.layout.orthogonal.OrthogonalLayouter;
 import com.intellij.openapi.graph.layout.router.EdgeGroupRouterStage;
 import com.intellij.openapi.graph.layout.router.OrthogonalEdgeRouter;
 import com.intellij.openapi.graph.layout.router.polyline.EdgeRouter;
-import com.intellij.openapi.graph.view.BridgeCalculator;
-import com.intellij.openapi.graph.view.DefaultGraph2DRenderer;
 import materials.ProgramEntity;
 import org.jetbrains.annotations.NotNull;
 import valueobjects.Language;
@@ -27,13 +25,13 @@ import java.util.stream.Stream;
  */
 public class TraceabilityLayouter implements Layouter {
 
-    private static final double GAP = 6000.0;
+    private static final double GAP = 600.0;
 
     private ImpactAnalysisGraph _impactAnalysisGraph;
 
 
-    private final DirectedOrthogonalLayouter _mainOrthogonalLayouter;
-    private final SubgraphLayouter _subgraphLayouter;
+    private DirectedOrthogonalLayouter _mainOrthogonalLayouter;
+    private SubgraphLayouter _subgraphLayouter;
 
     private GroupEdgeTargetDataProvider _groupEdgeTargetDataProvider;
     private DirectedEdgeDataProvider _directedEdgeDataProvider;
@@ -45,8 +43,7 @@ public class TraceabilityLayouter implements Layouter {
 
     public TraceabilityLayouter()
     {
-        _mainOrthogonalLayouter = createJavaNodeLayouter();
-        _subgraphLayouter = createSubgraphLayouter();
+
     }
 
     @Override
@@ -55,33 +52,19 @@ public class TraceabilityLayouter implements Layouter {
     }
 
     public void doLayout(@NotNull LayoutGraph graph) {
-        _directedEdgeDataProvider = new DirectedEdgeDataProvider(_impactAnalysisGraph, graph);
-        graph.addDataProvider(DirectedOrthogonalLayouter.DIRECTED_EDGE_DPKEY, _directedEdgeDataProvider);
-        _impactAnalysisGraph.getGraph().addDataProvider(DirectedOrthogonalLayouter.DIRECTED_EDGE_DPKEY, _directedEdgeDataProvider);
 
-        _groupEdgeTargetDataProvider = new GroupEdgeTargetDataProvider(_impactAnalysisGraph, graph);
-        graph.addDataProvider(PortConstraintKeys.TARGET_GROUPID_KEY, _groupEdgeTargetDataProvider);
-        _impactAnalysisGraph.getGraph().addDataProvider(PortConstraintKeys.TARGET_GROUPID_KEY, _groupEdgeTargetDataProvider);
-
-        final DefaultGraph2DRenderer graph2DRenderer = (DefaultGraph2DRenderer) _impactAnalysisGraph.getView().getGraph2DRenderer();
-        final BridgeCalculator bridgeCalculator = GraphManager.getGraphManager().createBridgeCalculator();
-        bridgeCalculator.setCrossingMode(BridgeCalculator.CROSSING_MODE_VERTICAL_CROSSES_HORIZONTAL);
-        graph2DRenderer.setBridgeCalculator(bridgeCalculator);
+        _mainOrthogonalLayouter = createJavaNodeLayouter();
+        _subgraphLayouter = createSubgraphLayouter();
         LanguageNodeSubgraphDataProvider swiftNodeSubgraphDataProvider = new LanguageNodeSubgraphDataProvider(_impactAnalysisGraph, Language.Swift);
-        graph.addDataProvider(SubgraphLayouter.SELECTED_NODES, swiftNodeSubgraphDataProvider);
-
+        graph.addDataProvider(SubgraphLayouter.NODE_ID_DPKEY, swiftNodeSubgraphDataProvider);
 
         run(_mainOrthogonalLayouter);
         _subgraphLayouter.doLayout(graph);
         calculateTracebilityLayout(graph);
 
+
         BufferedLayouter bufferedLayouter = GraphManager.getGraphManager().createBufferedLayouter(getEdgeGroupRouterStage(getEdgeRouter()));
         bufferedLayouter.doLayout(graph);
-        getHighestNodeJavaPosition(graph.getNodeArray(), Language.Java);
-        getHighestNodeJavaPosition(graph.getNodeArray(), Language.Swift);
-
-        //getLowestNodeJavaPosition(graph.getNodeArray(), Language.Java);
-        //getLowestNodeJavaPosition(graph.getNodeArray(), Language.Swift);
     }
 
     private void run(Layouter layouter) {
@@ -94,23 +77,35 @@ public class TraceabilityLayouter implements Layouter {
      * @param graph The LayoutGraph that needs to be layouted
      */
     private void calculateTracebilityLayout(final LayoutGraph graph){
-        if (!isCurrentGapBigEnough(graph)) {
-            final double distance = _mostFarRightPosition + (GAP - _mostFarLeftPosition);
-            moveSwiftNodesToRight(graph, distance);
-        }
-        double highestJavaNodePosition = getHighestNodeJavaPosition(graph.getNodeArray(), Language.Java);
-        double highestSwiftNodePosition = getHighestNodeJavaPosition(graph.getNodeArray(), Language.Swift);
+        final double distanceX = calculateDistanceForSwiftNode(_mostFarRightPosition, _mostFarLeftPosition, GAP);
+        moveSwiftNodesToRight(graph, distanceX);
+
+        double highestJavaNodePosition = getHighestNodeYPosition(graph.getNodeArray(), Language.Java);
+        double highestSwiftNodePosition = getHighestNodeYPosition(graph.getNodeArray(), Language.Swift);
         // Highest Java Node ist higher than highest SwiftNode
         if (highestJavaNodePosition < highestSwiftNodePosition) {
             final double distance = highestSwiftNodePosition - highestJavaNodePosition;
-            levelNodes(graph, distance);
+            //levelNodes(graph, distance);
         } else {
             final double distance = highestJavaNodePosition - highestSwiftNodePosition;
-            levelNodes(graph, distance);
+            //levelNodes(graph, distance);
         }
     }
 
 
+    private void printNodes(final LayoutGraph graph) {
+        final Node[] nodeArray = graph.getNodeArray();
+
+        for (Node node : nodeArray) {
+            if (node != null) {
+                String name = _impactAnalysisGraph.getProgramEnitity(node).getSimpleName();
+                double x = graph.getX(node);
+                double y = graph.getY(node);
+                System.out.println(name + " X: " + x + " Y: " + y);
+            }
+
+        }
+    }
 
     /**
      * Returns if the current layout has a gap between "Java" and "Swift"-Nodes is big enough.
@@ -121,9 +116,15 @@ public class TraceabilityLayouter implements Layouter {
         _mostFarRightPosition =  getMostFarRightJavaNodePosition(graph.getNodeArray());
         _mostFarLeftPosition = getMostFarLeftSwiftNodePosition(graph.getNodeArray());
 
-        boolean gap_big_enough = _mostFarLeftPosition - _mostFarRightPosition > GAP;
-        System.out.println("Gap big enough ?: " + gap_big_enough);
-        return gap_big_enough;
+        return isGapBigEnough(_mostFarRightPosition, _mostFarLeftPosition, GAP);
+    }
+
+    public boolean isGapBigEnough(final double xJavaPosition, final double xSwiftPosition, final double gap) {
+        return xSwiftPosition - xJavaPosition >= gap;
+    }
+
+    public double calculateDistanceForSwiftNode(final double xJavaPosition, final double xSwiftPosition, final double gap) {
+        return xJavaPosition + (gap - xSwiftPosition);
     }
 
     /**
@@ -153,8 +154,8 @@ public class TraceabilityLayouter implements Layouter {
                     //moveBy(Node node,double dx, double dy)
 
                     double xNode = graph.getX(node);
-                    double neXNode = xNode +distance;
-                    System.out.println("Moving node: " + programEntity.getSimpleName() + " by " + neXNode + " to the east");
+                    double neXNode = xNode + distance;
+                    System.out.println("Moving swift node: " + programEntity.getSimpleName() + " by " + neXNode + " to the east");
                     graph.moveBy(node, neXNode, 0);
                 }
             }
@@ -199,7 +200,7 @@ public class TraceabilityLayouter implements Layouter {
      * @param nodeArray An Node-Array of nodes in the LayoutGraph
      * @return Returns the value of the highes java-node. The value can be negative
      */
-    private double getHighestNodeJavaPosition(final Node[] nodeArray, Language language) {
+    private double getHighestNodeYPosition(final Node[] nodeArray, Language language) {
 
         Comparator<Node> comparator = Comparator.comparingDouble(node -> _impactAnalysisGraph.getGraph().getY(node));
 
@@ -279,7 +280,7 @@ public class TraceabilityLayouter implements Layouter {
     private static SubgraphLayouter createSubgraphLayouter()
     {
         final SubgraphLayouter subgraphLayouter = GraphManager.getGraphManager().createSubgraphLayouter(GraphManager.getGraphManager().createBalloonLayouter());
-        subgraphLayouter.setSubgraphNodesDpKey(Layouter.SELECTED_NODES);
+        subgraphLayouter.setSubgraphNodesDpKey(Layouter.NODE_ID_DPKEY);
 //        partialLayouter.setComponentAssignmentStrategy(PartialLayouter.COMPONENT_ASSIGNMENT_STRATEGY_CONNECTED);
 //        partialLayouter.setPositioningStrategy(PartialLayouter.SUBGRAPH_POSITIONING_STRATEGY_FROM_SKETCH);
 //

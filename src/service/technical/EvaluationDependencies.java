@@ -41,8 +41,8 @@ public class EvaluationDependencies {
         ProgramEntity eventSwift = new ProgramEntity("JsonKeysEvent", Language.Swift);
 
         //Dependencies Java
-        ProgramEntityRelationship a = new ProgramEntityRelationship(eventImageCellJava, eventModelJava, RelationshipType.Dependency);
-        ProgramEntityRelationship b = new ProgramEntityRelationship(eventTextCellJava, eventModelJava, RelationshipType.Dependency);
+        ProgramEntityRelationship a = new ProgramEntityRelationship(eventImageCellJava, eventModelJava, RelationshipType.Extends);
+        ProgramEntityRelationship b = new ProgramEntityRelationship(eventTextCellJava, eventModelJava, RelationshipType.Extends);
         ProgramEntityRelationship c = new ProgramEntityRelationship(eventModelJava, eventModelJava, RelationshipType.Dependency);
         ProgramEntityRelationship f = new ProgramEntityRelationship(eventTextImageCellJava, eventModelJava, RelationshipType.Dependency);
         ProgramEntityRelationship o = new ProgramEntityRelationship(eventModelJava, eventJava, RelationshipType.Dependency);
@@ -74,6 +74,39 @@ public class EvaluationDependencies {
         TraceLinkProgramEntityAssociation event = new TraceLinkProgramEntityAssociation(eventJava, eventSwift, 6.43);
 
         ProgramEntityRelationship[] allDependencies = {a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, eventDetailModel, eventModel, eventDetailHeaderCell, eventImageCell, eventTextImageCell, eventTextCell, event};
+
+        dependencies.addAll(new ArrayList<ProgramEntityRelationship>(Arrays.asList(allDependencies)));
+
+        return dependencies;
+    }
+
+    public static final Set<ProgramEntityRelationship> getDepedencies2() {
+        Set<ProgramEntityRelationship> dependencies = new HashSet<>();
+
+        ProgramEntity eventDetailModelJava = new ProgramEntity("EventDetailModelJava", Language.Java);
+        eventDetailModelJava.setAsInitialClass();
+        ProgramEntity eventDetailModelSwift = new ProgramEntity("EventDetailModelSwift", Language.Swift);
+
+        ProgramEntity eventDetailHeaderCellJava = new ProgramEntity("EventDetailHeaderCellJava", Language.Java);
+        ProgramEntity eventDetailHeaderCellSwift = new ProgramEntity("EventDetailHeaderCellSwift", Language.Swift);
+
+
+        ProgramEntityRelationship d = new ProgramEntityRelationship(eventDetailHeaderCellJava, eventDetailModelJava, RelationshipType.Dependency);
+
+        ProgramEntityRelationship p = new ProgramEntityRelationship(eventDetailModelJava, eventDetailModelJava, RelationshipType.Dependency);
+
+        //Dependencies Swift
+
+
+        ProgramEntityRelationship l = new ProgramEntityRelationship(eventDetailHeaderCellSwift, eventDetailModelSwift, RelationshipType.Dependency);
+
+        ProgramEntityRelationship q = new ProgramEntityRelationship(eventDetailModelSwift, eventDetailModelSwift, RelationshipType.Dependency);
+
+        //TraceLinks
+        TraceLinkProgramEntityAssociation eventDetailHeaderCell = new TraceLinkProgramEntityAssociation(eventDetailHeaderCellJava, eventDetailHeaderCellSwift, 40.10);
+
+
+        ProgramEntityRelationship[] allDependencies = {d, l, p, q, eventDetailHeaderCell};
 
         dependencies.addAll(new ArrayList<ProgramEntityRelationship>(Arrays.asList(allDependencies)));
 
