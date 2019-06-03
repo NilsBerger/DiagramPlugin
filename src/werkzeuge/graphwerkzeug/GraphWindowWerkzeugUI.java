@@ -11,6 +11,7 @@ import com.intellij.ui.components.JBTabbedPane;
 import org.jetbrains.annotations.NotNull;
 import werkzeuge.graphwerkzeug.presentation.TraceabilityLayouterAction;
 import werkzeuge.graphwerkzeug.presentation.toolbaractions.*;
+import werkzeuge.graphwerkzeug.presentation.toolbaractions.nodefilterwerkzeug.NodeFilterDialogOpenAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -110,10 +111,14 @@ public class GraphWindowWerkzeugUI {
 
         actions.add(new ZoomInAction(classgraph.getGraph()));
         actions.add(new ZoomOutAction(classgraph.getGraph()));
-
         actions.add(new ActualZoomAction(classgraph.getGraph()));
-
         actions.add(new FitContentAction(classgraph.getGraph()));
+
+        actions.addSeparator();
+        actions.add(new UndoAction());
+        actions.add(new RedoAction());
+
+
         actions.addSeparator();
         actions.add(new TraceabilityLayouterAction(classgraph));
         actions.add(new TraceabilityCompLayouterAction(classgraph));
@@ -124,8 +129,9 @@ public class GraphWindowWerkzeugUI {
         actions.add(new PrintPreviewAction(classgraph.getGraph()));
 
         actions.addSeparator();
-        actions.add(new NodeFilterAction(classgraph));
-        actions.add(new MarkingFilterAction(classgraph));
+        actions.add(new NodeFilterDialogOpenAction(classgraph));
+        //actions.add(new NodeFilterAction(classgraph));
+        //actions.add(new MarkingFilterAction(classgraph));
         actions.add(new NodeUnfilterAction(classgraph));
         actions.addSeparator();
 

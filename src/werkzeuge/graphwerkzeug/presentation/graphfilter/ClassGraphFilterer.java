@@ -23,7 +23,9 @@ public class ClassGraphFilterer extends CustomGraphUpdater {
     private FilterStrategy _filterStrategy;
 
     public ClassGraphFilterer(ImpactAnalysisGraph impactAnalysisGraph) {
+
         _impactAnalysisGraph = impactAnalysisGraph;
+        _graphHider = GraphManager.getGraphManager().createGraphHider(_impactAnalysisGraph.getGraph());
     }
 
     /**
@@ -34,10 +36,9 @@ public class ClassGraphFilterer extends CustomGraphUpdater {
      */
     @Override
     public void update(Graph2D graph2D, Graph2DView graph2DView) {
-        _graphHider = GraphManager.getGraphManager().createGraphHider(graph2D);
         _graphHider.setFireGraphEventsEnabled(true);
         Collection<ProgramEntity> nodes = _impactAnalysisGraph.getDataModel().getNodes();
-        unfilterAll();
+        //unfilterAll();
         if (_filterStrategy != null) {
             for (ProgramEntity node : nodes)
                 if (_filterStrategy.filterNode(node)) {
@@ -55,7 +56,8 @@ public class ClassGraphFilterer extends CustomGraphUpdater {
         _filterStrategy = filterStrategy;
     }
 
-    private void unfilterAll() {
+    public void unfilterAll() {
+        _graphHider.setFireGraphEventsEnabled(true);
         Collection<ProgramEntity> nodes = _impactAnalysisGraph.getDataModel().getNodes();
         for (ProgramEntity node : nodes) {
             unfilter(node);

@@ -22,6 +22,6 @@ public class NodeUnfilterAction extends AbstractGraphAction {
     @Override
     protected void actionPerformed(AnActionEvent anActionEvent, Graph2D graph2D) {
         _filter.setFilterStrategy(new NodeUnfilterStrategy());
-        _filter.update(graph2D, _impactAnalysisGraph.getView());
+        _filter.unfilterAll();
     }
 }

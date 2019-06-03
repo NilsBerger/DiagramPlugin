@@ -19,7 +19,7 @@ public class TraceabilityLayouterAction extends AbstractGraphAction<Graph2D> {
     }
 
     @Override
-    protected void actionPerformed(AnActionEvent anActionEvent, Graph2D graph2D) {
+    protected void actionPerformed(AnActionEvent anActionEvent, Graph2D graph42D) {
 
         _impactAnalysisGraph.getGraphBuilder().getGraphPresentationModel().getSettings().getCurrentLayouter();
         Project project = getProject(anActionEvent);
